@@ -52,7 +52,7 @@ export default function LoanApplicationForm() {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Application Submitted!</h2>
           <p className="text-gray-600">
-            Thank you for your application. We'll review it and get back to you within 24 hours.
+            Thank you for your application. We&apos;ll review it and get back to you within 24 hours.
           </p>
         </div>
         <Button variant="primary" onClick={() => window.location.href = '/'}>

@@ -48,7 +48,7 @@ export default function ContactForm() {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Message Sent!</h2>
           <p className="text-accent-gray2">
-            Thank you for contacting us. We'll get back to you within 24 hours.
+            Thank you for contacting us. We&apos;ll get back to you within 24 hours.
           </p>
         </div>
         <Button variant="primary" onClick={() => window.location.href = '/'}>

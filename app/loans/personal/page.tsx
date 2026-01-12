@@ -35,7 +35,7 @@ const personalLoanTypes = [
   {
     icon: GraduationCap,
     title: 'Education Financing',
-    description: 'Invest in your future or your family\'s education with competitive rates and flexible repayment terms.',
+    description: 'Invest in your future or your family&apos;s education with competitive rates and flexible repayment terms.',
     highlight: 'Education investment',
   },
   {
@@ -159,7 +159,7 @@ const faqs = [
   {
     number: 1,
     question: 'What makes Brilliance Advisory different from online loan comparison platforms?',
-    answer: 'While digital platforms offer automated matching, Brilliance Advisory provides personalized financial consulting through experienced advisors. We take time to understand your financial situation, goals, and preferences through one-on-one consultations. Our consultants leverage their expertise and relationships with banking partners to secure the most favorable terms specifically tailored to your profile. You\'ll work directly with a dedicated consultant who guides you through the entire process, answers your questions, and ensures you make informed decisions aligned with your financial objectives.',
+    answer: 'While digital platforms offer automated matching, Brilliance Advisory provides personalized financial consulting through experienced advisors. We take time to understand your financial situation, goals, and preferences through one-on-one consultations. Our consultants leverage their expertise and relationships with banking partners to secure the most favorable terms specifically tailored to your profile. You&apos;ll work directly with a dedicated consultant who guides you through the entire process, answers your questions, and ensures you make informed decisions aligned with your financial objectives.',
   },
   {
     number: 2,
@@ -169,7 +169,7 @@ const faqs = [
   {
     number: 3,
     question: 'What is the maximum loan amount I can access through your advisory service?',
-    answer: 'Loan limits vary significantly based on your creditworthiness, income level, and the specific lender. Major banks typically offer personal loans ranging from S$1,000 to S$200,000, with amounts often calculated as multiples of your monthly income (commonly 4 to 10 times). Higher-income individuals with excellent credit profiles may qualify for amounts up to S$300,000 or more. Our consultants will evaluate your profile during the initial consultation and provide realistic guidance on the loan amounts you\'re likely to qualify for, along with strategies to optimize your borrowing capacity.',
+    answer: 'Loan limits vary significantly based on your creditworthiness, income level, and the specific lender. Major banks typically offer personal loans ranging from S$1,000 to S$200,000, with amounts often calculated as multiples of your monthly income (commonly 4 to 10 times). Higher-income individuals with excellent credit profiles may qualify for amounts up to S$300,000 or more. Our consultants will evaluate your profile during the initial consultation and provide realistic guidance on the loan amounts you&apos;re likely to qualify for, along with strategies to optimize your borrowing capacity.',
   },
   {
     number: 4,
@@ -189,7 +189,7 @@ const faqs = [
   {
     number: 7,
     question: 'Can I apply for a personal loan if I have existing debts or credit cards?',
-    answer: 'Yes, you can apply, but approval depends on your total debt service ratio (DSR) and creditworthiness. Lenders typically assess your ability to manage all existing obligations plus the new loan. Generally, banks prefer a total DSR below 40-60% of your gross monthly income, though this varies by lender and income level. If you\'re consolidating existing debts, this may actually improve your application profile. Our consultants can help you evaluate your current debt situation, optimize your DSR, and structure an application strategy that enhances your approval prospects.',
+    answer: 'Yes, you can apply, but approval depends on your total debt service ratio (DSR) and creditworthiness. Lenders typically assess your ability to manage all existing obligations plus the new loan. Generally, banks prefer a total DSR below 40-60% of your gross monthly income, though this varies by lender and income level. If you&apos;re consolidating existing debts, this may actually improve your application profile. Our consultants can help you evaluate your current debt situation, optimize your DSR, and structure an application strategy that enhances your approval prospects.',
   },
   {
     number: 8,
@@ -216,7 +216,7 @@ export default function PersonalLoansPage() {
               Personalized Loan Solutions Tailored to Your Financial Goals
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed animate-float-up-delay-2">
-              Experience premium financial advisory with one-on-one consultations. Our expert consultants work directly with you to secure personalized loan solutions that align with your unique needs, whether for home improvements, education, debt consolidation, or life's important moments.
+              Experience premium financial advisory with one-on-one consultations. Our expert consultants work directly with you to secure personalized loan solutions that align with your unique needs, whether for home improvements, education, debt consolidation, or life&apos;s important moments.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-float-up-delay-3">
               <Link href="/apply" className="w-full sm:w-auto">
@@ -288,7 +288,7 @@ export default function PersonalLoansPage() {
               Common Uses for Personal Loans
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-float-up-delay-2">
-              Whether you're planning for the future, managing expenses, or pursuing personal goals, our consultants help you structure financing that supports your aspirations.
+              Whether you&apos;re planning for the future, managing expenses, or pursuing personal goals, our consultants help you structure financing that supports your aspirations.
             </p>
           </div>
           
@@ -409,7 +409,7 @@ export default function PersonalLoansPage() {
             
             <div className="mt-8 text-center">
               <p className="text-gray-600 mb-4">
-                <strong>Note:</strong> Meeting minimum eligibility criteria doesn't guarantee approval. Lenders assess multiple factors including credit history, debt-to-income ratio, and employment stability. Our consultants provide personalized guidance on improving your application profile and can recommend lenders whose criteria align best with your situation.
+                <strong>Note:</strong> Meeting minimum eligibility criteria doesn&apos;t guarantee approval. Lenders assess multiple factors including credit history, debt-to-income ratio, and employment stability. Our consultants provide personalized guidance on improving your application profile and can recommend lenders whose criteria align best with your situation.
               </p>
               <Link href="/contact">
                 <Button variant="primary" size="lg" className="inline-flex items-center justify-center gap-2">
@@ -587,7 +587,7 @@ export default function PersonalLoansPage() {
                 <div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">Strategic Loan Structuring</h3>
                   <p className="text-gray-600 leading-relaxed">
-                    Our consultants don't just find you a loan—they help you structure financing strategically. We consider factors like your existing obligations, future financial plans, and overall debt management strategy. Whether you're consolidating debts, financing a major purchase, or managing unexpected expenses, we ensure the loan terms complement your broader financial picture rather than merely addressing an immediate need.
+                    Our consultants don&apos;t just find you a loan—they help you structure financing strategically. We consider factors like your existing obligations, future financial plans, and overall debt management strategy. Whether you&apos;re consolidating debts, financing a major purchase, or managing unexpected expenses, we ensure the loan terms complement your broader financial picture rather than merely addressing an immediate need.
                   </p>
                 </div>
               </div>
@@ -603,7 +603,7 @@ export default function PersonalLoansPage() {
                 <div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">Preferential Rates Through Relationships</h3>
                   <p className="text-gray-600 leading-relaxed">
-                    Our established relationships with leading banks and financial institutions enable us to negotiate preferential terms on your behalf. We leverage our understanding of each lender's criteria, current promotions, and preferential rate structures to present your application optimally. This often results in more favorable interest rates and terms than what you might secure through direct applications.
+                    Our established relationships with leading banks and financial institutions enable us to negotiate preferential terms on your behalf. We leverage our understanding of each lender&apos;s criteria, current promotions, and preferential rate structures to present your application optimally. This often results in more favorable interest rates and terms than what you might secure through direct applications.
                   </p>
                 </div>
               </div>

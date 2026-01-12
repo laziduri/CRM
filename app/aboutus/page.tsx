@@ -33,7 +33,7 @@ export default function AboutPage() {
             About Brilliance Advisory
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Singapore's trusted financial consultancy specialising in human-led personal and business loan advisory. We provide personalised guidance, not automated matching.
+            Singapore&apos;s trusted financial consultancy specialising in human-led personal and business loan advisory. We provide personalised guidance, not automated matching.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link href="/contact">
@@ -63,7 +63,7 @@ export default function AboutPage() {
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-3">Our Vision</h2>
                   <p className="text-gray-700 leading-relaxed">
-                    To be Singapore's most trusted financial advisory firm, recognised for our human-led approach that delivers personalised financing solutions and genuine client success.
+                    To be Singapore&apos;s most trusted financial advisory firm, recognised for our human-led approach that delivers personalised financing solutions and genuine client success.
                   </p>
                 </div>
               </div>
@@ -77,7 +77,7 @@ export default function AboutPage() {
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-3">Our Mission</h2>
                   <p className="text-gray-700 leading-relaxed">
-                    To provide expert, personalised loan advisory services that help individuals and businesses secure the right financing through proper assessment, strategic planning, and dedicated support—putting our clients' best interests first.
+                    To provide expert, personalised loan advisory services that help individuals and businesses secure the right financing through proper assessment, strategic planning, and dedicated support—putting our clients&apos; best interests first.
                   </p>
                 </div>
               </div>
@@ -166,7 +166,7 @@ export default function AboutPage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Why Brilliance Advisory?</h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              We don't just recommend all banks and apply to every loan. We do proper assessments, provide real advice, and create strategic plans tailored to your unique situation.
+              We don&apos;t just recommend all banks and apply to every loan. We do proper assessments, provide real advice, and create strategic plans tailored to your unique situation.
             </p>
           </div>
 
@@ -193,7 +193,7 @@ export default function AboutPage() {
                 <div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Real Advice & Strategic Planning</h3>
                   <p className="text-gray-700 leading-relaxed">
-                    Online applications can't give you real advice. They can't assess your complete financial picture or help you plan strategically. Our advisors provide genuine guidance, helping you understand your options, structure your application optimally, and plan for long-term financial success.
+                    Online applications can&apos;t give you real advice. They can&apos;t assess your complete financial picture or help you plan strategically. Our advisors provide genuine guidance, helping you understand your options, structure your application optimally, and plan for long-term financial success.
                   </p>
                 </div>
               </div>
@@ -207,7 +207,7 @@ export default function AboutPage() {
                 <div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Client-First Philosophy</h3>
                   <p className="text-gray-700 leading-relaxed">
-                    Every decision we make prioritises your best interests. We're not incentivised to push you toward any particular bank or loan product. Instead, we focus on finding the solution that genuinely fits your needs, even if it means recommending fewer options that are better suited to you.
+                    Every decision we make prioritises your best interests. We&apos;re not incentivised to push you toward any particular bank or loan product. Instead, we focus on finding the solution that genuinely fits your needs, even if it means recommending fewer options that are better suited to you.
                   </p>
                 </div>
               </div>

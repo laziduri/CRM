@@ -18,7 +18,7 @@ export default function Partners() {
         {/* Header Section */}
         <div className="text-center mb-12">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 animate-gradient-text">
-            We're proud to work alongside a diverse network of partners from reputable banks and fintech to agencies
+            We&apos;re proud to work alongside a diverse network of partners from reputable banks and fintech to agencies
           </h2>
           <h3 className="text-xl md:text-2xl font-semibold text-gray-700">
             Our Network of Strategic Partners

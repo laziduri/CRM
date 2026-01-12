@@ -183,17 +183,17 @@ const faqs = [
   {
     number: 6,
     question: 'What are the penalties for paying my business loan earlier?',
-    answer: 'Most banks have an early repayment penalty applicable of about 2-5%. Some non-bank lenders allow for early repayment without fee, and some have a minimum loan period of 6 months and is without fee after that period. It\'s important to clarify the early repayment terms with your lender before signing the loan agreement.',
+    answer: 'Most banks have an early repayment penalty applicable of about 2-5%. Some non-bank lenders allow for early repayment without fee, and some have a minimum loan period of 6 months and is without fee after that period. It&apos;s important to clarify the early repayment terms with your lender before signing the loan agreement.',
   },
   {
     number: 7,
     question: 'How many guarantors are needed and how do I know if they qualify?',
-    answer: 'Typically at least one personal guarantor is required. The guarantor needs to be qualified such that they: Have at least an annual income of more than S$24,000, Is a Singaporean or PR, and Has no default or bankruptcy records outstanding. The guarantor\'s credit score also plays a crucial role in loan approval and interest rate determination.',
+    answer: 'Typically at least one personal guarantor is required. The guarantor needs to be qualified such that they: Have at least an annual income of more than S$24,000, Is a Singaporean or PR, and Has no default or bankruptcy records outstanding. The guarantor&apos;s credit score also plays a crucial role in loan approval and interest rate determination.',
   },
   {
     number: 8,
     question: 'How long are typical Working Capital Loan repayment periods?',
-    answer: 'Working Capital Loans typically offer repayment periods of up to 5 years. Banks (DBS, OCBC, UOB) generally offer maximum tenures of 5 years, which allows for smaller monthly payments and better cash flow management. Digital banks offer flexible tenures from 1 to 5 years. Non-bank lenders typically provide shorter tenures of 6 to 24 months. The tenure you qualify for depends on your business\'s financial health, cash flow projections, and the lender\'s risk assessment. Longer tenures mean lower monthly payments but higher total interest costs.',
+    answer: 'Working Capital Loans typically offer repayment periods of up to 5 years. Banks (DBS, OCBC, UOB) generally offer maximum tenures of 5 years, which allows for smaller monthly payments and better cash flow management. Digital banks offer flexible tenures from 1 to 5 years. Non-bank lenders typically provide shorter tenures of 6 to 24 months. The tenure you qualify for depends on your business&apos;s financial health, cash flow projections, and the lender&apos;s risk assessment. Longer tenures mean lower monthly payments but higher total interest costs.',
   },
 ]
 
@@ -227,7 +227,7 @@ export default function BusinessLoansPage() {
                 Working Capital Loans to Fuel Your Business Growth
               </h1>
               <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed animate-float-up-delay-2">
-                Access up to S$500,000 in working capital financing to manage daily operations, bridge cash flow gaps, and seize growth opportunities. Connect with Singapore's leading banks and financial institutions through our platform.
+                Access up to S$500,000 in working capital financing to manage daily operations, bridge cash flow gaps, and seize growth opportunities. Connect with Singapore&apos;s leading banks and financial institutions through our platform.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 animate-float-up-delay-3">
                 <Link href="/apply" className="w-full sm:w-auto">
@@ -458,7 +458,7 @@ export default function BusinessLoansPage() {
                 A Working Capital Loan is a type of financing specifically designed to help small and medium-sized enterprises (SMEs) manage their daily operational expenses, bridge cash flow gaps, and support business growth. These unsecured loans provide quick access to funds without requiring collateral, making them ideal for businesses that need immediate working capital.
               </p>
               <p className="text-lg text-gray-700 leading-relaxed mb-6 animate-slide-in-left">
-                Under Singapore's Enterprise Financing Scheme (EFS), eligible SMEs can access up to <strong>S$500,000</strong> in working capital financing. The government provides a 50% default risk share, while younger companies (incorporated within the last 5 years) enjoy a higher risk share of 70%, making it easier to secure funding.
+                Under Singapore&apos;s Enterprise Financing Scheme (EFS), eligible SMEs can access up to <strong>S$500,000</strong> in working capital financing. The government provides a 50% default risk share, while younger companies (incorporated within the last 5 years) enjoy a higher risk share of 70%, making it easier to secure funding.
               </p>
             </div>
             
@@ -617,7 +617,7 @@ export default function BusinessLoansPage() {
             
             <div className="mt-8 text-center">
               <p className="text-gray-600 mb-4">
-                <strong>Important:</strong> While most banks require 1-2 years of operating history, some lenders may consider newer businesses with strong financial projections or existing relationships. Businesses that don't meet EFS criteria may still qualify for non-EFS working capital loans from banks or alternative lenders, though terms and rates may differ. It's advisable to consult with our team to explore the best option for your specific situation.
+                <strong>Important:</strong> While most banks require 1-2 years of operating history, some lenders may consider newer businesses with strong financial projections or existing relationships. Businesses that don&apos;t meet EFS criteria may still qualify for non-EFS working capital loans from banks or alternative lenders, though terms and rates may differ. It&apos;s advisable to consult with our team to explore the best option for your specific situation.
               </p>
               <Link href="/contact">
                 <Button variant="primary" size="lg" className="inline-flex items-center justify-center gap-2">

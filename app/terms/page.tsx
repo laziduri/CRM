@@ -34,7 +34,7 @@ export default function TermsPage() {
           <Card className="prose prose-lg max-w-none">
             <div className="mb-8">
               <p className="text-gray-700 leading-relaxed">
-                These Terms and Conditions ("Terms") govern your use of the advisory services provided by Brilliance Advisory Pte. Ltd. ("Brilliance Advisory", "we", "us", or "our"). By engaging our services, you ("Client", "you", or "your") acknowledge that you have read, understood, and agree to be bound by these Terms.
+                These Terms and Conditions (&quot;Terms&quot;) govern your use of the advisory services provided by Brilliance Advisory Pte. Ltd. (&quot;Brilliance Advisory&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;). By engaging our services, you (&quot;Client&quot;, &quot;you&quot;, or &quot;your&quot;) acknowledge that you have read, understood, and agree to be bound by these Terms.
               </p>
             </div>
 
@@ -43,19 +43,19 @@ export default function TermsPage() {
               <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Definitions and Interpretation</h2>
               <div className="space-y-3 text-gray-700 leading-relaxed">
                 <p>
-                  <strong>"Advisory Services"</strong> means the financial consultancy and loan advisory services provided by Brilliance Advisory, including but not limited to assessment, consultation, and guidance relating to personal and business loan products.
+                  <strong>&quot;Advisory Services&quot;</strong> means the financial consultancy and loan advisory services provided by Brilliance Advisory, including but not limited to assessment, consultation, and guidance relating to personal and business loan products.
                 </p>
                 <p>
-                  <strong>"Client"</strong> means any individual or entity that engages Brilliance Advisory for Advisory Services.
+                  <strong>&quot;Client&quot;</strong> means any individual or entity that engages Brilliance Advisory for Advisory Services.
                 </p>
                 <p>
-                  <strong>"Lender"</strong> means any financial institution, bank, licensed moneylender, or other third-party entity that provides loan products or financing solutions.
+                  <strong>&quot;Lender&quot;</strong> means any financial institution, bank, licensed moneylender, or other third-party entity that provides loan products or financing solutions.
                 </p>
                 <p>
-                  <strong>"Loan Application"</strong> means any application submitted by the Client to a Lender for a loan product, whether submitted directly by the Client or facilitated through Brilliance Advisory.
+                  <strong>&quot;Loan Application&quot;</strong> means any application submitted by the Client to a Lender for a loan product, whether submitted directly by the Client or facilitated through Brilliance Advisory.
                 </p>
                 <p>
-                  In these Terms, unless the context otherwise requires, words in the singular include the plural and vice versa, and references to "including" are to be construed as "including without limitation".
+                  In these Terms, unless the context otherwise requires, words in the singular include the plural and vice versa, and references to &quot;including&quot; are to be construed as &quot;including without limitation&quot;.
                 </p>
               </div>
             </div>
@@ -150,7 +150,7 @@ export default function TermsPage() {
               <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Fees and Payments</h2>
               <div className="space-y-3 text-gray-700 leading-relaxed">
                 <p>
-                  Brilliance Advisory's advisory and consultation services are provided to Clients free of charge. We operate on a commission-based model where financial institutions may pay us a service fee only when you successfully secure a loan through our recommendation, subject to your explicit consent and the terms of our agreement with such institutions.
+                  Brilliance Advisory&apos;s advisory and consultation services are provided to Clients free of charge. We operate on a commission-based model where financial institutions may pay us a service fee only when you successfully secure a loan through our recommendation, subject to your explicit consent and the terms of our agreement with such institutions.
                 </p>
                 <p>
                   You acknowledge that this commission arrangement does not influence our advisory recommendations, and we maintain our commitment to prioritising your best interests in our service delivery.

@@ -24,7 +24,7 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Introduction and Scope</h2>
           <div className="space-y-4 text-gray-700 leading-relaxed">
             <p>
-              Brilliance Advisory Pte. Ltd. ("we", "us", "our", or "Brilliance Advisory") is a Singapore-based financial consultancy providing loan advisory services. This Privacy Policy explains how we collect, use, disclose, and protect your personal data in accordance with Singapore's Personal Data Protection Act 2012 ("PDPA").
+              Brilliance Advisory Pte. Ltd. (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;, or &quot;Brilliance Advisory&quot;) is a Singapore-based financial consultancy providing loan advisory services. This Privacy Policy explains how we collect, use, disclose, and protect your personal data in accordance with Singapore&apos;s Personal Data Protection Act 2012 (&quot;PDPA&quot;).
             </p>
             <p>
               This Privacy Policy applies to all personal data collected, used, disclosed, and processed by Brilliance Advisory through our website, consultations, communications, and any other services we provide. By using our services or providing your personal data to us, you acknowledge that you have read and understood this Privacy Policy.
@@ -332,7 +332,7 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Updates to This Privacy Policy</h2>
           <div className="space-y-4 text-gray-700 leading-relaxed">
             <p>
-              We may update this Privacy Policy from time to time to reflect changes in our practices, services, or legal requirements. The updated Privacy Policy will be posted on our website with a revised "Last Updated" date.
+              We may update this Privacy Policy from time to time to reflect changes in our practices, services, or legal requirements. The updated Privacy Policy will be posted on our website with a revised &quot;Last Updated&quot; date.
             </p>
             <p>
               We encourage you to review this Privacy Policy periodically to stay informed about how we collect, use, and protect your personal data. Your continued use of our services after any changes constitutes your acceptance of the updated Privacy Policy.

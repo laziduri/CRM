@@ -51,7 +51,7 @@ export default function FAQSection() {
               Quick Answers to your burning questions
             </h2>
             <p className="text-lg text-accent-gray2 mb-8">
-              Don't see your question listed?
+              Don&apos;t see your question listed?
             </p>
             <Link href="/faq">
               <Button 

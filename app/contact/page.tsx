@@ -16,7 +16,7 @@ export default function ContactPage() {
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-gradient-text">Get in Touch</h1>
           <p className="text-lg text-accent-gray2 max-w-2xl mx-auto">
-            Have a question? We're here to help. Get in touch with our team or visit our office.
+            Have a question? We&apos;re here to help. Get in touch with our team or visit our office.
           </p>
         </div>
 
@@ -33,7 +33,7 @@ export default function ContactPage() {
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">Email Us</h3>
                     <p className="text-gray-600 mb-1">admin@brillianceadvisory.sg</p>
-                    <p className="text-sm text-accent-gray2">We'll respond within 24 hours</p>
+                    <p className="text-sm text-accent-gray2">We&apos;ll respond within 24 hours</p>
                   </div>
                 </div>
               </Card>

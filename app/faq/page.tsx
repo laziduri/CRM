@@ -170,7 +170,7 @@ export default function FAQPage() {
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-gradient-text">Frequently Asked Questions</h1>
           <p className="text-lg md:text-xl text-accent-gray2 max-w-3xl mx-auto">
-            This FAQ answers the most common questions about Brilliance Advisory, Personal Loans, and Business Loans in Singapore. Whether you're exploring financing options for personal needs or seeking capital for your business, we've compiled practical information to help you understand our advisory services and the loan landscape in Singapore.
+            This FAQ answers the most common questions about Brilliance Advisory, Personal Loans, and Business Loans in Singapore. Whether you&apos;re exploring financing options for personal needs or seeking capital for your business, we&apos;ve compiled practical information to help you understand our advisory services and the loan landscape in Singapore.
           </p>
         </div>
 
@@ -180,7 +180,7 @@ export default function FAQPage() {
             <div className="mb-8">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-text">About Brilliance Advisory</h2>
               <p className="text-lg text-accent-gray2 leading-relaxed">
-                At Brilliance Advisory, we believe that securing the right financing requires more than just comparing rates. Our human-led approach combines market knowledge with personalised guidance to help you navigate Singapore's lending landscape with confidence. We work with you to understand your unique circumstances and connect you with suitable loan options from our network of trusted financial institutions.
+                At Brilliance Advisory, we believe that securing the right financing requires more than just comparing rates. Our human-led approach combines market knowledge with personalised guidance to help you navigate Singapore&apos;s lending landscape with confidence. We work with you to understand your unique circumstances and connect you with suitable loan options from our network of trusted financial institutions.
               </p>
             </div>
             <AccordionDark>
@@ -283,7 +283,7 @@ export default function FAQPage() {
         {/* Disclaimer */}
         <div className="text-center py-6 border-t border-secondary-gray3">
           <p className="text-sm text-accent-gray2 italic">
-            All information provided is general in nature. Final approvals and loan terms are subject to the respective bank's assessment and policies.
+            All information provided is general in nature. Final approvals and loan terms are subject to the respective bank&apos;s assessment and policies.
           </p>
         </div>
       </div>
