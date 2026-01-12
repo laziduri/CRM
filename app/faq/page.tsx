@@ -261,7 +261,7 @@ export default function FAQPage() {
             <div className="text-center max-w-3xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-bold mb-6 animate-gradient-text">Still Have Questions?</h2>
               <p className="text-lg text-accent-gray2 mb-6 leading-relaxed">
-                We understand that every financial situation is unique, and you may have specific questions that aren't covered in this FAQ. Our advisory team is here to provide personalised guidance tailored to your circumstances. Whether you're exploring personal financing options or seeking business capital, we can help you understand your options and navigate the application process.
+                We understand that every financial situation is unique, and you may have specific questions that aren&apos;t covered in this FAQ. Our advisory team is here to provide personalised guidance tailored to your circumstances. Whether you&apos;re exploring personal financing options or seeking business capital, we can help you understand your options and navigate the application process.
               </p>
               <p className="text-lg font-semibold text-gray-900 mb-8">
                 If you do not see your question here, speak with one of our advisors for a personalised assessment.

@@ -107,7 +107,7 @@ export default function TermsPage() {
                   Loan approvals, interest rates, loan amounts, tenure, fees, and all other terms and conditions are determined solely by the Lender based on their independent assessment of your creditworthiness, financial profile, and other factors. Each Lender has its own eligibility criteria, assessment processes, and approval policies, which are beyond our control.
                 </p>
                 <p>
-                  We make reasonable efforts to provide accurate information and guidance based on available data and our experience, but we cannot and do not guarantee outcomes, timelines, or results. All loan approvals are subject to the Lender's final assessment and credit evaluation.
+                  We make reasonable efforts to provide accurate information and guidance based on available data and our experience, but we cannot and do not guarantee outcomes, timelines, or results. All loan approvals are subject to the Lender&apos;s final assessment and credit evaluation.
                 </p>
               </div>
             </div>

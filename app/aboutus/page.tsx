@@ -123,7 +123,7 @@ export default function AboutPage() {
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Client-First Focus</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
-                Our clients' success is our success. We prioritise their best interests above all else, providing honest advice, transparent communication, and dedicated support throughout their journey.
+                Our clients&apos; success is our success. We prioritise their best interests above all else, providing honest advice, transparent communication, and dedicated support throughout their journey.
               </p>
             </Card>
 
@@ -179,7 +179,7 @@ export default function AboutPage() {
                 <div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Proper Assessment, Not Mass Applications</h3>
                   <p className="text-gray-700 leading-relaxed">
-                    Unlike online platforms that submit your application to multiple banks simultaneously, we conduct a thorough assessment of your financial profile, goals, and circumstances. We then strategically select the most suitable lenders—not all lenders—based on what's truly best for you.
+                    Unlike online platforms that submit your application to multiple banks simultaneously, we conduct a thorough assessment of your financial profile, goals, and circumstances. We then strategically select the most suitable lenders—not all lenders—based on what&apos;s truly best for you.
                   </p>
                 </div>
               </div>
