@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 60" width="180" height="60">
+  <!-- Light blue square upper left -->
+  <rect x="5" y="8" width="24" height="24" fill="#87CEEB" rx="2"/>
+  <!-- Smaller light purple rectangle -->
+  <rect x="12" y="15" width="20" height="18" fill="#DDA0DD" rx="2"/>
+  <!-- Text -->
+  <text x="40" y="38" font-family="Arial, sans-serif" font-size="26" font-weight="500" fill="#87CEEB">trust</text>
+</svg>

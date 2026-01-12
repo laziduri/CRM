@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 60" width="180" height="60">
+  <!-- Red graphical element: 5 vertical bars, middle taller -->
+  <g fill="#FF0000">
+    <rect x="5" y="18" width="4" height="18"/>
+    <rect x="11" y="12" width="4" height="24"/>
+    <rect x="17" y="8" width="4" height="28"/>
+    <rect x="23" y="12" width="4" height="24"/>
+    <rect x="29" y="18" width="4" height="18"/>
+  </g>
+  <!-- Text -->
+  <text x="38" y="38" font-family="Arial, sans-serif" font-size="26" font-weight="bold" fill="#0033CC" letter-spacing="1">UOB</text>
+</svg>

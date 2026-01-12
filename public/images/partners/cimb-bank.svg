@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" width="220" height="60">
+  <!-- Stylized C or folded ribbon emblem - geometric shape -->
+  <path d="M 8 12 L 8 20 L 4 20 L 4 28 L 8 28 L 8 36 L 12 36 L 12 28 L 16 28 L 16 20 L 12 20 L 12 12 Z" fill="#8B0000"/>
+  <path d="M 6 14 L 14 14 L 14 22 L 6 22 Z" fill="#A52A2A" opacity="0.7"/>
+  <!-- Text -->
+  <text x="22" y="32" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#8B0000" letter-spacing="1">CIMB</text>
+  <text x="22" y="48" font-family="Arial, sans-serif" font-size="18" font-weight="600" fill="#A52A2A" letter-spacing="0.5">BANK</text>
+</svg>

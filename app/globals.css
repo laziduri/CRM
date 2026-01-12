@@ -1,0 +1,683 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 255, 255, 255;
+  --background-end-rgb: 255, 255, 255;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: #FFFFFF;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Custom range input styling to match primary color */
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #1E3A5F;
+  cursor: pointer;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 2px 4px rgba(30, 58, 95, 0.3);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #1E3A5F;
+  cursor: pointer;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 2px 4px rgba(30, 58, 95, 0.3);
+}
+
+input[type="range"]::-ms-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #1E3A5F;
+  cursor: pointer;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 2px 4px rgba(30, 58, 95, 0.3);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.animate-fade-in-delay {
+  animation: fadeIn 0.8s ease-out 0.2s both;
+}
+
+.animate-fade-in-delay-2 {
+  animation: fadeIn 0.8s ease-out 0.4s both;
+}
+
+@keyframes scroll-reviews-up {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes scroll-reviews-down {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.scroll-reviews-animation-up {
+  animation: scroll-reviews-up 40s linear infinite;
+}
+
+.scroll-reviews-animation-down {
+  animation: scroll-reviews-down 40s linear infinite;
+}
+
+.scroll-reviews-paused {
+  animation-play-state: paused;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes scroll-logos {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-scroll-logos {
+  animation: scroll-logos 18s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.animate-scroll-logos:hover {
+  animation-play-state: paused;
+}
+
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-text {
+  background: linear-gradient(
+    90deg,
+    #1E3A5F 0%,
+    #0F766E 25%,
+    #14B8A6 50%,
+    #0F766E 75%,
+    #1E3A5F 100%
+  );
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 4s ease infinite;
+}
+
+.animate-gradient-text-white {
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #CCFBF1 15%,
+    #99F6E4 30%,
+    #CCFBF1 45%,
+    #ffffff 60%,
+    #E0F2FE 75%,
+    #ffffff 90%,
+    #BAE6FD 100%
+  );
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 4s ease infinite;
+}
+
+/* Modern background patterns */
+.bg-modern-grid {
+  background-image: 
+    linear-gradient(rgba(30, 58, 95, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 58, 95, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+.bg-modern-dots {
+  background-image: radial-gradient(circle, rgba(15, 118, 110, 0.1) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+.bg-gradient-modern {
+  background: linear-gradient(135deg, #1E3A5F 0%, #0F766E 50%, #1E3A5F 100%);
+}
+
+.bg-gradient-modern-light {
+  background: linear-gradient(135deg, #E0F2FE 0%, #CCFBF1 50%, #E0F2FE 100%);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Radial glow effect */
+.radial-glow-teal {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(20, 184, 166, 0.15) 0%,
+    rgba(15, 118, 110, 0.08) 40%,
+    rgba(30, 58, 95, 0.03) 70%,
+    transparent 100%
+  );
+  filter: blur(60px);
+}
+
+.radial-glow-teal-intense {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(20, 184, 166, 0.2) 0%,
+    rgba(15, 118, 110, 0.1) 50%,
+    transparent 100%
+  );
+  filter: blur(40px);
+}
+
+/* Dotted background pattern - dark version */
+.bg-dots-pattern {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.2) 1.5px, transparent 1.5px);
+  background-size: 50px 50px;
+  background-position: 0 0;
+}
+
+/* Dotted background pattern - white version with brand colors (stars) */
+.bg-dots-pattern-white {
+  background-image: radial-gradient(circle, rgba(15, 118, 110, 0.2) 1.5px, transparent 1.5px),
+                    radial-gradient(circle, rgba(30, 58, 95, 0.12) 1px, transparent 1px),
+                    radial-gradient(circle, rgba(14, 184, 166, 0.1) 2px, transparent 2px);
+  background-size: 50px 50px, 35px 35px, 70px 70px;
+  background-position: 0 0, 25px 25px, 10px 10px;
+}
+
+/* Animated stars background - twinkling effect */
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes float-stars {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(10px, -10px);
+  }
+  50% {
+    transform: translate(-5px, -20px);
+  }
+  75% {
+    transform: translate(-10px, -10px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes twinkle-delayed-1 {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes twinkle-delayed-2 {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.bg-animated-stars {
+  position: relative;
+  background-image: 
+    radial-gradient(circle, rgba(15, 118, 110, 0.6) 2px, transparent 2px),
+    radial-gradient(circle, rgba(30, 58, 95, 0.5) 1.5px, transparent 1.5px),
+    radial-gradient(circle, rgba(14, 184, 166, 0.55) 2.5px, transparent 2.5px),
+    radial-gradient(circle, rgba(15, 118, 110, 0.4) 1.5px, transparent 1.5px),
+    radial-gradient(circle, rgba(30, 58, 95, 0.45) 2px, transparent 2px),
+    radial-gradient(circle, rgba(14, 184, 166, 0.5) 1.8px, transparent 1.8px);
+  background-size: 50px 50px, 35px 35px, 65px 65px, 45px 45px, 40px 40px, 55px 55px;
+  background-position: 0 0, 25px 25px, 12px 12px, 40px 40px, 18px 18px, 32px 32px;
+  animation: float-stars 20s ease-in-out infinite, twinkle 3s ease-in-out infinite;
+}
+
+.bg-animated-stars-layer-2 {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle, rgba(14, 184, 166, 0.5) 1.5px, transparent 1.5px),
+    radial-gradient(circle, rgba(15, 118, 110, 0.4) 2px, transparent 2px),
+    radial-gradient(circle, rgba(30, 58, 95, 0.35) 2.2px, transparent 2.2px),
+    radial-gradient(circle, rgba(14, 184, 166, 0.45) 1.8px, transparent 1.8px);
+  background-size: 48px 48px, 42px 42px, 58px 58px, 52px 52px;
+  background-position: 15px 15px, 38px 38px, 8px 8px, 28px 28px;
+  animation: float-stars 25s ease-in-out infinite reverse, twinkle-delayed-1 4s ease-in-out infinite;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.bg-animated-stars-layer-3 {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle, rgba(30, 58, 95, 0.45) 1.8px, transparent 1.8px),
+    radial-gradient(circle, rgba(14, 184, 166, 0.5) 2px, transparent 2px),
+    radial-gradient(circle, rgba(15, 118, 110, 0.4) 1.6px, transparent 1.6px);
+  background-size: 60px 60px, 46px 46px, 54px 54px;
+  background-position: 22px 22px, 45px 45px, 10px 10px;
+  animation: float-stars 30s ease-in-out infinite, twinkle-delayed-2 3.5s ease-in-out infinite;
+  opacity: 1;
+  pointer-events: none;
+}
+
+/* Text animations - words coming down */
+@keyframes word-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-100px) scale(0.8);
+    filter: blur(10px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(10px) scale(1.05);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.animate-word-drop {
+  animation: word-drop 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  opacity: 0;
+}
+
+.animate-word-drop-delay-1 {
+  animation: word-drop 2s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s forwards;
+  opacity: 0;
+}
+
+.animate-word-drop-delay-2 {
+  animation: word-drop 2s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s forwards;
+  opacity: 0;
+}
+
+.animate-word-drop-delay-3 {
+  animation: word-drop 2s cubic-bezier(0.34, 1.56, 0.64, 1) 1.2s forwards;
+  opacity: 0;
+}
+
+.animate-word-drop-delay-4 {
+  animation: word-drop 2s cubic-bezier(0.34, 1.56, 0.64, 1) 1.6s forwards;
+  opacity: 0;
+}
+
+.animate-word-drop-delay-5 {
+  animation: word-drop 2s cubic-bezier(0.34, 1.56, 0.64, 1) 2s forwards;
+  opacity: 0;
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up-delay {
+  animation: fade-in-up 1.5s ease-out 3s both;
+  opacity: 0;
+}
+
+.animate-fade-in-up-delay-2 {
+  animation: fade-in-up 1.5s ease-out 3.5s both;
+  opacity: 0;
+}
+
+.animate-fade-in-up-delay-3 {
+  animation: fade-in-up 1.5s ease-out 4s both;
+  opacity: 0;
+}
+
+/* Business Loan Page Unique Animations */
+@keyframes slide-in-from-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes slide-in-from-right {
+  0% {
+    opacity: 0;
+    transform: translateX(100px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  60% {
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes rotate-in {
+  0% {
+    opacity: 0;
+    transform: rotate(-10deg) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+@keyframes float-up {
+  0% {
+    opacity: 0;
+    transform: translateY(60px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(180deg);
+  }
+}
+
+.animate-slide-in-left {
+  animation: slide-in-from-left 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  opacity: 0;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-from-right 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  opacity: 0;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  opacity: 0;
+}
+
+.animate-rotate-in {
+  animation: rotate-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  opacity: 0;
+}
+
+.animate-float-up {
+  animation: float-up 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  opacity: 0;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 3s infinite;
+}
+
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+/* Staggered animations for cards */
+.animate-float-up-delay-1 {
+  animation: float-up 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s forwards;
+  opacity: 0;
+}
+
+.animate-float-up-delay-2 {
+  animation: float-up 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s forwards;
+  opacity: 0;
+}
+
+.animate-float-up-delay-3 {
+  animation: float-up 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s forwards;
+  opacity: 0;
+}
+
+.animate-float-up-delay-4 {
+  animation: float-up 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s forwards;
+  opacity: 0;
+}
+
+.animate-float-up-delay-5 {
+  animation: float-up 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s forwards;
+  opacity: 0;
+}
+
+.animate-float-up-delay-6 {
+  animation: float-up 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s forwards;
+  opacity: 0;
+}
+
+/* Enhanced animated stars for business loan page */
+.bg-business-stars {
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-business-stars::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(2px 2px at 20% 30%, rgba(20, 184, 166, 0.6), transparent),
+    radial-gradient(2px 2px at 60% 70%, rgba(15, 118, 110, 0.7), transparent),
+    radial-gradient(1px 1px at 50% 50%, rgba(30, 58, 95, 0.5), transparent),
+    radial-gradient(1px 1px at 80% 10%, rgba(20, 184, 166, 0.6), transparent),
+    radial-gradient(2px 2px at 90% 50%, rgba(15, 118, 110, 0.5), transparent),
+    radial-gradient(1px 1px at 33% 80%, rgba(30, 58, 95, 0.6), transparent),
+    radial-gradient(2px 2px at 70% 20%, rgba(20, 184, 166, 0.7), transparent),
+    radial-gradient(1px 1px at 15% 60%, rgba(15, 118, 110, 0.5), transparent);
+  background-repeat: repeat;
+  background-size: 200% 200%;
+  animation: float-stars 30s ease-in-out infinite, twinkle 4s ease-in-out infinite;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.bg-business-stars::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(1.5px 1.5px at 40% 20%, rgba(14, 184, 166, 0.6), transparent),
+    radial-gradient(1.5px 1.5px at 25% 80%, rgba(15, 118, 110, 0.5), transparent),
+    radial-gradient(1px 1px at 85% 40%, rgba(30, 58, 95, 0.6), transparent),
+    radial-gradient(2px 2px at 10% 50%, rgba(20, 184, 166, 0.7), transparent),
+    radial-gradient(1px 1px at 55% 90%, rgba(15, 118, 110, 0.5), transparent),
+    radial-gradient(1.5px 1.5px at 75% 10%, rgba(30, 58, 95, 0.6), transparent);
+  background-repeat: repeat;
+  background-size: 150% 150%;
+  animation: float-stars 25s ease-in-out infinite reverse, twinkle-delayed-1 5s ease-in-out infinite;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Dynamic Background System - Particle Animations */
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translate(-50%, -50%) translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(-50%, -50%) translate(10px, -15px) scale(1.1);
+  }
+  50% {
+    transform: translate(-50%, -50%) translate(-8px, -25px) scale(0.9);
+  }
+  75% {
+    transform: translate(-50%, -50%) translate(-12px, -10px) scale(1.05);
+  }
+}
+
+/* Subtle opacity animation for twinkling effect */
+@keyframes particleTwinkle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Ensure background doesn't interfere with content */
+@media (prefers-reduced-motion: reduce) {
+  @keyframes particleFloat {
+    0%, 100% {
+      transform: translate(-50%, -50%);
+    }
+  }
+  
+  @keyframes particleTwinkle {
+    0%, 100% {
+      opacity: 1;
+    }
+  }
+}

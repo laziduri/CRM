@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 60" width="150" height="60">
+  <!-- Red square with white star/cross -->
+  <rect x="5" y="10" width="28" height="28" fill="#FF0000" rx="2"/>
+  <!-- Four-pointed star/cross symbol -->
+  <path d="M 19 15 L 19 19 L 15 19 L 15 23 L 19 23 L 19 27 L 23 27 L 23 23 L 27 23 L 27 19 L 23 19 L 23 15 Z" fill="white"/>
+  <!-- Text -->
+  <text x="38" y="38" font-family="Arial, sans-serif" font-size="26" font-weight="bold" fill="#000000" letter-spacing="1">DBS</text>
+</svg>
