@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts'
-import { DollarSign, TrendingUp, Calculator, Calendar } from 'lucide-react'
+import { DollarSign, TrendingUp, Calculator, Calendar, Info, ChevronDown } from 'lucide-react'
 import Card from '@/components/ui/Card'
 import Slider from '@/components/ui/Slider'
 import Input from '@/components/ui/Input'
@@ -15,10 +15,50 @@ const CHART_COLORS = {
   interest: '#14B8A6', // Teal light
 }
 
+// Singapore bank loan interest rate ranges (2024-2025)
+const loanTypes = [
+  {
+    name: 'Personal Loan',
+    description: 'Unsecured personal financing for individuals',
+    rateRange: '2.65% - 4.19% p.a. (EIR)',
+    flatRateRange: '1.38% - 2.00% p.a. (flat)',
+    banks: 'DBS, OCBC, UOB',
+  },
+  {
+    name: 'Business Loan (EFS)',
+    description: 'Government-backed SME working capital loans',
+    rateRange: '4.5% - 6.5% p.a.',
+    flatRateRange: 'Typically lower with government risk-sharing',
+    banks: 'Participating Financial Institutions',
+  },
+  {
+    name: 'Business Loan (Unsecured)',
+    description: 'Commercial loans without collateral',
+    rateRange: '7% - 12% p.a.',
+    flatRateRange: 'Higher rates, no security required',
+    banks: 'DBS, UOB, OCBC, Standard Chartered',
+  },
+  {
+    name: 'Secured Business Loan',
+    description: 'Loans with property/equipment as collateral',
+    rateRange: '4% - 7% p.a.',
+    flatRateRange: 'Lower rates with security',
+    banks: 'All major banks',
+  },
+  {
+    name: 'Trade Financing',
+    description: 'Invoice financing and trade credit',
+    rateRange: '6% - 9% p.a.',
+    flatRateRange: 'Effective rates vary by terms',
+    banks: 'Trade finance specialists',
+  },
+]
+
 export default function LoanCalculator() {
   const [loanAmount, setLoanAmount] = useState(50000)
   const [interestRate, setInterestRate] = useState(4.5)
   const [tenure, setTenure] = useState(36)
+  const [showLoanTypes, setShowLoanTypes] = useState(false)
 
   const calculation = calculateLoanPayment(loanAmount, interestRate, tenure)
 
@@ -54,16 +94,82 @@ export default function LoanCalculator() {
           />
 
           <Slider
-            label="Interest Rate (p.a.)"
+            label="Interest Rate (EIR p.a.)"
             value={interestRate}
             min={1}
             max={15}
             step={0.1}
-            formatValue={(v) => `${v.toFixed(2)}%`}
+            formatValue={(v) => `${v.toFixed(2)}% EIR`}
             onChange={(e) => {
               setInterestRate(parseFloat(e.target.value))
             }}
           />
+          <p className="text-xs text-gray-500 -mt-2 mb-2">
+            EIR (Effective Interest Rate) reflects the true cost including how interest compounds over time
+          </p>
+
+          {/* Loan Types Info Button */}
+          <div className="relative">
+            <button
+              type="button"
+              onMouseEnter={() => setShowLoanTypes(true)}
+              onMouseLeave={() => setShowLoanTypes(false)}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary/5 hover:bg-primary/10 border border-primary/20 rounded-lg text-primary font-medium transition-all duration-200 group"
+            >
+              <Info className="w-4 h-4" />
+              <span className="text-sm">View Singapore Loan Types & Interest Rates</span>
+              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showLoanTypes ? 'rotate-180' : ''}`} />
+            </button>
+
+            {/* Hover Tooltip/Dropdown */}
+            {showLoanTypes && (
+              <div 
+                className="absolute top-full left-0 right-0 mt-2 z-50 bg-white rounded-xl shadow-2xl border-2 border-primary/20 overflow-hidden animate-fade-in"
+                onMouseEnter={() => setShowLoanTypes(true)}
+                onMouseLeave={() => setShowLoanTypes(false)}
+              >
+                <div className="p-4 bg-gradient-to-r from-primary to-teal">
+                  <h3 className="text-white font-bold text-lg">Singapore Loan Types & Interest Rates</h3>
+                  <p className="text-white/90 text-sm mt-1">Rates are indicative and subject to bank assessment (2024-2025)</p>
+                </div>
+                <div className="max-h-[400px] overflow-y-auto">
+                  {loanTypes.map((loan, index) => (
+                    <div 
+                      key={index}
+                      className={`p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors ${index === loanTypes.length - 1 ? 'border-b-0' : ''}`}
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                          <h4 className="font-bold text-gray-900 mb-1">{loan.name}</h4>
+                          <p className="text-sm text-gray-600 mb-2">{loan.description}</p>
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded">EIR:</span>
+                              <span className="text-sm font-medium text-gray-900">{loan.rateRange}</span>
+                            </div>
+                            {loan.flatRateRange && (
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-semibold text-teal bg-teal/10 px-2 py-0.5 rounded">Flat:</span>
+                                <span className="text-sm text-gray-700">{loan.flatRateRange}</span>
+                              </div>
+                            )}
+                            <div className="text-xs text-gray-500 mt-2">
+                              <strong>Banks:</strong> {loan.banks}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="p-3 bg-gray-50 border-t border-gray-200">
+                  <p className="text-xs text-gray-600 text-center">
+                    <strong>Note:</strong> Actual rates depend on credit profile, loan amount, tenure, and lender assessment. EIR (Effective Interest Rate) reflects the true cost including fees.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
 
           <Slider
             label="Loan Tenure (months)"

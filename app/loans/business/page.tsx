@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { 
   Briefcase, 
@@ -198,15 +197,6 @@ const faqs = [
 ]
 
 export default function BusinessLoansPage() {
-  const [cardsFanned, setCardsFanned] = useState(false)
-
-  useEffect(() => {
-    // Trigger animation after component mounts
-    const timer = setTimeout(() => {
-      setCardsFanned(true)
-    }, 300)
-    return () => clearTimeout(timer)
-  }, [])
 
   return (
     <div className="min-h-screen bg-white">
@@ -219,9 +209,9 @@ export default function BusinessLoansPage() {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-teal-light/5 rounded-full blur-3xl opacity-30 animate-float"></div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div className="max-w-4xl mx-auto text-center">
             {/* Left Side - Text Content */}
-            <div className="text-left">
+            <div className="text-left lg:text-center">
               <Badge variant="primary" className="mb-6 animate-scale-in">Business Financing</Badge>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-gradient-text animate-float-up">
                 Working Capital Loans to Fuel Your Business Growth
@@ -229,7 +219,7 @@ export default function BusinessLoansPage() {
               <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed animate-float-up-delay-2">
                 Access up to S$500,000 in working capital financing to manage daily operations, bridge cash flow gaps, and seize growth opportunities. Connect with Singapore&apos;s leading banks and financial institutions through our platform.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 animate-float-up-delay-3">
+              <div className="flex flex-col sm:flex-row gap-4 animate-float-up-delay-3 justify-center lg:justify-center">
                 <Link href="/apply" className="w-full sm:w-auto">
                   <Button variant="primary" size="lg" className="text-lg px-8 py-6 w-full sm:w-auto min-w-[240px] inline-flex items-center justify-center gap-2">
                     Get Started Today
@@ -241,203 +231,6 @@ export default function BusinessLoansPage() {
                     Speak to an Expert
                   </Button>
                 </Link>
-              </div>
-            </div>
-
-            {/* Right Side - Loan Offer Cards (Photo-like visual) */}
-            <div className="relative h-auto md:h-[380px] flex flex-col md:block items-center md:items-start justify-center mb-8 md:mb-0 gap-4 md:gap-0">
-              {/* Mobile: Stack vertically without overlap */}
-              <div className="md:hidden w-full max-w-[280px] space-y-4">
-                {/* First Card - DBS */}
-                <div className="w-full bg-white rounded-lg shadow-xl p-4 border border-gray-100">
-                  <div className="flex items-center mb-3">
-                    <div className="text-lg font-bold text-primary">DBS</div>
-                  </div>
-                  <h3 className="text-base font-bold text-gray-900 mb-4">Business Term Loan</h3>
-                  <div className="space-y-3 mb-4">
-                    <div>
-                      <div className="text-xs text-teal-600 mb-0.5">Approved Loan</div>
-                      <div className="text-lg font-bold text-gray-900">$100,000</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-teal-600 mb-0.5">Monthly Cost</div>
-                      <div className="text-lg font-bold text-gray-900">$3,155</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-teal-600 mb-0.5">Monthly Rate</div>
-                      <div className="text-lg font-bold text-gray-900">0.90%</div>
-                    </div>
-                  </div>
-                  {/* Improved buttons */}
-                  <div className="flex gap-2 pointer-events-none">
-                    <div className="flex-1 px-4 py-2.5 text-xs font-semibold rounded-lg bg-white border-2 border-teal/30 bg-gradient-to-r from-teal/5 to-teal-light/5 text-teal-700 shadow-sm">
-                      MORE INFO
-                    </div>
-                    <div className="flex-1 px-4 py-2.5 text-xs font-bold rounded-lg bg-gradient-to-r from-teal to-teal-light text-white shadow-md">
-                      CHOOSE OFFER
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Second Card - CIMB */}
-                <div className="w-full bg-white rounded-lg shadow-xl p-4 border border-gray-100">
-                  <div className="flex items-center mb-3">
-                    <div className="text-lg font-bold text-red-600">CIMB</div>
-                  </div>
-                  <h3 className="text-base font-bold text-gray-900 mb-4">Working Capital Loan</h3>
-                  <div className="space-y-3 mb-4">
-                    <div>
-                      <div className="text-xs text-teal-600 mb-0.5">Approved Loan</div>
-                      <div className="text-lg font-bold text-gray-900">$100,000</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-teal-600 mb-0.5">Monthly Cost</div>
-                      <div className="text-lg font-bold text-gray-900">$3,160</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-teal-600 mb-0.5">Monthly Rate</div>
-                      <div className="text-lg font-bold text-gray-900">0.91%</div>
-                    </div>
-                  </div>
-                  {/* Improved buttons */}
-                  <div className="flex gap-2 pointer-events-none">
-                    <div className="flex-1 px-4 py-2.5 text-xs font-semibold rounded-lg bg-white border-2 border-teal/30 bg-gradient-to-r from-teal/5 to-teal-light/5 text-teal-700 shadow-sm">
-                      MORE INFO
-                    </div>
-                    <div className="flex-1 px-4 py-2.5 text-xs font-bold rounded-lg bg-gradient-to-r from-teal to-teal-light text-white shadow-md">
-                      CHOOSE OFFER
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Third Card - CIMB */}
-                <div className="w-full bg-white rounded-lg shadow-xl p-4 border border-gray-100">
-                  <div className="flex items-center mb-3">
-                    <div className="text-lg font-bold text-red-600">CIMB</div>
-                  </div>
-                  <h3 className="text-base font-bold text-gray-900 mb-4">Working Capital Loan</h3>
-                  <div className="space-y-3 mb-4">
-                    <div>
-                      <div className="text-xs text-teal-600 mb-0.5">Approved Loan</div>
-                      <div className="text-lg font-bold text-gray-900">$100,000</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-teal-600 mb-0.5">Monthly Cost</div>
-                      <div className="text-lg font-bold text-gray-900">$3,160</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-teal-600 mb-0.5">Monthly Rate</div>
-                      <div className="text-lg font-bold text-gray-900">0.91%</div>
-                    </div>
-                  </div>
-                  {/* Improved buttons */}
-                  <div className="flex gap-2 pointer-events-none">
-                    <div className="flex-1 px-4 py-2.5 text-xs font-semibold rounded-lg bg-white border-2 border-teal/30 bg-gradient-to-r from-teal/5 to-teal-light/5 text-teal-700 shadow-sm">
-                      MORE INFO
-                    </div>
-                    <div className="flex-1 px-4 py-2.5 text-xs font-bold rounded-lg bg-gradient-to-r from-teal to-teal-light text-white shadow-md">
-                      CHOOSE OFFER
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Desktop: Overlapping cards with fan-out animation */}
-              <div className="hidden md:block relative w-full max-w-[320px] h-[420px] ml-auto">
-                {/* Third Card - UOB (Top, Behind) */}
-                <div 
-                  className={`absolute w-[260px] bg-white rounded-xl shadow-xl p-5 border border-gray-100 transition-all duration-1000 ease-out ${
-                    cardsFanned 
-                      ? 'top-0 right-12 rotate-[-4deg] z-10 opacity-90' 
-                      : 'bottom-0 left-0 rotate-0 z-10 opacity-60'
-                  }`}
-                >
-                  <div className="flex items-center mb-3">
-                    <div className="text-lg font-bold text-primary">UOB</div>
-                  </div>
-                  <h3 className="text-base font-bold text-gray-900 mb-4">Business Term Loan</h3>
-                  <div className="space-y-3">
-                    <div>
-                      <div className="text-xs text-teal-600 mb-0.5">Approved Loan</div>
-                      <div className="text-lg font-bold text-gray-900">$100,000</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-teal-600 mb-0.5">Monthly Cost</div>
-                      <div className="text-lg font-bold text-gray-900">$3,158</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-teal-600 mb-0.5">Monthly Rate</div>
-                      <div className="text-lg font-bold text-gray-900">0.89%</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* First Card - DBS (Middle) */}
-                <div 
-                  className={`absolute w-[260px] bg-white rounded-xl shadow-xl p-5 border border-gray-100 transition-all duration-1000 ease-out ${
-                    cardsFanned 
-                      ? 'top-[40px] right-6 rotate-[-2deg] z-20 opacity-95' 
-                      : 'bottom-0 left-0 rotate-0 z-20 opacity-75'
-                  }`}
-                  style={{ transitionDelay: cardsFanned ? '0.1s' : '0s' }}
-                >
-                  <div className="flex items-center mb-3">
-                    <div className="text-lg font-bold text-primary">DBS</div>
-                  </div>
-                  <h3 className="text-base font-bold text-gray-900 mb-4">Business Term Loan</h3>
-                  <div className="space-y-3 mb-4">
-                    <div>
-                      <div className="text-xs text-teal-600 mb-0.5">Approved Loan</div>
-                      <div className="text-lg font-bold text-gray-900">$100,000</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-teal-600 mb-0.5">Monthly Cost</div>
-                      <div className="text-lg font-bold text-gray-900">$3,155</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-teal-600 mb-0.5">Monthly Rate</div>
-                      <div className="text-lg font-bold text-gray-900">0.90%</div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Second Card - CIMB (Bottom, Front) - Main visible card */}
-                <div 
-                  className={`absolute w-[260px] bg-white rounded-xl shadow-2xl p-5 border border-gray-100 transition-all duration-1000 ease-out ${
-                    cardsFanned 
-                      ? 'bottom-0 left-0 rotate-[3deg] z-30' 
-                      : 'bottom-0 left-0 rotate-0 z-30'
-                  }`}
-                  style={{ transitionDelay: cardsFanned ? '0.2s' : '0s' }}
-                >
-                  <div className="flex items-center mb-3">
-                    <div className="text-lg font-bold text-red-600">CIMB</div>
-                  </div>
-                  <h3 className="text-base font-bold text-gray-900 mb-4">Working Capital Loan</h3>
-                  <div className="space-y-3 mb-4">
-                    <div>
-                      <div className="text-xs text-teal-600 mb-0.5">Approved Loan</div>
-                      <div className="text-lg font-bold text-gray-900">$100,000</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-teal-600 mb-0.5">Monthly Cost</div>
-                      <div className="text-lg font-bold text-gray-900">$3,160</div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-teal-600 mb-0.5">Monthly Rate</div>
-                      <div className="text-lg font-bold text-gray-900">0.91%</div>
-                    </div>
-                  </div>
-                  {/* Improved buttons */}
-                  <div className="flex gap-2 pointer-events-none">
-                    <div className="flex-1 px-4 py-2.5 text-xs font-semibold rounded-lg bg-gradient-to-r from-teal/5 to-teal-light/5 border-2 border-teal/30 text-teal-700 shadow-sm">
-                      MORE INFO
-                    </div>
-                    <div className="flex-1 px-4 py-2.5 text-xs font-bold rounded-lg bg-gradient-to-r from-teal to-teal-light text-white shadow-md">
-                      CHOOSE OFFER
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -809,34 +602,41 @@ export default function BusinessLoansPage() {
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl opacity-40 animate-pulse-glow" style={{ animationDelay: '1s' }}></div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-text animate-rotate-in">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+            {/* Left Side - Text Content */}
+            <div className="flex flex-col justify-center">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight animate-gradient-text">
                 Frequently Asked Questions
               </h2>
-            </div>
-            
-            <AccordionDark>
-              {faqs.map((faq) => (
-                <AccordionItemDark 
-                  key={faq.number} 
-                  number={faq.number} 
-                  title={faq.question}
-                  defaultOpen={faq.number === 1}
-                >
-                  <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
-                </AccordionItemDark>
-              ))}
-            </AccordionDark>
-            
-            <div className="mt-12 text-center">
-              <p className="text-gray-600 mb-4">Still have questions?</p>
+              <p className="text-lg text-gray-600 mb-8">
+                Still have questions?
+              </p>
               <Link href="/contact">
-                <Button variant="primary" size="lg" className="inline-flex items-center justify-center gap-2">
+                <Button 
+                  variant="primary" 
+                  size="lg" 
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2"
+                >
                   Contact Us
                   <ArrowRight className="w-5 h-5" />
                 </Button>
               </Link>
+            </div>
+
+            {/* Right Side - FAQ Accordions */}
+            <div>
+              <AccordionDark>
+                {faqs.map((faq) => (
+                  <AccordionItemDark 
+                    key={faq.number} 
+                    number={faq.number} 
+                    title={faq.question}
+                    defaultOpen={false}
+                  >
+                    <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
+                  </AccordionItemDark>
+                ))}
+              </AccordionDark>
             </div>
           </div>
         </div>

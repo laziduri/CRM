@@ -1,6 +1,8 @@
+import Link from 'next/link'
 import ContactForm from '@/components/forms/ContactForm'
 import Card from '@/components/ui/Card'
-import { Mail, Phone, MapPin, Clock } from 'lucide-react'
+import Button from '@/components/ui/Button'
+import { Mail, Phone, MapPin, Clock, ArrowRight, FileText, Users, TrendingUp, Zap, UserCheck } from 'lucide-react'
 
 export default function ContactPage() {
   return (
@@ -109,10 +111,150 @@ export default function ContactPage() {
           </div>
 
           {/* Right Column - Contact Form */}
-          <div>
+          <div id="contact-form">
             <ContactForm />
           </div>
         </div>
+
+        {/* Partnership Section */}
+        <section className="mt-20 mb-16">
+          <Card className="bg-gradient-to-br from-primary/5 via-white to-teal/5 border-2 border-primary/20 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal/5 rounded-full blur-3xl -ml-32 -mb-32"></div>
+            
+            <div className="relative z-10 p-8 md:p-12">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div>
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20 mb-6">
+                    <UserCheck className="w-5 h-5 text-primary" />
+                    <span className="text-sm font-semibold text-primary">Strategic Partnerships</span>
+                  </div>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-4">
+                    Partner With Us
+                  </h2>
+                  <p className="text-lg text-gray-700 mb-6 leading-relaxed">
+                    We&apos;re always looking to collaborate with financial institutions, service providers, and businesses that share our commitment to excellence and client-first service. Let&apos;s explore how we can work together.
+                  </p>
+                  <div className="space-y-4 mb-6">
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Users className="w-4 h-4 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-1">Financial Institutions</h3>
+                        <p className="text-gray-600 text-sm">Partner with us to expand your reach and connect with qualified clients.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <TrendingUp className="w-4 h-4 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-1">Service Providers</h3>
+                        <p className="text-gray-600 text-sm">Collaborate on complementary services that benefit our mutual clients.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Zap className="w-4 h-4 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-1">Business Partners</h3>
+                        <p className="text-gray-600 text-sm">Join our network and create value together for businesses and individuals.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <Link href="#contact-form">
+                    <Button variant="primary" size="lg" className="w-full sm:w-auto">
+                      Discuss Partnership
+                      <ArrowRight className="w-5 h-5 ml-2 inline" />
+                    </Button>
+                  </Link>
+                </div>
+                <div className="lg:pl-8">
+                  <div className="bg-white rounded-xl p-8 border-2 border-gray-100 shadow-lg">
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">Why Partner With Us?</h3>
+                    <ul className="space-y-3">
+                      <li className="flex items-start gap-3">
+                        <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                        <p className="text-gray-700">Established network of clients seeking financing solutions</p>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                        <p className="text-gray-700">Transparent and ethical business practices</p>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                        <p className="text-gray-700">Dedicated partnership management and support</p>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </section>
+
+        {/* Apply Loan Section */}
+        <section className="mb-12">
+          <Card className="bg-gradient-to-r from-primary to-teal text-white overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -mr-48 -mt-48"></div>
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -ml-48 -mb-48"></div>
+            
+            <div className="relative z-10 p-8 md:p-12">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div>
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 rounded-full border border-white/30 mb-6 backdrop-blur-sm">
+                    <FileText className="w-5 h-5 text-white" />
+                    <span className="text-sm font-semibold text-white">Get Started</span>
+                  </div>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+                    Ready to Apply for a Loan?
+                  </h2>
+                  <p className="text-lg text-white/90 mb-6 leading-relaxed">
+                    Start your loan application process today. Our team will guide you through every step, from initial assessment to final approval.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Link href="/apply">
+                      <Button variant="secondary" size="lg" className="bg-white text-primary hover:bg-gray-100 w-full sm:w-auto">
+                        Apply Now
+                        <ArrowRight className="w-5 h-5 ml-2 inline" />
+                      </Button>
+                    </Link>
+                    <Link href="/loans/personal">
+                      <Button variant="outline" size="lg" className="border-2 border-white text-white hover:bg-white/10 w-full sm:w-auto">
+                        Browse Loans
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+                <div className="lg:pl-8">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/20">
+                    <h3 className="text-xl font-bold text-white mb-4">What to Expect</h3>
+                    <ul className="space-y-3">
+                      <li className="flex items-start gap-3">
+                        <div className="w-2 h-2 bg-white rounded-full mt-2 flex-shrink-0"></div>
+                        <p className="text-white/90">Comprehensive assessment of your financial profile</p>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <div className="w-2 h-2 bg-white rounded-full mt-2 flex-shrink-0"></div>
+                        <p className="text-white/90">Strategic recommendations tailored to your needs</p>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <div className="w-2 h-2 bg-white rounded-full mt-2 flex-shrink-0"></div>
+                        <p className="text-white/90">Expert guidance through the application process</p>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <div className="w-2 h-2 bg-white rounded-full mt-2 flex-shrink-0"></div>
+                        <p className="text-white/90">Ongoing support until loan disbursement</p>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </section>
       </div>
     </div>
   )

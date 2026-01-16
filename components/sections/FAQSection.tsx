@@ -3,7 +3,8 @@
 import Link from 'next/link'
 import AccordionDark, { AccordionItemDark } from '@/components/ui/AccordionDark'
 import Button from '@/components/ui/Button'
-import { ArrowRight } from 'lucide-react'
+import Card from '@/components/ui/Card'
+import { ArrowRight, MessageCircle } from 'lucide-react'
 
 const faqs = [
   {
@@ -73,13 +74,49 @@ export default function FAQSection() {
                   key={faq.number} 
                   number={faq.number} 
                   title={faq.question}
-                  defaultOpen={faq.number === 1}
+                  defaultOpen={false}
                 >
                   <p>{faq.answer}</p>
                 </AccordionItemDark>
               ))}
             </AccordionDark>
           </div>
+        </div>
+
+        {/* Ask an Assistant Section */}
+        <div className="mt-16 max-w-4xl mx-auto">
+          <Card className="p-8 md:p-10 text-center">
+            {/* Icon */}
+            <div className="flex justify-center mb-6">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+                <MessageCircle className="w-8 h-8 text-primary" />
+              </div>
+            </div>
+
+            {/* Heading */}
+            <h3 className="text-2xl md:text-3xl font-bold text-primary mb-4">
+              Don&apos;t see your question here?
+            </h3>
+
+            {/* Description */}
+            <p className="text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+              Our AI assistant can help answer your questions about loans, eligibility, and our services. For personalized advice tailored to your specific situation, our experienced advisors are ready to help.
+            </p>
+
+            {/* Button */}
+            <div className="flex justify-center">
+              <Link href="/contact">
+                <Button 
+                  variant="primary" 
+                  size="lg"
+                  className="inline-flex items-center gap-2"
+                >
+                  Speak to an Advisor
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              </Link>
+            </div>
+          </Card>
         </div>
       </div>
     </section>

@@ -4,6 +4,7 @@ import React from 'react'
 import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
+import AIChatbot from '@/components/layout/AIChatbot'
 
 const DynamicBackground = dynamic(() => import('@/components/DynamicBackground'), {
   ssr: false,
@@ -28,6 +29,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <AIChatbot />
       </body>
     </html>
   )

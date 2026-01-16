@@ -14,7 +14,7 @@ export default function Header() {
     { href: '/aboutus', label: 'About' },
     { href: '/contact', label: 'Contact' },
     { href: '/faq', label: 'FAQ' },
-    { href: '/blog', label: 'Resources' },
+    { href: '/resources', label: 'Resources' },
   ]
 
   const loanLinks = [
@@ -47,19 +47,22 @@ export default function Header() {
               onMouseEnter={() => setIsLoansDropdownOpen(true)}
               onMouseLeave={() => setIsLoansDropdownOpen(false)}
             >
-              <Link
-                href="/loans"
+              <button
                 className="text-gray-700 hover:text-primary transition-colors font-medium flex items-center gap-1"
               >
                 Loans
                 <ChevronDown size={16} className={`transition-transform ${isLoansDropdownOpen ? 'rotate-180' : ''}`} />
-              </Link>
+              </button>
               {isLoansDropdownOpen && (
                 <>
-                  {/* Invisible hover bridge to cover the gap */}
-                  <div className="absolute top-full left-0 w-full h-2"></div>
+                  {/* Invisible hover bridge to cover the gap between button and menu */}
+                  <div className="absolute top-full left-0 w-48 h-4"></div>
                   {/* Dropdown Menu */}
-                  <div className="absolute top-full left-0 w-48 z-50 mt-2">
+                  <div 
+                    className="absolute top-full left-0 w-48 z-50 mt-2"
+                    onMouseEnter={() => setIsLoansDropdownOpen(true)}
+                    onMouseLeave={() => setIsLoansDropdownOpen(false)}
+                  >
                     <div className="bg-white rounded-lg shadow-xl border border-secondary-gray3/50 py-2">
                       {loanLinks.map((link) => (
                         <Link
@@ -124,13 +127,9 @@ export default function Header() {
               
               {/* Mobile Loans Menu */}
               <div className="space-y-2">
-                <Link
-                  href="/loans"
-                  className="text-gray-700 hover:text-primary transition-colors font-medium"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
+                <div className="text-gray-700 font-medium px-4 py-2">
                   Loans
-                </Link>
+                </div>
                 {loanLinks.map((link) => (
                   <Link
                     key={link.href}

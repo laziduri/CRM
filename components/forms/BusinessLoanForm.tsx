@@ -39,10 +39,28 @@ export default function BusinessLoanForm() {
 
   const onSubmit = async (data: BusinessLoanFormData) => {
     setIsSubmitting(true)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    setIsSubmitting(false)
-    setIsSubmitted(true)
+    try {
+      const response = await fetch('/api/submit-business-loan', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to submit application')
+      }
+
+      setIsSubmitted(true)
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      alert('Failed to submit application. Please try again or contact us directly.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (isSubmitted) {

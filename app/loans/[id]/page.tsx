@@ -25,11 +25,11 @@ export default function LoanDetailPage({ params }: PageProps) {
       <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link
-          href="/loans"
+          href="/loans/personal"
           className="inline-flex items-center text-primary hover:text-primary-dark mb-6"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Loans
+          Back to Loan Options
         </Link>
 
         <Card className="mb-6">

@@ -633,34 +633,41 @@ export default function PersonalLoansPage() {
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl opacity-40 animate-pulse-glow" style={{ animationDelay: '1s' }}></div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-text animate-rotate-in">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+            {/* Left Side - Text Content */}
+            <div className="flex flex-col justify-center">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight animate-gradient-text">
                 Frequently Asked Questions
               </h2>
-            </div>
-            
-            <AccordionDark>
-              {faqs.map((faq) => (
-                <AccordionItemDark 
-                  key={faq.number} 
-                  number={faq.number} 
-                  title={faq.question}
-                  defaultOpen={faq.number === 1}
-                >
-                  <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
-                </AccordionItemDark>
-              ))}
-            </AccordionDark>
-            
-            <div className="mt-12 text-center">
-              <p className="text-gray-600 mb-4">Have additional questions or ready to begin?</p>
+              <p className="text-lg text-gray-600 mb-8">
+                Have additional questions or ready to begin?
+              </p>
               <Link href="/contact">
-                <Button variant="primary" size="lg" className="inline-flex items-center justify-center gap-2">
+                <Button 
+                  variant="primary" 
+                  size="lg" 
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2"
+                >
                   Schedule Your Consultation
                   <ArrowRight className="w-5 h-5" />
                 </Button>
               </Link>
+            </div>
+
+            {/* Right Side - FAQ Accordions */}
+            <div>
+              <AccordionDark>
+                {faqs.map((faq) => (
+                  <AccordionItemDark 
+                    key={faq.number} 
+                    number={faq.number} 
+                    title={faq.question}
+                    defaultOpen={false}
+                  >
+                    <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
+                  </AccordionItemDark>
+                ))}
+              </AccordionDark>
             </div>
           </div>
         </div>

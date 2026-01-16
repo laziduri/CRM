@@ -35,9 +35,14 @@ export default function BlogPage() {
       <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12">
-          <h1 className="text-4xl font-bold mb-4 animate-gradient-text">Resources</h1>
+          <div className="mb-4">
+            <Link href="/resources" className="text-primary hover:text-primary-dark text-sm mb-2 inline-block">
+              ← Back to Resources
+            </Link>
+          </div>
+          <h1 className="text-4xl font-bold mb-4 animate-gradient-text">Blog Articles</h1>
           <p className="text-lg text-gray-600 mb-6">
-            Expert knowledge library covering personal loans, business financing, credit management, and SME growth strategies
+            Expert insights, market trends, and practical guides on personal and business financing
           </p>
 
           {/* Pillar Filter */}

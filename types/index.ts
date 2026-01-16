@@ -47,3 +47,15 @@ export interface Partner {
   logo: string
   url?: string
 }
+
+export interface Job {
+  id: string
+  title: string
+  slug: string
+  department: 'Business Development' | 'Client Solutions' | 'Operations' | 'Marketing' | 'People & Admin' | 'Internships'
+  employmentType: 'Full-Time' | 'Internship'
+  location: string
+  status: 'Open' | 'Talent Pool'
+  description: string
+  postedDate?: string
+}
