@@ -29,9 +29,14 @@ export default function AIChatbot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Hi! I\'m Claire from Brilliance Advisory 👋\n\nI help with personal and business loans in Singapore.',
+      text: 'Hi! I\'m Claire from Brilliance Advisory 👋\n\nChoose how you\'d like to start 🙂\n\n(This chat is for guidance only — no application is submitted here.)',
       sender: 'bot',
       timestamp: new Date(),
+      buttons: [
+        { label: 'Learn & Understand', value: 'learn_understand' },
+        { label: 'My Situation', value: 'my_situation' },
+        { label: 'Others', value: 'others' },
+      ],
     },
   ])
   
@@ -177,7 +182,6 @@ export default function AIChatbot() {
     if (thread) {
       setCurrentThreadId(threadId)
       setMessages(thread.messages)
-      setShowThreads(false)
     }
   }
 
@@ -324,14 +328,13 @@ export default function AIChatbot() {
       return
     }
     
-    if (buttonValue === 'whatsapp_advisor') {
+    if (buttonValue === 'whatsapp_advisor' || buttonValue === 'speak_to_human') {
       openWhatsApp()
       return
     }
     
-    // Progressive disclosure - first show simple question, then buttons
-    if (messages.length === 1) {
-      // First interaction - ask simple question
+    // Level 1 Categories (Learn & Understand, My Situation, Others)
+    if (buttonValue === 'learn_understand') {
       const userMessage: Message = {
         id: Date.now().toString(),
         text: buttonLabel,
@@ -340,18 +343,165 @@ export default function AIChatbot() {
       }
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: 'Is this for personal or business use?',
+        text: 'What would you like to learn about?',
         sender: 'bot',
         timestamp: new Date(),
         buttons: [
-          { label: 'Personal', value: 'personal' },
-          { label: 'Business', value: 'business' },
+          { label: 'Personal loan basics', value: 'learn_personal_basics' },
+          { label: 'Business / SME loan basics', value: 'learn_business_basics' },
+          { label: 'How banks assess applications', value: 'learn_bank_assessment' },
+          { label: 'Documents to prepare (Singapore)', value: 'learn_documents' },
         ],
       }
       const newMessages = [...messages, userMessage, botMessage]
       setMessages(newMessages)
       updateCurrentThread(newMessages)
+      return
+    }
+    
+    if (buttonValue === 'my_situation') {
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        text: buttonLabel,
+        sender: 'user',
+        timestamp: new Date(),
+      }
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: 'Tell me more about your situation:',
+        sender: 'bot',
+        timestamp: new Date(),
+        buttons: [
+          { label: 'I\'ve been rejected before', value: 'situation_rejected' },
+          { label: 'My case is complicated', value: 'situation_complicated' },
+          { label: 'Not sure if I should apply now', value: 'situation_unsure' },
+          { label: 'I want someone to review my situation', value: 'situation_review' },
+        ],
+      }
+      const newMessages = [...messages, userMessage, botMessage]
+      setMessages(newMessages)
+      updateCurrentThread(newMessages)
+      return
+    }
+    
+    if (buttonValue === 'others') {
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        text: buttonLabel,
+        sender: 'user',
+        timestamp: new Date(),
+      }
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: 'How can I help?',
+        sender: 'bot',
+        timestamp: new Date(),
+        buttons: [
+          { label: 'Fees & how we work', value: 'others_fees' },
+          { label: 'Speak to a human (WhatsApp)', value: 'speak_to_human' },
+          { label: 'Just chat with Claire', value: 'just_chat' },
+          { label: 'I\'m just browsing', value: 'others_browsing' },
+        ],
+      }
+      const newMessages = [...messages, userMessage, botMessage]
+      setMessages(newMessages)
+      updateCurrentThread(newMessages)
+      return
+    }
+    
+    // Handle "Speak to a human" - show WhatsApp message
+    if (buttonValue === 'speak_to_human') {
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        text: buttonLabel,
+        sender: 'user',
+        timestamp: new Date(),
+      }
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: 'If you\'d prefer to talk to a human advisor, you can continue on WhatsApp anytime 💬\n\nYou\'ll be speaking with a Brilliance Advisory consultant. No obligation.',
+        sender: 'bot',
+        timestamp: new Date(),
+      }
+      const newMessages = [...messages, userMessage, botMessage]
+      setMessages(newMessages)
+      updateCurrentThread(newMessages)
+      openWhatsApp()
+      return
+    }
+    
+    // Level 2 options that require routing question (except WhatsApp)
+    const level2OptionsRequiringRouting = [
+      'learn_personal_basics', 'learn_business_basics', 'learn_bank_assessment', 'learn_documents',
+      'situation_rejected', 'situation_complicated', 'situation_unsure', 'situation_review',
+      'just_chat', 'others_browsing', 'others_fees'
+    ]
+    
+    if (level2OptionsRequiringRouting.includes(buttonValue)) {
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        text: buttonLabel,
+        sender: 'user',
+        timestamp: new Date(),
+      }
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: 'Just one quick question so I guide you correctly 🔍\n\nIs this for a personal loan or a business / SME loan?',
+        sender: 'bot',
+        timestamp: new Date(),
+        buttons: [
+          { label: 'Personal', value: 'routing_personal' },
+          { label: 'Business / SME', value: 'routing_business' },
+        ],
+      }
+      const newMessages = [...messages, userMessage, botMessage]
+      setMessages(newMessages)
+      updateCurrentThread(newMessages)
+      // Store the level 2 selection for later use
+      setConversationFlow({ type: null, step: 0, answers: { level2: buttonValue } })
+      return
+    }
+    
+    // Routing question response (Personal vs Business/SME)
+    if (buttonValue === 'routing_personal' || buttonValue === 'routing_business') {
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        text: buttonLabel,
+        sender: 'user',
+        timestamp: new Date(),
+      }
+      const loanType = buttonValue === 'routing_personal' ? 'personal' : 'business'
+      const level2Option = conversationFlow.answers.level2 || ''
+      
+      // Update memory
+      const updatedMemory = {
+        ...conversationMemory,
+        userInfo: { ...conversationMemory.userInfo, loanType: loanType as 'personal' | 'business' },
+      }
+      setConversationMemory(updatedMemory)
+      
+      // Create summary message
+      let summaryText = `✅ Here's what I understand so far: `
+      if (level2Option.startsWith('learn_')) {
+        summaryText += `you want to learn about ${level2Option.replace('learn_', '').replace('_', ' ')}, and this is for a ${loanType} loan. `
+      } else if (level2Option.startsWith('situation_')) {
+        summaryText += `you have a ${level2Option.replace('situation_', '').replace('_', ' ')} situation, and this is for a ${loanType} loan. `
+      } else {
+        summaryText += `this is for a ${loanType} loan. `
+      }
+      summaryText += `\n\nYou can type your question anytime now 😊`
+      
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: summaryText,
+        sender: 'bot',
+        timestamp: new Date(),
+      }
+      const newMessages = [...messages, userMessage, botMessage]
+      setMessages(newMessages)
+      updateCurrentThread(newMessages)
       setConversationStage('mid')
+      setConversationFlow({ type: loanType as 'personal' | 'business', step: 0, answers: {} })
       return
     }
     
@@ -563,6 +713,65 @@ export default function AIChatbot() {
   const handleSendMessage = async (quickText?: string) => {
     const messageText = quickText || inputValue.trim()
     if (!messageText || isLoading) return
+
+    // Check if user has completed the funnel (has selected Personal/Business after Level 2)
+    const hasCompletedFunnel = conversationFlow.type === 'personal' || conversationFlow.type === 'business'
+    const isFirstMessage = messages.length === 1
+    const hasSelectedLevel1 = messages.some(m => 
+      m.sender === 'user' && (m.text === 'Learn & Understand' || m.text === 'My Situation' || m.text === 'Others')
+    )
+    
+    // If user types before completing funnel, redirect them
+    if (!hasCompletedFunnel && !isFirstMessage && hasSelectedLevel1) {
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        text: messageText,
+        sender: 'user',
+        timestamp: new Date(),
+      }
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: 'To guide you properly, please start by choosing one of the options below 🙂',
+        sender: 'bot',
+        timestamp: new Date(),
+        buttons: [
+          { label: 'Learn & Understand', value: 'learn_understand' },
+          { label: 'My Situation', value: 'my_situation' },
+          { label: 'Others', value: 'others' },
+        ],
+      }
+      const newMessages = [...messages, userMessage, botMessage]
+      setMessages(newMessages)
+      updateCurrentThread(newMessages)
+      if (!quickText) setInputValue('')
+      return
+    }
+    
+    // If user types on first message, redirect to Level 1 categories
+    if (isFirstMessage || (!hasSelectedLevel1 && !hasCompletedFunnel)) {
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        text: messageText,
+        sender: 'user',
+        timestamp: new Date(),
+      }
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: 'To guide you properly, please start by choosing one of the options below 🙂',
+        sender: 'bot',
+        timestamp: new Date(),
+        buttons: [
+          { label: 'Learn & Understand', value: 'learn_understand' },
+          { label: 'My Situation', value: 'my_situation' },
+          { label: 'Others', value: 'others' },
+        ],
+      }
+      const newMessages = [...messages, userMessage, botMessage]
+      setMessages(newMessages)
+      updateCurrentThread(newMessages)
+      if (!quickText) setInputValue('')
+      return
+    }
 
     // Detect intent and update memory
     const detectedIntent = detectIntent(messageText, conversationMemory as ConversationMemory)
@@ -1114,6 +1323,22 @@ Purpose: ${appointmentData.purpose}`
                           ))}
                         </div>
                       )}
+                      
+                      {/* Buttons */}
+                      {message.buttons && message.buttons.length > 0 && (
+                        <div className="mt-3 pt-3 border-t border-gray-200 space-y-2">
+                          {message.buttons.map((button, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => handleButtonClick(button.value, button.label)}
+                              disabled={isLoading}
+                              className="w-full text-left px-3 py-2 bg-gray-50 hover:bg-primary hover:text-white text-gray-700 rounded-lg transition-all duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200 hover:border-primary"
+                            >
+                              {button.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -1156,52 +1381,21 @@ Purpose: ${appointmentData.purpose}`
                 <div className="flex gap-2">
                   {conversationStage === 'early' && (
                     <button
-                      onClick={() => {
-                        const userMessage: Message = {
-                          id: Date.now().toString(),
-                          text: 'Ask a question',
-                          sender: 'user',
-                          timestamp: new Date(),
-                        }
-                        setMessages(prev => [...prev, userMessage])
-                        updateCurrentThread([...messages, userMessage])
-                        setInputValue('')
-                        inputRef.current?.focus()
-                      }}
-                      className="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white px-3 py-2 rounded-lg transition-colors text-sm font-medium"
+                      onClick={() => openWhatsApp()}
+                      className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20BA5A] text-white px-3 py-2 rounded-lg transition-colors text-sm font-medium"
                     >
                       <MessageSquare className="w-4 h-4" />
-                      Ask a question
+                      WhatsApp
                     </button>
                   )}
                   {conversationStage === 'mid' && (
-                    <>
-                      <button
-                        onClick={() => {
-                          const userMessage: Message = {
-                            id: Date.now().toString(),
-                            text: 'Get estimate',
-                            sender: 'user',
-                            timestamp: new Date(),
-                          }
-                          setMessages(prev => [...prev, userMessage])
-                          updateCurrentThread([...messages, userMessage])
-                          setInputValue('')
-                          inputRef.current?.focus()
-                        }}
-                        className="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white px-3 py-2 rounded-lg transition-colors text-sm font-medium"
-                      >
-                        <Calendar className="w-4 h-4" />
-                        Get estimate
-                      </button>
-                      <button
-                        onClick={() => openWhatsApp()}
-                        className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20BA5A] text-white px-3 py-2 rounded-lg transition-colors text-sm font-medium"
-                      >
-                        <MessageSquare className="w-4 h-4" />
-                        WhatsApp
-                      </button>
-                    </>
+                    <button
+                      onClick={() => openWhatsApp()}
+                      className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20BA5A] text-white px-3 py-2 rounded-lg transition-colors text-sm font-medium"
+                    >
+                      <MessageSquare className="w-4 h-4" />
+                      WhatsApp
+                    </button>
                   )}
                   {conversationStage === 'high-intent' && (
                     <>
@@ -1227,16 +1421,29 @@ Purpose: ${appointmentData.purpose}`
                 {/* Input Area */}
                 <div className="p-4 border-t border-gray-200 bg-white flex-shrink-0">
                 <div className="flex items-center gap-2">
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    placeholder="Type your message..."
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
-                    disabled={isLoading}
-                  />
+                  {(() => {
+                    // Check if user has completed funnel (must select Personal/Business after Level 2)
+                    const hasCompletedFunnel = conversationFlow.type === 'personal' || conversationFlow.type === 'business'
+                    const hasSelectedLevel1 = messages.some(m => 
+                      m.sender === 'user' && (m.text === 'Learn & Understand' || m.text === 'My Situation' || m.text === 'Others')
+                    )
+                    // Disable input if: not first message AND (hasn't selected Level 1 OR selected Level 1 but not completed funnel)
+                    const isFirstMessage = messages.length === 1
+                    const isInputDisabled = !isFirstMessage && (!hasSelectedLevel1 || (!hasCompletedFunnel && hasSelectedLevel1))
+                    
+                    return (
+                      <input
+                        ref={inputRef}
+                        type="text"
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        placeholder={isInputDisabled ? "Please select an option above first..." : "Type your message..."}
+                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-500"
+                        disabled={isLoading || isInputDisabled}
+                      />
+                    )
+                  })()}
                   <button
                     onClick={() => handleSendMessage()}
                     disabled={!inputValue.trim() || isLoading}

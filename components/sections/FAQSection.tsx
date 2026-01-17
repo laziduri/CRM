@@ -3,8 +3,7 @@
 import Link from 'next/link'
 import AccordionDark, { AccordionItemDark } from '@/components/ui/AccordionDark'
 import Button from '@/components/ui/Button'
-import Card from '@/components/ui/Card'
-import { ArrowRight, MessageCircle } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
 const faqs = [
   {
@@ -14,8 +13,8 @@ const faqs = [
   },
   {
     number: 2,
-    question: 'How is Brilliance Advisory service free of charge?',
-    answer: 'Our advisory and consultation services are completely free to our clients. We operate on a commission-based model where financial institutions pay us a service fee only when you successfully secure a loan through our recommendation. This allows us to offer personalized, expert financial consulting at no cost to you. Our team\'s dedication to finding you the best financing solution is uncompromised by this model—we prioritize your best interests first. This win-win arrangement enables us to provide free, professional advisory services while ensuring you get competitive rates and exclusive benefits from our partner institutions.',
+    question: 'How much does Brilliance Advisory charge for advisory services?',
+    answer: 'Brilliance Advisory provides professional loan advisory services tailored to each individual or business situation. Any advisory fees are assessed on a case-by-case basis, depending on the scope and complexity of work involved. We are fully transparent about our fees — all applicable fees, if any, will be clearly explained and agreed upon before any engagement of services. There are no hidden charges.',
   },
   {
     number: 3,
@@ -81,42 +80,6 @@ export default function FAQSection() {
               ))}
             </AccordionDark>
           </div>
-        </div>
-
-        {/* Ask an Assistant Section */}
-        <div className="mt-16 max-w-4xl mx-auto">
-          <Card className="p-8 md:p-10 text-center">
-            {/* Icon */}
-            <div className="flex justify-center mb-6">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
-                <MessageCircle className="w-8 h-8 text-primary" />
-              </div>
-            </div>
-
-            {/* Heading */}
-            <h3 className="text-2xl md:text-3xl font-bold text-primary mb-4">
-              Don&apos;t see your question here?
-            </h3>
-
-            {/* Description */}
-            <p className="text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-              Our AI assistant can help answer your questions about loans, eligibility, and our services. For personalized advice tailored to your specific situation, our experienced advisors are ready to help.
-            </p>
-
-            {/* Button */}
-            <div className="flex justify-center">
-              <Link href="/contact">
-                <Button 
-                  variant="primary" 
-                  size="lg"
-                  className="inline-flex items-center gap-2"
-                >
-                  Speak to an Advisor
-                  <ArrowRight className="w-5 h-5" />
-                </Button>
-              </Link>
-            </div>
-          </Card>
         </div>
       </div>
     </section>

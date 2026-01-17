@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Card from '@/components/ui/Card'
 import PersonalLoanForm from '@/components/forms/PersonalLoanForm'
 import BusinessLoanForm from '@/components/forms/BusinessLoanForm'
@@ -8,6 +9,16 @@ import { Briefcase, User } from 'lucide-react'
 
 export default function ApplyPage() {
   const [loanType, setLoanType] = useState<'personal' | 'business'>('personal')
+
+  // Auto-select business if coming from business loan page
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const referrer = document.referrer
+      if (referrer.includes('/loans/business')) {
+        setLoanType('business')
+      }
+    }
+  }, [])
 
   return (
     <div className="min-h-screen bg-white py-12 relative overflow-hidden">

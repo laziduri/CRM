@@ -5,6 +5,7 @@ import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import AIChatbot from '@/components/layout/AIChatbot'
+import PreloaderWrapper from '@/components/PreloaderWrapper'
 
 const DynamicBackground = dynamic(() => import('@/components/DynamicBackground'), {
   ssr: false,
@@ -22,14 +23,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <DynamicBackground />
-        <Header />
-        <main className="min-h-screen">
-          {children}
-        </main>
-        <Footer />
-        <AIChatbot />
+      <body className="bg-white">
+        <PreloaderWrapper>
+          <DynamicBackground />
+          <Header />
+          <main className="min-h-screen">
+            {children}
+          </main>
+          <Footer />
+          <AIChatbot />
+        </PreloaderWrapper>
       </body>
     </html>
   )

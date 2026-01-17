@@ -223,7 +223,7 @@ export default function Testimonials() {
       <div className="absolute inset-0 bg-animated-stars opacity-100">
         <div className="bg-animated-stars-layer-2"></div>
         <div className="bg-animated-stars-layer-3"></div>
-      </div>
+        </div>
       
       {/* Soft gradient overlays */}
       <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-teal-light/10 rounded-full blur-3xl opacity-50"></div>
@@ -289,8 +289,8 @@ export default function Testimonials() {
                       key={`left-${review.id}-${index}`}
                       review={review}
                       index={index}
-                    />
-                  ))}
+                  />
+                ))}
                 </div>
               </div>
 

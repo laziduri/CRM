@@ -1,7 +1,6 @@
 'use client'
 
 import { ReactNode, useState } from 'react'
-import { Plus, Minus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface AccordionItemDarkProps {
@@ -15,19 +14,16 @@ export function AccordionItemDark({ number, title, children, defaultOpen = false
   const [isOpen, setIsOpen] = useState(defaultOpen)
 
   return (
-    <div className="bg-white rounded-xl shadow-sm mb-3 overflow-hidden border border-secondary-gray3 hover:shadow-md hover:border-teal-light transition-all">
+    <div className={cn(
+      "bg-white rounded-xl shadow-sm mb-3 overflow-hidden border border-secondary-gray3 transition-all duration-300",
+      "hover:shadow-[0_0_25px_rgba(20,184,166,0.25)] hover:border-teal",
+      isOpen && "shadow-[0_0_25px_rgba(20,184,166,0.25)] border-teal"
+    )}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex items-center justify-between p-5 md:p-6 text-left hover:bg-secondary-gray2 transition-colors"
       >
-        <span className="text-gray-900 font-semibold text-base md:text-lg pr-4 leading-tight">{number}. {title}</span>
-        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-teal-light/20 flex items-center justify-center border border-teal-light/50">
-          {isOpen ? (
-            <Minus className="w-4 h-4 text-teal" />
-          ) : (
-            <Plus className="w-4 h-4 text-teal" />
-          )}
-        </div>
+        <span className="text-gray-900 font-semibold text-base md:text-lg leading-tight">{number}. {title}</span>
       </button>
       {isOpen && (
         <div className="px-5 md:px-6 pb-5 md:pb-6 text-gray-600 leading-relaxed text-sm md:text-base">

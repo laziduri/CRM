@@ -48,7 +48,7 @@ export function loadKnowledgeBase(): KnowledgeChunk[] {
   if (fs.existsSync(siteDir)) {
     const siteFiles = fs.readdirSync(siteDir, { recursive: true })
     for (const file of siteFiles) {
-      if (file.endsWith('.md')) {
+      if (typeof file === 'string' && file.endsWith('.md')) {
         const filePath = path.join(siteDir, file)
         const content = fs.readFileSync(filePath, 'utf-8')
         const parsed = parseMarkdownFile(content, file, 'site')
@@ -62,7 +62,7 @@ export function loadKnowledgeBase(): KnowledgeChunk[] {
   if (fs.existsSync(bankDir)) {
     const bankFiles = fs.readdirSync(bankDir, { recursive: true })
     for (const file of bankFiles) {
-      if (file.endsWith('.md')) {
+      if (typeof file === 'string' && file.endsWith('.md')) {
         const filePath = path.join(bankDir, file)
         const content = fs.readFileSync(filePath, 'utf-8')
         const parsed = parseMarkdownFile(content, file, 'bank')

@@ -15,7 +15,7 @@ const mostPopularFAQs = [
   },
   {
     question: 'How much does your advisory service cost?',
-    answer: 'Our advisory service is provided at no direct cost to you. We maintain relationships with various financial institutions, and when a loan is successfully arranged through our advisory, we may receive a referral fee from the lender. This fee does not affect your loan terms, interest rates, or any charges you would otherwise pay directly to the lender.',
+    answer: 'Brilliance Advisory provides professional loan advisory services tailored to each individual or business situation. Any advisory fees are assessed on a case-by-case basis, depending on the scope and complexity of work involved. We are fully transparent about our fees — all applicable fees, if any, will be clearly explained and agreed upon before any engagement of services. There are no hidden charges.',
   },
   {
     question: 'What are the basic eligibility requirements for a personal loan in Singapore?',
@@ -247,11 +247,11 @@ function AIChatbot() {
     }
 
     if (lowerMessage.includes('cost') || lowerMessage.includes('fee') || lowerMessage.includes('price') || lowerMessage.includes('charge')) {
-      return 'Our advisory service is completely free for clients. We operate on a commission-based model where financial institutions pay us only when you successfully secure a loan through our recommendation. This means no upfront costs, no hidden fees, and no obligation. Your loan terms and interest rates are not affected by this arrangement. Would you like to schedule a free consultation?'
+      return 'Brilliance Advisory provides professional loan advisory services tailored to each individual or business situation. Any advisory fees are assessed on a case-by-case basis, depending on the scope and complexity of work involved. We are fully transparent about our fees — all applicable fees, if any, will be clearly explained and agreed upon before any engagement of services. There are no hidden charges. Would you like to speak with one of our advisors to discuss your specific situation?'
     }
 
     if (lowerMessage.includes('how to') || lowerMessage.includes('how do i') || lowerMessage.includes('process') || lowerMessage.includes('apply')) {
-      return 'Getting started is simple! Contact us through our website or phone to schedule a free consultation. Our advisor will discuss your financing needs, assess your situation, and guide you through the application process. We handle everything from initial assessment to loan disbursement. Would you like to book an appointment with one of our advisors?'
+      return 'Getting started is simple! Contact us through our website or phone to schedule a consultation. Our advisor will discuss your financing needs, assess your situation, and guide you through the application process. We handle everything from initial assessment to loan disbursement. Would you like to book an appointment with one of our advisors?'
     }
 
     // Check for loan-related questions
@@ -268,7 +268,7 @@ function AIChatbot() {
     }
 
     if (lowerMessage.includes('eligibility') || lowerMessage.includes('qualify') || lowerMessage.includes('requirements')) {
-      return 'Eligibility requirements vary by loan type and lender. For personal loans, you typically need to be 21-65 years old with minimum monthly income. For business loans, you need ACRA registration and operational history. Our advisors can assess your specific situation and identify suitable options. Would you like to schedule a free consultation?'
+      return 'Eligibility requirements vary by loan type and lender. For personal loans, you typically need to be 21-65 years old with minimum monthly income. For business loans, you need ACRA registration and operational history. Our advisors can assess your specific situation and identify suitable options. Would you like to schedule a consultation?'
     }
 
     if (lowerMessage.includes('document') || lowerMessage.includes('paperwork') || lowerMessage.includes('required')) {
@@ -284,7 +284,7 @@ function AIChatbot() {
     }
 
     // Default response - always direct to contact
-    return 'I understand you\'re looking for information about loans or our services. For personalized advice tailored to your specific situation, I recommend speaking directly with one of our experienced advisors. They can provide accurate, up-to-date information and guide you through your options. Would you like to schedule a free consultation?'
+    return 'I understand you\'re looking for information about loans or our services. For personalized advice tailored to your specific situation, I recommend speaking directly with one of our experienced advisors. They can provide accurate, up-to-date information and guide you through your options. Would you like to schedule a consultation?'
   }
 
   return (
@@ -330,8 +330,8 @@ function AIChatbot() {
             {messages.length === 0 && (
               <div className="text-center text-gray-500 py-8">
                 <MessageCircle className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                <p className="text-sm">Hi! I'm here to help answer your questions about loans and Brilliance Advisory.</p>
-                <p className="text-xs mt-2">Ask me anything, and I'll guide you to the right information or connect you with our advisors.</p>
+                <p className="text-sm">Hi! I&apos;m here to help answer your questions about loans and Brilliance Advisory.</p>
+                <p className="text-xs mt-2">Ask me anything, and I&apos;ll guide you to the right information or connect you with our advisors.</p>
               </div>
             )}
             {messages.map((msg, idx) => (

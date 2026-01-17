@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import { Facebook, Twitter, Linkedin, Instagram } from 'lucide-react'
 
@@ -37,8 +39,21 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand Section */}
           <div>
-            <Link href="/">
-              <h3 className="text-2xl font-bold text-white mb-4 hover:text-teal-light transition-colors cursor-pointer">Brilliance Advisory</h3>
+            <Link href="/" className="flex items-center gap-2 mb-4">
+              <div className="relative h-12 w-12 flex-shrink-0">
+                <img
+                  src="/images/whitelogo.svg"
+                  alt="Brilliance Advisory Logo"
+                  className="h-12 w-12 object-contain"
+                  onError={(e) => {
+                    // Fallback to PNG if SVG doesn't exist
+                    if (e.currentTarget.src.includes('.svg')) {
+                      e.currentTarget.src = '/images/whitelogo.png'
+                    }
+                  }}
+                />
+              </div>
+              <h3 className="text-2xl font-bold text-white hover:text-teal-light transition-colors cursor-pointer">Brilliance Advisory</h3>
             </Link>
             <p className="text-sm mb-4 leading-relaxed">
               Singapore-based financial consultancy specialising in human-led personal and business loan advisory. We provide personalised guidance to help you secure the right financing solution.

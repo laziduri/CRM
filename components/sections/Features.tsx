@@ -21,7 +21,7 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="py-20 bg-white relative overflow-hidden">
+    <section className="py-20 bg-white relative overflow-visible">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
       

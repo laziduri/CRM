@@ -87,7 +87,7 @@ export default function EducationArticlePage({ params }: PageProps) {
 
         {/* Article Content */}
         <Card className="mb-8">
-          <div className="prose prose-lg max-w-none p-6">
+          <div className="prose prose-lg max-w-none p-6 prose-a:no-underline prose-a:cursor-pointer">
             {contentSections.map((section, index) => {
               if (section.type === 'intro') {
                 return (
@@ -100,14 +100,14 @@ export default function EducationArticlePage({ params }: PageProps) {
               }
               return (
                 <div key={index} className="mb-8">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">{section.heading}</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4 cursor-default">{section.heading}</h2>
                   <div className="text-gray-700 leading-relaxed whitespace-pre-line">
                     {section.content.split('\n').map((paragraph, pIndex) => {
                       if (paragraph.trim().startsWith('-') || paragraph.trim().startsWith('*')) {
                         return (
-                          <ul key={pIndex} className="list-disc list-inside mb-4 ml-4 space-y-2">
+                          <ul key={pIndex} className="list-disc list-inside mb-4 ml-4 space-y-2 cursor-default">
                             {paragraph.split(/[-*]/).filter(p => p.trim()).map((item, i) => (
-                              <li key={i}>{item.trim()}</li>
+                              <li key={i} className="cursor-default">{item.trim()}</li>
                             ))}
                           </ul>
                         )
@@ -115,7 +115,7 @@ export default function EducationArticlePage({ params }: PageProps) {
                       if (paragraph.trim().startsWith('**') && paragraph.includes(':**')) {
                         const [bold, rest] = paragraph.split(':**')
                         return (
-                          <p key={pIndex} className="mb-4">
+                          <p key={pIndex} className="mb-4 cursor-default">
                             <strong>{bold.replace('**', '')}:</strong>
                             {rest}
                           </p>
@@ -123,7 +123,7 @@ export default function EducationArticlePage({ params }: PageProps) {
                       }
                       if (paragraph.trim() === '') return <br key={pIndex} />
                       return (
-                        <p key={pIndex} className="mb-4">
+                        <p key={pIndex} className="mb-4 cursor-default">
                           {paragraph}
                         </p>
                       )
@@ -160,8 +160,8 @@ export default function EducationArticlePage({ params }: PageProps) {
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Related Articles</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {relatedArticles.map((related) => (
-                <Link key={related.slug} href={`/resources/education/${related.slug}`}>
-                  <Card className="h-full hover:shadow-xl transition-shadow cursor-pointer">
+                <Link key={related.slug} href={`/resources/education/${related.slug}`} className="block">
+                  <Card className="h-full hover:shadow-xl transition-shadow">
                     <div className="p-6">
                       <Badge variant="secondary" className="mb-3">
                         {related.category}

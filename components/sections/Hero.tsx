@@ -140,16 +140,16 @@ export default function Hero() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="text-center">
           {/* Animated heading with words coming down */}
-          <div className="mb-6 overflow-hidden">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 text-primary">
+          <div className="mb-6 overflow-visible">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 text-primary leading-tight pb-2">
               <span className="inline-block animate-word-drop">Find</span>{' '}
               <span className="inline-block animate-word-drop-delay-1">the</span>{' '}
               <span className="inline-block animate-word-drop-delay-2 text-teal">Best</span>
             </h1>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-primary">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-primary leading-tight pb-4">
               <span className="inline-block animate-word-drop-delay-3">Loans</span>{' '}
               <span className="inline-block animate-word-drop-delay-4">in</span>{' '}
-              <span className="inline-block animate-word-drop-delay-5 text-teal">Singapore</span>
+              <span className="inline-block animate-word-drop-delay-5 text-teal pb-2">Singapore</span>
             </h1>
           </div>
           

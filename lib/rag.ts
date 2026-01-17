@@ -79,7 +79,7 @@ export function getKnowledgeBase(): KnowledgeChunk[] {
     try {
       const { loadKnowledgeBase } = require('./kb')
       cachedKnowledgeBase = loadKnowledgeBase()
-      console.log(`Loaded ${cachedKnowledgeBase.length} knowledge chunks`)
+      console.log(`Loaded ${cachedKnowledgeBase?.length || 0} knowledge chunks`)
     } catch (error) {
       console.error('Error loading knowledge base:', error)
       cachedKnowledgeBase = []
