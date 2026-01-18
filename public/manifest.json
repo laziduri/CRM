@@ -1,0 +1,40 @@
+{
+  "name": "Brilliance CRM",
+  "short_name": "Brilliance CRM",
+  "description": "AI-Powered CRM Platform for Loan Consultants",
+  "start_url": "/crm",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0066CC",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/images/brilliance-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/brilliance-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Go to CRM Dashboard",
+      "url": "/consultant/dashboard",
+      "icons": [
+        {
+          "src": "/images/brilliance-logo.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+}

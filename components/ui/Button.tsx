@@ -30,7 +30,7 @@ export default function Button({
 
   return (
     <button
-      className={cn(baseStyles, variants[variant], sizes[size], className)}
+      className={cn(baseStyles, variants[variant], sizes[size], 'flex items-center justify-center', className)}
       {...props}
     >
       {children}

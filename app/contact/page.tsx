@@ -2,7 +2,7 @@ import Link from 'next/link'
 import ContactForm from '@/components/forms/ContactForm'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
-import { Mail, Phone, MapPin, Clock, ArrowRight, FileText, Users, TrendingUp, Zap, UserCheck } from 'lucide-react'
+import { Mail, Phone, MapPin, Clock, ArrowRight, FileText, Users, TrendingUp, Zap, UserCheck, Calendar } from 'lucide-react'
 
 export default function ContactPage() {
   return (
@@ -78,6 +78,23 @@ export default function ContactPage() {
                   </div>
                 </div>
               </Card>
+
+              <Link href="/appointments">
+                <Card hover className="p-6 cursor-pointer border-2 border-primary/20 hover:border-primary transition-colors">
+                  <div className="flex items-start">
+                    <div className="bg-gradient-to-br from-primary to-teal p-3 rounded-full mr-4 flex-shrink-0">
+                      <Calendar className="w-6 h-6 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Schedule Appointment</h3>
+                      <p className="text-gray-600 mb-3">Book a consultation with our expert advisors. Choose a date and time that works for you.</p>
+                      <div className="flex items-center text-primary font-medium">
+                        View Calendar <ArrowRight className="w-4 h-4 ml-2" />
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </Link>
             </div>
 
             {/* Map */}

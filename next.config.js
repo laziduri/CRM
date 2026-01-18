@@ -11,6 +11,10 @@ const nextConfig = {
       },
     ],
   },
+  // Note: For subdomain routing (crm.yourdomain.com), configure at hosting level:
+  // - Vercel: Use rewrites in vercel.json
+  // - Other hosts: Configure DNS and server rewrites/routing
+  // The /crm route is ready to be served at crm.yourdomain.com when configured
 }
 
 module.exports = nextConfig

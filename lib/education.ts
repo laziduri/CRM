@@ -2275,33 +2275,13 @@ Financial institutions also consider financial planning and budgeting practices 
 
 ## Financial Planning and Budgeting
 
-**Annual Budgeting:**
-- Create comprehensive annual budgets
-- Project revenues realistically
-- Plan expenses carefully
-- Include capital expenditure plans
-- Set financial targets and goals
+Financial planning and budgeting represent systematic approaches to financial management that guide decision-making and enable performance tracking. When businesses create comprehensive annual budgets, they project revenues realistically based on historical performance and market conditions, plan expenses carefully across operational categories, and include capital expenditure plans that support growth objectives. This annual planning process establishes financial targets and goals that provide direction for business operations throughout the year.
 
-**Monthly Budgeting:**
-- Break down annual budget monthly
-- Track actual vs. budgeted performance
-- Adjust budgets based on performance
-- Identify variances and reasons
-- Take corrective action promptly
+Monthly budgeting breaks down annual budgets into monthly components that enable businesses to track actual versus budgeted performance more granularly. This monthly tracking allows businesses to identify variances between planned and actual results, analyze the reasons behind these variances, and take corrective action promptly when performance deviates from plans. The systematic comparison of actual versus budgeted performance provides businesses with early warning signs of potential issues and enables proactive management of financial performance.
 
-**Financial Targets:**
-- Set revenue targets
-- Establish profit margin goals
-- Plan cashflow objectives
-- Set debt reduction targets
-- Define growth milestones
+Financial targets encompass revenue targets that guide sales planning, profit margin goals that support profitability objectives, cashflow objectives that ensure adequate liquidity, debt reduction targets that improve financial position, and growth milestones that mark strategic progress. Setting clear financial targets helps businesses maintain focus on key financial objectives and provides benchmarks for measuring performance. These targets should be realistic yet challenging, based on historical performance and market conditions.
 
-**Performance Monitoring:**
-- Review financial performance regularly
-- Compare actual vs. budgeted results
-- Analyze variances and trends
-- Identify improvement opportunities
-- Make data-driven decisions
+Performance monitoring involves reviewing financial performance regularly through periodic financial statement analysis, comparing actual versus budgeted results to identify variances, analyzing trends and patterns that reveal business dynamics, and identifying improvement opportunities that enhance financial performance. This systematic monitoring enables data-driven decision-making that supports business objectives and financial discipline.
 
 ## Practical Considerations for Borrowers
 
