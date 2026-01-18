@@ -227,9 +227,9 @@ export default function AIProjectsPage() {
               <Button
                 variant="primary"
                 onClick={() => {
-                  const prompt = prompt('Describe your project idea:')
-                  if (prompt) {
-                    setAiPrompt(prompt)
+                  const userPrompt = window.prompt('Describe your project idea:')
+                  if (userPrompt) {
+                    setAiPrompt(userPrompt)
                     generateProjectWithAI()
                   }
                 }}

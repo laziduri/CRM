@@ -2,32 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { generateAccessToken, extractDeviceInfo, getSecurityHeaders } from '@/lib/auth-utils'
 import { createSession, parseDeviceInfo } from '@/lib/session'
-
-// In production, use a database (Prisma, MongoDB, etc.)
-// This is a temporary in-memory store for development
-const CLIENTS: Array<{
-  id: string
-  email: string
-  username?: string
-  password: string
-  name: string
-  phone: string
-  emailVerified: boolean
-  verificationToken?: string
-  verificationTokenExpiry?: Date
-  createdAt: Date
-}> = [
-  {
-    id: '1',
-    email: 'demo@example.com',
-    username: 'democlient',
-    password: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOKqJqJqJqJqJqJqJqJqJqJqJqJqJq',
-    name: 'Demo Client',
-    phone: '+65 9123 4567',
-    emailVerified: true, // Demo account is pre-verified
-    createdAt: new Date('2024-01-15'),
-  },
-]
+import { createClient } from '@/lib/supabase/server'
 
 export async function POST(request: NextRequest) {
   try {
@@ -48,8 +23,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Initialize Supabase client
+    const supabase = await createClient()
+
     // Check if email already exists
-    const existingClientByEmail = CLIENTS.find(c => c.email.toLowerCase() === email.toLowerCase())
+    const { data: existingClientByEmail } = await supabase
+      .from('clients')
+      .select('id')
+      .eq('email', email.toLowerCase())
+      .single()
+
     if (existingClientByEmail) {
       return NextResponse.json(
         { error: 'An account with this email already exists' },
@@ -58,7 +41,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if username already exists
-    const existingClientByUsername = CLIENTS.find((c: any) => c.username?.toLowerCase() === username.toLowerCase())
+    const { data: existingClientByUsername } = await supabase
+      .from('clients')
+      .select('id')
+      .eq('username', username.toLowerCase())
+      .single()
+
     if (existingClientByUsername) {
       return NextResponse.json(
         { error: 'This username is already taken. Please choose another one.' },
@@ -69,26 +57,34 @@ export async function POST(request: NextRequest) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Create new client (in production, save to database)
-    const newClient = {
-      id: String(CLIENTS.length + 1),
-      email: email.toLowerCase(),
-      username: username.toLowerCase(),
-      password: hashedPassword,
-      name,
-      phone,
-      emailVerified: true, // Auto-verify on registration (no verification required)
-      createdAt: new Date(),
-    }
+    // Create new client in Supabase
+    const { data: newClient, error: insertError } = await supabase
+      .from('clients')
+      .insert({
+        email: email.toLowerCase(),
+        username: username.toLowerCase(),
+        password_hash: hashedPassword,
+        name,
+        phone,
+        email_verified: true, // Auto-verify on registration
+      })
+      .select()
+      .single()
 
-    CLIENTS.push(newClient)
+    if (insertError || !newClient) {
+      console.error('[API] Supabase insert error:', insertError)
+      return NextResponse.json(
+        { error: 'Failed to create account' },
+        { status: 500 }
+      )
+    }
 
     // Extract device info from request for session management
     const { userAgent, ipAddress, deviceFingerprint } = extractDeviceInfo(request)
     const deviceInfo = parseDeviceInfo(userAgent)
     const deviceId = deviceFingerprint
 
-    // Create session for device/session management
+    // Create session in Supabase
     const session = createSession(
       newClient.id,
       deviceId,
@@ -96,6 +92,21 @@ export async function POST(request: NextRequest) {
       userAgent,
       ipAddress
     )
+
+    // Save session to Supabase
+    await supabase
+      .from('sessions')
+      .insert({
+        user_id: newClient.id,
+        user_type: 'client',
+        session_id: session.sessionId,
+        device_id: deviceId,
+        device_info: deviceInfo.deviceInfo,
+        user_agent: userAgent,
+        ip_address: ipAddress,
+        refresh_token: session.refreshToken,
+        expires_at: session.expiresAt,
+      })
 
     // Generate access token with session ID
     const accessToken = generateAccessToken({
@@ -115,7 +126,7 @@ export async function POST(request: NextRequest) {
         email: newClient.email,
         name: newClient.name,
         phone: newClient.phone,
-        emailVerified: true,
+        emailVerified: newClient.email_verified,
       },
       message: 'Account created successfully',
     }, {

@@ -269,9 +269,9 @@ export default function AIWorkflowsPage() {
               <Button
                 variant="primary"
                 onClick={() => {
-                  const prompt = prompt('Describe the workflow you need:')
-                  if (prompt) {
-                    setAiPrompt(prompt)
+                  const userPrompt = window.prompt('Describe the workflow you need:')
+                  if (userPrompt) {
+                    setAiPrompt(userPrompt)
                     generateWorkflowWithAI()
                   }
                 }}

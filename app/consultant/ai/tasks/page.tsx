@@ -16,9 +16,11 @@ import {
   Zap,
   Target,
   TrendingUp,
+  RefreshCw,
 } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
+import { getDefaultTaskDuration, getAutoFillExplanation } from '@/lib/crm-autofill'
 
 interface Task {
   id: string
@@ -58,6 +60,14 @@ export default function AITasksPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [showAIInsights, setShowAIInsights] = useState(false)
   const [autoScheduleEnabled, setAutoScheduleEnabled] = useState(true)
+  
+  // Task creation form state
+  const [taskTitle, setTaskTitle] = useState('')
+  const [taskDescription, setTaskDescription] = useState('')
+  const [taskPriority, setTaskPriority] = useState<'low' | 'medium' | 'high' | 'urgent'>('medium')
+  const [taskType, setTaskType] = useState<'follow-up' | 'document-review' | 'consultation' | 'administrative' | 'other'>('other')
+  const [taskDuration, setTaskDuration] = useState(30) // Default 30 min
+  const [autoFilledDuration, setAutoFilledDuration] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('consultant_token')
@@ -261,8 +271,8 @@ export default function AITasksPage() {
                 variant="primary"
                 size="sm"
                 onClick={() => {
-                  const prompt = prompt('Describe tasks you need:')
-                  if (prompt) generateTasksWithAI(prompt)
+                  const userPrompt = window.prompt('Describe tasks you need:')
+                  if (userPrompt) generateTasksWithAI(userPrompt)
                 }}
               >
                 <Zap className="w-4 h-4 mr-2" />
@@ -505,7 +515,16 @@ export default function AITasksPage() {
       {/* Create Task Modal */}
       <Modal
         isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
+        onClose={() => {
+          setShowCreateModal(false)
+          // Reset form
+          setTaskTitle('')
+          setTaskDescription('')
+          setTaskPriority('medium')
+          setTaskType('other')
+          setTaskDuration(30)
+          setAutoFilledDuration(false)
+        }}
         title="Create New Task"
         size="xl"
       >
@@ -515,6 +534,21 @@ export default function AITasksPage() {
             <label className="block text-sm font-medium text-gray-700 mb-2">Task Title</label>
             <input
               type="text"
+              value={taskTitle}
+              onChange={(e) => {
+                setTaskTitle(e.target.value)
+                // Auto-fill duration when title changes
+                if (e.target.value && !autoFilledDuration) {
+                  const suggestedDuration = getDefaultTaskDuration({
+                    title: e.target.value,
+                    description: taskDescription,
+                    priority: taskPriority,
+                    type: taskType,
+                  })
+                  setTaskDuration(suggestedDuration)
+                  setAutoFilledDuration(true)
+                }
+              }}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               placeholder="Enter task title"
             />
@@ -525,6 +559,20 @@ export default function AITasksPage() {
             <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
             <textarea
               rows={4}
+              value={taskDescription}
+              onChange={(e) => {
+                setTaskDescription(e.target.value)
+                // Re-calculate duration when description changes
+                if (taskTitle) {
+                  const suggestedDuration = getDefaultTaskDuration({
+                    title: taskTitle,
+                    description: e.target.value,
+                    priority: taskPriority,
+                    type: taskType,
+                  })
+                  setTaskDuration(suggestedDuration)
+                }
+              }}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               placeholder="Enter task description"
             />
@@ -559,17 +607,69 @@ export default function AITasksPage() {
             </label>
           </div>
 
+          {/* Task Type - helps AI determine duration */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Task Type</label>
+            <select
+              value={taskType}
+              onChange={(e) => {
+                const newType = e.target.value as typeof taskType
+                setTaskType(newType)
+                // Re-calculate duration based on task type
+                if (taskTitle) {
+                  const suggestedDuration = getDefaultTaskDuration({
+                    title: taskTitle,
+                    description: taskDescription,
+                    priority: taskPriority,
+                    type: newType,
+                  })
+                  setTaskDuration(suggestedDuration)
+                  setAutoFilledDuration(true)
+                }
+              }}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            >
+              <option value="other">General</option>
+              <option value="follow-up">Follow-up</option>
+              <option value="document-review">Document Review</option>
+              <option value="consultation">Consultation</option>
+              <option value="administrative">Administrative</option>
+            </select>
+          </div>
+
           {/* Scheduling Options */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Duration</label>
-              <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+              <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                Duration
+                {autoFilledDuration && (
+                  <span className="text-xs text-purple-600 flex items-center gap-1">
+                    <Sparkles className="w-3 h-3" />
+                    AI Suggested
+                  </span>
+                )}
+              </label>
+              <select
+                value={taskDuration}
+                onChange={(e) => {
+                  setTaskDuration(Number(e.target.value))
+                  setAutoFilledDuration(false) // User manually changed
+                }}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              >
                 <option value="15">15 min</option>
                 <option value="30">30 min</option>
+                <option value="45">45 min</option>
                 <option value="60">1 hour</option>
+                <option value="90">1.5 hours</option>
                 <option value="120">2 hours</option>
                 <option value="240">4 hours</option>
               </select>
+              {autoFilledDuration && (
+                <p className="text-xs text-gray-500 mt-1">
+                  {getAutoFillExplanation('duration', { duration: taskDuration, type: taskType, priority: taskPriority })}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Min Chunk</label>
@@ -600,9 +700,27 @@ export default function AITasksPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
-              <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+              <select
+                value={taskPriority}
+                onChange={(e) => {
+                  const newPriority = e.target.value as typeof taskPriority
+                  setTaskPriority(newPriority)
+                  // Re-calculate duration based on new priority
+                  if (taskTitle) {
+                    const suggestedDuration = getDefaultTaskDuration({
+                      title: taskTitle,
+                      description: taskDescription,
+                      priority: newPriority,
+                      type: taskType,
+                    })
+                    setTaskDuration(suggestedDuration)
+                    setAutoFilledDuration(true)
+                  }
+                }}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              >
                 <option value="low">Low</option>
-                <option value="medium" selected>Medium</option>
+                <option value="medium">Medium</option>
                 <option value="high">High</option>
                 <option value="urgent">Urgent</option>
               </select>

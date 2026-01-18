@@ -18,13 +18,13 @@ export default function ResourcesPage() {
   const [sortBy, setSortBy] = useState<SortType>('newest')
   const [isSortOpen, setIsSortOpen] = useState(false)
 
-  const blogPosts = resourcesArticles || []
-  const educationPosts = educationArticles || []
+  const blogPosts = useMemo(() => resourcesArticles || [], [])
+  const educationPosts = useMemo(() => educationArticles || [], [])
 
-  const allPosts = [
+  const allPosts = useMemo(() => [
     ...blogPosts.map(post => ({ ...post, type: 'blog' as const })),
     ...educationPosts.map(post => ({ ...post, type: 'education' as const }))
-  ]
+  ], [blogPosts, educationPosts])
 
   // Filter by tab
   const filteredByTab = useMemo(() => {

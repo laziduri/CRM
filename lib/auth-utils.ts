@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
 import jwt from 'jsonwebtoken'
+import { createHash } from 'crypto'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'brilliance-advisory-secret-key-change-in-production'
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'brilliance-advisory-refresh-secret-key-change-in-production'
@@ -59,8 +60,7 @@ export function extractDeviceInfo(request: NextRequest): {
   
   // Create device fingerprint
   const fingerprintData = `${userAgent}|${acceptLanguage}`
-  const deviceFingerprint = require('crypto')
-    .createHash('sha256')
+  const deviceFingerprint = createHash('sha256')
     .update(fingerprintData)
     .digest('hex')
     .substring(0, 32)

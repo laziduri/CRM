@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Button from '@/components/ui/Button'
-import { Mail, Lock, AlertCircle, ArrowRight, User, Phone, CheckCircle2, Briefcase } from 'lucide-react'
+import { Mail, Lock, AlertCircle, ArrowRight, User, Phone, CheckCircle2, Briefcase, Loader2 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 
-export default function ClientLoginPage() {
+function ClientLoginContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { login } = useAuth()
@@ -42,6 +42,7 @@ export default function ClientLoginPage() {
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    setSuccess('')
     setIsLoading(true)
 
     try {
@@ -60,15 +61,19 @@ export default function ClientLoginPage() {
       }
 
       // Use AuthContext login function
-      if (data.token) {
+      if (data.token && data.clientId) {
         login(data.token, data.clientId)
         setSuccess('Login successful! Redirecting...')
         // Redirect to dashboard
         setTimeout(() => {
           router.push('/client/dashboard')
         }, 500)
+      } else {
+        setError('Login failed: Invalid response from server.')
+        setIsLoading(false)
       }
     } catch (err) {
+      console.error('Login error:', err)
       setError('An error occurred. Please try again.')
       setIsLoading(false)
     }
@@ -295,7 +300,7 @@ export default function ClientLoginPage() {
               {/* Sign Up Link */}
               <div className="mt-6 pt-6 border-t border-gray-200 text-center">
                 <p className="text-sm text-gray-600">
-                  Don't have an account?{' '}
+                  Don&apos;t have an account?{' '}
                   <button
                     type="button"
                     onClick={() => setIsRegistering(true)}
@@ -500,5 +505,17 @@ export default function ClientLoginPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function ClientLoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      </div>
+    }>
+      <ClientLoginContent />
+    </Suspense>
   )
 }

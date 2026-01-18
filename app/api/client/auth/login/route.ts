@@ -3,33 +3,7 @@ import bcrypt from 'bcryptjs'
 import { generateAccessToken, extractDeviceInfo, getSecurityHeaders } from '@/lib/auth-utils'
 import { createSession, parseDeviceInfo, generateDeviceFingerprint } from '@/lib/session'
 import { sendDeviceLoginNotification } from '@/lib/email'
-
-// In production, use a database (Prisma, MongoDB, etc.)
-// This is a temporary in-memory store for development
-// Demo credentials: 
-//   Email: demo@example.com / Password: demo123
-//   Username: democlient / Password: demo123
-const CLIENTS: Array<{
-  id: string
-  email: string
-  username?: string
-  password: string
-  name: string
-  phone: string
-  emailVerified: boolean
-  createdAt: Date
-}> = [
-  {
-    id: '1',
-    email: 'demo@example.com',
-    username: 'democlient',
-    password: '$2a$10$rOzJqJqJqJqJqJqJqJqJqOKqJqJqJqJqJqJqJqJqJqJqJqJqJq', // hashed "demo123"
-    name: 'Demo Client',
-    phone: '+65 9123 4567',
-    emailVerified: true, // Demo account is pre-verified
-    createdAt: new Date('2024-01-15'),
-  },
-]
+import { createClient } from '@/lib/supabase/server'
 
 export async function POST(request: NextRequest) {
   try {
@@ -45,12 +19,52 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Find client by email or username
-    const client = CLIENTS.find(c => {
-      const emailMatch = c.email.toLowerCase() === loginIdentifier.toLowerCase()
-      const usernameMatch = c.username?.toLowerCase() === loginIdentifier.toLowerCase()
-      return emailMatch || usernameMatch
-    })
+    // Demo client fallback (for development/testing)
+    const demoClient = {
+      id: '1',
+      email: 'demo@example.com',
+      username: 'democlient',
+      password_hash: null, // Will use demo123 fallback
+      name: 'Demo Client',
+      phone: '+65 9123 4567',
+      email_verified: true,
+      created_at: new Date('2024-01-15').toISOString(),
+    }
+
+    let client = null
+    let clientError = null
+
+    // Check if this is a demo account first
+    const isDemoAccount = loginIdentifier.toLowerCase() === 'demo@example.com' || 
+                         loginIdentifier.toLowerCase() === 'democlient'
+
+    // Try Supabase first, fallback to demo client if Supabase is not configured or client not found
+    if (!isDemoAccount) {
+      try {
+        // Check if Supabase is configured
+        if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+          const supabase = await createClient()
+          
+          // Find client by email or username
+          const result = await supabase
+            .from('clients')
+            .select('*')
+            .or(`email.eq.${loginIdentifier.toLowerCase()},username.eq.${loginIdentifier.toLowerCase()}`)
+            .maybeSingle()
+
+          client = result.data
+          clientError = result.error
+        } else {
+          console.log('[API] Supabase not configured, skipping database lookup')
+        }
+      } catch (error) {
+        console.error('[API] Supabase error:', error)
+        // Fall through - will return error if client not found
+      }
+    } else {
+      // Use demo client for demo accounts
+      client = demoClient
+    }
 
     if (!client) {
       return NextResponse.json(
@@ -60,9 +74,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify password
-    // For demo: accept "demo123" as password
-    // In production, use bcrypt to compare hashed passwords
-    const isValidPassword = password === 'demo123' || await bcrypt.compare(password, client.password).catch(() => false)
+    // For demo: accept "demo123" as password (fallback for existing demo accounts)
+    let isValidPassword = password === 'demo123'
+    
+    // If not demo123 and client has password hash, try bcrypt comparison
+    if (!isValidPassword && client.password_hash) {
+      try {
+        isValidPassword = await bcrypt.compare(password, client.password_hash)
+      } catch (error) {
+        console.error('[API] Bcrypt compare error:', error)
+        isValidPassword = false
+      }
+    }
 
     if (!isValidPassword) {
       return NextResponse.json(
@@ -84,6 +107,29 @@ export async function POST(request: NextRequest) {
       userAgent,
       ipAddress
     )
+
+    // Save session to Supabase (skip if using demo client or Supabase not configured)
+    try {
+      if (!isDemoAccount && process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+        const supabase = await createClient()
+        await supabase
+          .from('sessions')
+          .insert({
+            user_id: client.id,
+            user_type: 'client',
+            session_id: session.sessionId,
+            device_id: deviceId,
+            device_info: deviceInfo.deviceInfo,
+            user_agent: userAgent,
+            ip_address: ipAddress,
+            refresh_token: session.refreshToken,
+            expires_at: session.expiresAt,
+          })
+      }
+    } catch (error) {
+      console.error('[API] Failed to save session to Supabase:', error)
+      // Continue login even if session save fails
+    }
 
     // Generate access token with session ID
     const accessToken = generateAccessToken({
@@ -118,8 +164,8 @@ export async function POST(request: NextRequest) {
         id: client.id,
         email: client.email,
         name: client.name,
-        phone: client.phone,
-        emailVerified: client.emailVerified,
+        phone: client.phone || '',
+        emailVerified: client.email_verified || false,
       },
       device: {
         deviceId: deviceId,

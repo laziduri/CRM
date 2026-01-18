@@ -120,7 +120,7 @@ export function getSession(sessionId: string): Session | undefined {
 }
 
 export function getSessionByRefreshToken(refreshToken: string): Session | undefined {
-  for (const session of SESSIONS.values()) {
+  for (const session of Array.from(SESSIONS.values())) {
     if (session.refreshToken === refreshToken && session.isActive) {
       // Check if refresh token expired (30 days)
       const refreshExpiry = new Date(session.createdAt.getTime() + REFRESH_TOKEN_EXPIRY)
@@ -177,7 +177,7 @@ export function invalidateDeviceSessions(deviceId: string): void {
 
 export function cleanupExpiredSessions(): void {
   const now = new Date()
-  for (const [sessionId, session] of SESSIONS.entries()) {
+  for (const [sessionId, session] of Array.from(SESSIONS.entries())) {
     // Remove sessions expired more than 7 days ago
     const refreshExpiry = new Date(session.createdAt.getTime() + REFRESH_TOKEN_EXPIRY)
     if (now > refreshExpiry) {

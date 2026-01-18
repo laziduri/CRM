@@ -15,7 +15,8 @@ import {
   Edit,
   Eye,
   Download,
-  Tag
+  Tag,
+  DollarSign
 } from 'lucide-react'
 import Button from '@/components/ui/Button'
 

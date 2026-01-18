@@ -1,9 +1,16 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Facebook, Twitter, Linkedin, Instagram } from 'lucide-react'
 
 export default function Footer() {
+  const pathname = usePathname()
+  
+  // Hide footer on CRM pages (they have their own footer)
+  if (pathname?.startsWith('/crm')) {
+    return null
+  }
   const footerLinks = {
     company: [
       { href: '/aboutus', label: 'About Us' },
@@ -19,6 +26,7 @@ export default function Footer() {
     resources: [
       { href: '/calculator', label: 'Loan Calculator' },
       { href: '/apply', label: 'Apply Now' },
+      { href: '/crm', label: 'Consultant CRM' },
     ],
     legal: [
       { href: '/privacy', label: 'Privacy Policy' },
@@ -34,8 +42,8 @@ export default function Footer() {
   ]
 
   return (
-    <footer className="bg-neutral-900 text-neutral-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <footer className="bg-neutral-900 text-neutral-300 w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand Section */}
           <div>

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, User, Lock, Camera, Save, AlertCircle, CheckCircle2, Mail, Calendar as CalendarIcon, Link2, Bell, ExternalLink, RefreshCw } from 'lucide-react'
+import { ArrowLeft, User, Lock, Camera, Save, AlertCircle, CheckCircle2, Mail, Calendar as CalendarIcon, Link2, Bell, ExternalLink, RefreshCw, Cake, Eye, EyeOff } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
 import Input from '@/components/ui/Input'
@@ -32,6 +32,32 @@ export default function ConsultantSettingsPage() {
   const [isOutlookCalendarConnected, setIsOutlookCalendarConnected] = useState(false)
   const [isConnectingCalendar, setIsConnectingCalendar] = useState(false)
   const [connectingCalendarType, setConnectingCalendarType] = useState<'google' | 'outlook' | null>(null)
+  
+  // Calendar color
+  const [calendarColor, setCalendarColor] = useState<string>('blue')
+  const [isSavingColor, setIsSavingColor] = useState(false)
+  const [teamMembers, setTeamMembers] = useState<any[]>([])
+  
+  // Birthday visibility
+  const [showBirthday, setShowBirthday] = useState<boolean>(true)
+  const [isSavingBirthday, setIsSavingBirthday] = useState(false)
+  
+  const COLOR_PRESETS = [
+    { name: 'mint', hex: '#10B981' },
+    { name: 'blue', hex: '#3B82F6' },
+    { name: 'purple', hex: '#8B5CF6' },
+    { name: 'pink', hex: '#EC4899' },
+    { name: 'red', hex: '#EF4444' },
+    { name: 'orange', hex: '#F97316' },
+    { name: 'yellow', hex: '#EAB308' },
+    { name: 'green', hex: '#22C55E' },
+    { name: 'teal', hex: '#14B8A6' },
+    { name: 'cyan', hex: '#06B6D4' },
+    { name: 'indigo', hex: '#6366F1' },
+    { name: 'violet', hex: '#A855F7' },
+    { name: 'rose', hex: '#F43F5E' },
+    { name: 'amber', hex: '#F59E0B' },
+  ]
 
   useEffect(() => {
     const token = localStorage.getItem('consultant_token')
@@ -63,6 +89,23 @@ export default function ConsultantSettingsPage() {
     // Check calendar connection status (mock - in production, fetch from API)
     setIsGoogleCalendarConnected(false)
     setIsOutlookCalendarConnected(false)
+    
+    // Load calendar color
+    const savedColor = localStorage.getItem('consultant_calendar_color') || 'blue'
+    setCalendarColor(savedColor)
+    
+    // Load birthday visibility (mock - in production, fetch from API)
+    const savedShowBirthday = localStorage.getItem('consultant_show_birthday')
+    setShowBirthday(savedShowBirthday !== null ? savedShowBirthday === 'true' : true)
+    
+    // Load team members to get their colors (mock - in production, fetch from API)
+    const mockTeamMembers = [
+      { id: '1', name: 'You', email: 'you@example.com', role: 'consultant', color: savedColor },
+      { id: '2', name: 'John Smith', email: 'john@example.com', role: 'consultant', color: 'green' },
+      { id: '3', name: 'Jane Doe', email: 'jane@example.com', role: 'consultant', color: 'purple' },
+      { id: '4', name: 'Ashley', email: 'ashley@example.com', role: 'director', color: 'orange' },
+    ]
+    setTeamMembers(mockTeamMembers)
     
     setIsLoading(false)
   }, [router])
@@ -413,15 +456,17 @@ export default function ConsultantSettingsPage() {
                     onChange={handleProfilePictureChange}
                     className="hidden"
                   />
-                  <Button
-                    variant="outline"
-                    className="cursor-pointer"
-                    onClick={() => document.querySelector('input[type="file"]')?.click()}
-                    as="span"
+                  <button
+                    type="button"
+                    className="px-4 py-2 border-2 border-primary text-primary hover:bg-gradient-to-r hover:from-primary hover:to-teal hover:text-white focus:ring-primary transition-all rounded-lg flex items-center justify-center cursor-pointer"
+                    onClick={() => {
+                      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement
+                      fileInput?.click()
+                    }}
                   >
                     <Camera className="w-4 h-4 mr-2" />
                     Choose Image
-                  </Button>
+                  </button>
                 </label>
                 <p className="text-xs text-gray-500 mt-2">
                   JPG, PNG or GIF. Max size 5MB
@@ -447,33 +492,48 @@ export default function ConsultantSettingsPage() {
             <p className="text-sm text-gray-600 mb-6">Update your password to keep your account secure</p>
 
             <form onSubmit={handlePasswordUpdate} className="space-y-4">
-              <Input
-                label="Current Password"
-                type="password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                required
-                icon={Lock}
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Input
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    required
+                    className="pl-10"
+                  />
+                </div>
+              </div>
 
-              <Input
-                label="New Password"
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                required
-                icon={Lock}
-                helperText="Must be at least 6 characters"
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Input
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                    className="pl-10"
+                  />
+                </div>
+                <p className="mt-1 text-xs text-gray-500">Must be at least 6 characters</p>
+              </div>
 
-              <Input
-                label="Confirm New Password"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                icon={Lock}
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    className="pl-10"
+                  />
+                </div>
+              </div>
 
               <div className="flex justify-end">
                 <Button
@@ -542,7 +602,7 @@ export default function ConsultantSettingsPage() {
                       Remind 1 day before appointment
                     </label>
                     <p className="text-xs text-gray-500 mt-1">
-                      You'll receive an email reminder 24 hours before each appointment
+                      You&apos;ll receive an email reminder 24 hours before each appointment
                     </p>
                   </div>
                 </div>
@@ -562,7 +622,7 @@ export default function ConsultantSettingsPage() {
                       Remind 2 hours before appointment
                     </label>
                     <p className="text-xs text-gray-500 mt-1">
-                      You'll receive an email reminder 2 hours before each appointment
+                      You&apos;ll receive an email reminder 2 hours before each appointment
                     </p>
                   </div>
                 </div>
@@ -853,6 +913,286 @@ export default function ConsultantSettingsPage() {
                     )}
                   </Button>
                 )}
+              </div>
+            </div>
+          </Card>
+
+          {/* Calendar Color Settings */}
+          <Card className="p-6">
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">Calendar Color</h2>
+                <p className="text-sm text-gray-600">
+                  Choose your personal color for calendar items. This helps distinguish your appointments and tasks from teammates.
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              {/* Teammate Colors - Read Only */}
+              {teamMembers.filter(m => m.id !== '1' && m.color).length > 0 && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-3">Teammate Colors (Protected)</label>
+                  <p className="text-xs text-gray-500 mb-3">These colors are reserved for your teammates and cannot be changed or selected.</p>
+                  <div className="grid grid-cols-7 gap-3">
+                    {COLOR_PRESETS.map((preset) => {
+                      const teammateUsing = teamMembers.find(m => m.id !== '1' && m.color === preset.name)
+                      const isReserved = !!teammateUsing
+                      
+                      return (
+                        <div key={preset.name} className="relative">
+                          <div
+                            className={`w-12 h-12 rounded-lg border-2 transition-all ${
+                              isReserved
+                                ? 'border-gray-400 bg-gray-100 cursor-not-allowed opacity-60'
+                                : 'border-gray-300'
+                            }`}
+                            style={{ backgroundColor: preset.hex }}
+                            title={isReserved ? `${preset.name} - Reserved for ${teammateUsing?.name}` : preset.name}
+                          >
+                            {isReserved && (
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="w-6 h-6 rounded-full bg-white/80 flex items-center justify-center">
+                                  <span className="text-xs font-bold text-gray-600">🔒</span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                          {isReserved && (
+                            <p className="text-xs text-gray-500 mt-1 text-center truncate">{teammateUsing?.name}</p>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Personal Color Selection */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">Select Your Personal Color</label>
+                <p className="text-xs text-gray-500 mb-3">Choose a color for your calendar items. Teammate colors are not available for selection.</p>
+                <div className="grid grid-cols-7 gap-3">
+                  {COLOR_PRESETS.map((preset) => {
+                    const teammateUsing = teamMembers.find(m => m.id !== '1' && m.color === preset.name)
+                    const isReserved = !!teammateUsing
+                    const isSelected = calendarColor === preset.name
+                    
+                    return (
+                      <button
+                        key={preset.name}
+                        type="button"
+                        onClick={() => {
+                          if (!isReserved) {
+                            setCalendarColor(preset.name)
+                          }
+                        }}
+                        disabled={isReserved}
+                        className={`w-12 h-12 rounded-lg border-2 transition-all relative ${
+                          isReserved
+                            ? 'border-gray-400 bg-gray-100 cursor-not-allowed opacity-60'
+                            : isSelected
+                            ? 'border-gray-900 ring-2 ring-primary scale-110'
+                            : 'border-gray-300 hover:border-gray-400 hover:scale-105'
+                        }`}
+                        style={{ backgroundColor: preset.hex }}
+                        title={
+                          isReserved
+                            ? `${preset.name} - Reserved for ${teammateUsing?.name}`
+                            : preset.name
+                        }
+                      >
+                        {isReserved && (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-6 h-6 rounded-full bg-white/80 flex items-center justify-center">
+                              <span className="text-xs font-bold text-gray-600">🔒</span>
+                            </div>
+                          </div>
+                        )}
+                        {isSelected && !isReserved && (
+                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+                            <CheckCircle2 className="w-3 h-3 text-white" />
+                          </div>
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+                <p className="text-xs text-gray-500 mt-2 capitalize">Selected: {calendarColor}</p>
+                {COLOR_PRESETS.filter(p => teamMembers.find(m => m.id !== '1' && m.color === p.name)).length > 0 && (
+                  <p className="text-xs text-amber-600 mt-2">
+                    ⚠️ Some colors are reserved for your teammates and cannot be selected.
+                  </p>
+                )}
+              </div>
+
+              <div className="pt-4 border-t border-gray-200">
+                <Button
+                  variant="primary"
+                  onClick={async () => {
+                    setIsSavingColor(true)
+                    setError('')
+                    
+                    // Validate that selected color is not a teammate color
+                    const teammateUsing = teamMembers.find(m => m.id !== '1' && m.color === calendarColor)
+                    if (teammateUsing) {
+                      setError(`This color is reserved for ${teammateUsing.name}. Please select a different color.`)
+                      setIsSavingColor(false)
+                      return
+                    }
+                    
+                    try {
+                      const consultantId = localStorage.getItem('consultant_id')
+                      if (!consultantId) {
+                        setError('Please log in to save color preference')
+                        return
+                      }
+
+                      const response = await fetch('/api/consultant/calendar/color', {
+                        method: 'PUT',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'x-consultant-id': consultantId,
+                        },
+                        body: JSON.stringify({ color: calendarColor }),
+                      })
+
+                      const data = await response.json()
+
+                      if (!response.ok) {
+                        setError(data.error || 'Failed to save color preference')
+                        return
+                      }
+
+                      // Save to localStorage
+                      localStorage.setItem('consultant_calendar_color', calendarColor)
+                      setSuccess('Calendar color updated successfully!')
+                      setTimeout(() => setSuccess(''), 3000)
+                    } catch (err) {
+                      setError('Failed to save color preference. Please try again.')
+                    } finally {
+                      setIsSavingColor(false)
+                    }
+                  }}
+                  disabled={isSavingColor}
+                >
+                  {isSavingColor ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Color
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </Card>
+
+          {/* Birthday Visibility Settings */}
+          <Card className="p-6">
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                  <Cake className="w-5 h-5 text-primary" />
+                  Birthday Visibility
+                </h2>
+                <p className="text-sm text-gray-600">
+                  Control whether your birthday is visible to teammates in the calendar.
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div className="flex items-center gap-3">
+                  {showBirthday ? (
+                    <Eye className="w-5 h-5 text-green-600" />
+                  ) : (
+                    <EyeOff className="w-5 h-5 text-gray-400" />
+                  )}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-900">
+                      Show Birthday in Calendar
+                    </label>
+                    <p className="text-xs text-gray-500">
+                      {showBirthday 
+                        ? 'Your birthday will be visible to teammates' 
+                        : 'Your birthday will be hidden from teammates'}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowBirthday(!showBirthday)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    showBirthday ? 'bg-primary' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      showBirthday ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="pt-4 border-t border-gray-200">
+                <Button
+                  variant="primary"
+                  onClick={async () => {
+                    setIsSavingBirthday(true)
+                    setError('')
+                    try {
+                      const consultantId = localStorage.getItem('consultant_id')
+                      if (!consultantId) {
+                        setError('Please log in to save birthday preference')
+                        return
+                      }
+
+                      const response = await fetch('/api/consultant/birthday/visibility', {
+                        method: 'PUT',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'x-consultant-id': consultantId,
+                        },
+                        body: JSON.stringify({ showBirthday }),
+                      })
+
+                      const data = await response.json()
+
+                      if (!response.ok) {
+                        setError(data.error || 'Failed to save birthday preference')
+                        return
+                      }
+
+                      // Save to localStorage
+                      localStorage.setItem('consultant_show_birthday', String(showBirthday))
+                      setSuccess('Birthday visibility updated successfully!')
+                      setTimeout(() => setSuccess(''), 3000)
+                    } catch (err) {
+                      setError('Failed to save birthday preference. Please try again.')
+                    } finally {
+                      setIsSavingBirthday(false)
+                    }
+                  }}
+                  disabled={isSavingBirthday}
+                >
+                  {isSavingBirthday ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Preference
+                    </>
+                  )}
+                </Button>
               </div>
             </div>
           </Card>

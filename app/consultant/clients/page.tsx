@@ -15,17 +15,32 @@ import {
   MoreVertical,
   Eye,
   Edit,
-  MessageSquare
+  MessageSquare,
+  List,
+  Grid,
+  Users,
+  MapPin,
+  X,
+  Upload,
+  FileSpreadsheet,
+  CheckCircle2,
+  AlertCircle
 } from 'lucide-react'
 import Button from '@/components/ui/Button'
+import Modal from '@/components/ui/Modal'
+import Input from '@/components/ui/Input'
 
 interface Client {
   id: string
   name: string
+  companyName?: string
   type: 'personal' | 'business'
-  email: string
-  phone: string
-  status: 'active' | 'inactive' | 'prospect'
+  email?: string
+  phone?: string
+  status: 'door knocked' | 'to call' | 'to book appointment' | 'book appointment' | 'closed'
+  notes: string
+  location?: string
+  interestLevel?: 'hot' | 'warm' | 'cold'
   assignedDate: Date
   totalDeals: number
   totalLoanAmount: number
@@ -40,7 +55,30 @@ export default function ClientsPage() {
   const [clients, setClients] = useState<Client[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [filterType, setFilterType] = useState<'all' | 'personal' | 'business'>('all')
-  const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive' | 'prospect'>('all')
+  const [filterStatus, setFilterStatus] = useState<'all' | 'door knocked' | 'to call' | 'to book appointment' | 'book appointment' | 'closed'>('all')
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [showImportModal, setShowImportModal] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isImporting, setIsImporting] = useState(false)
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid') // Lead tracker view mode
+  const [extractedClients, setExtractedClients] = useState<any[]>([])
+  const [selectedClients, setSelectedClients] = useState<Set<number>>(new Set())
+  const [importFile, setImportFile] = useState<File | null>(null)
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    name: '',
+    companyName: '',
+    notes: '',
+    location: '',
+    interestLevel: 'warm' as 'hot' | 'warm' | 'cold',
+    status: 'door knocked' as 'door knocked' | 'to call' | 'to book appointment' | 'book appointment' | 'closed',
+    // Business fields
+    businessUEN: '',
+    businessRegistrationDate: '',
+    businessAddress: '',
+  })
+  const [showCompanyName, setShowCompanyName] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('consultant_token')
@@ -57,7 +95,8 @@ export default function ClientsPage() {
         type: 'personal',
         email: 'john.doe@example.com',
         phone: '+65 9123 4567',
-        status: 'active',
+        status: 'to book appointment',
+        notes: 'Interested in personal loan for home renovation. Follow up next week.',
         assignedDate: new Date('2023-06-15'),
         totalDeals: 2,
         totalLoanAmount: 125000,
@@ -67,10 +106,12 @@ export default function ClientsPage() {
       {
         id: '2',
         name: 'ABC Trading Pte Ltd',
+        companyName: 'ABC Trading Pte Ltd',
         type: 'business',
         email: 'contact@abctrading.sg',
         phone: '+65 6789 0123',
-        status: 'active',
+        status: 'book appointment',
+        notes: 'Business loan application in progress. Meeting scheduled for next Monday.',
         assignedDate: new Date('2023-08-20'),
         totalDeals: 3,
         totalLoanAmount: 450000,
@@ -85,7 +126,8 @@ export default function ClientsPage() {
         type: 'personal',
         email: 'jane.smith@example.com',
         phone: '+65 9234 5678',
-        status: 'active',
+        status: 'to call',
+        notes: 'Initial contact made. Need to call back for loan requirements.',
         assignedDate: new Date('2023-10-10'),
         totalDeals: 1,
         totalLoanAmount: 30000,
@@ -94,10 +136,12 @@ export default function ClientsPage() {
       {
         id: '4',
         name: 'XYZ Services Ltd',
+        companyName: 'XYZ Services Ltd',
         type: 'business',
         email: 'info@xyzservices.sg',
         phone: '+65 6345 6789',
-        status: 'active',
+        status: 'closed',
+        notes: 'Deal closed successfully. Client signed loan agreement last month.',
         assignedDate: new Date('2023-09-05'),
         totalDeals: 2,
         totalLoanAmount: 250000,
@@ -112,7 +156,8 @@ export default function ClientsPage() {
         type: 'personal',
         email: 'robert.chen@example.com',
         phone: '+65 9456 7890',
-        status: 'inactive',
+        status: 'door knocked',
+        notes: 'Door knocked yesterday. Left business card. Awaiting response.',
         assignedDate: new Date('2022-11-15'),
         totalDeals: 1,
         totalLoanAmount: 75000,
@@ -121,10 +166,12 @@ export default function ClientsPage() {
       {
         id: '6',
         name: 'DEF Manufacturing Pte Ltd',
+        companyName: 'DEF Manufacturing Pte Ltd',
         type: 'business',
         email: 'contact@defmfg.sg',
         phone: '+65 6456 7890',
-        status: 'prospect',
+        status: 'to call',
+        notes: 'Prospect from referral. Need to call and introduce our services.',
         assignedDate: new Date('2024-01-01'),
         totalDeals: 0,
         totalLoanAmount: 0,
@@ -138,12 +185,97 @@ export default function ClientsPage() {
 
   const filteredClients = clients.filter(client => {
     const matchesSearch = client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         client.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         client.phone.includes(searchQuery)
+                         (client.companyName && client.companyName.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                         (client.email && client.email.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                         (client.phone && client.phone.includes(searchQuery)) ||
+                         (client.notes && client.notes.toLowerCase().includes(searchQuery.toLowerCase()))
     const matchesType = filterType === 'all' || client.type === filterType
     const matchesStatus = filterStatus === 'all' || client.status === filterStatus
     return matchesSearch && matchesType && matchesStatus
   })
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const handleAddClient = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    try {
+      // In production, this would be an API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
+      // Auto-capture location if available
+      let capturedLocation = formData.location
+      if (!capturedLocation && typeof navigator !== 'undefined' && navigator.geolocation) {
+        // Try to get location from browser (in production, you'd use a geocoding service)
+        // For now, we'll just use the manual input
+      }
+
+      // Create new client
+      const newClient: Client = {
+        id: String(clients.length + 1),
+        name: formData.name,
+        companyName: formData.companyName || undefined,
+        type: formData.companyName ? 'business' : 'personal',
+        status: formData.status,
+        notes: formData.notes,
+        location: capturedLocation || undefined,
+        interestLevel: formData.interestLevel,
+        assignedDate: new Date(),
+        totalDeals: 0,
+        totalLoanAmount: 0,
+        businessUEN: formData.companyName && formData.businessUEN ? formData.businessUEN : undefined,
+        businessRegistrationDate: formData.companyName && formData.businessRegistrationDate ? new Date(formData.businessRegistrationDate) : undefined,
+      }
+
+      // Add to clients list
+      setClients(prev => [...prev, newClient])
+      
+      // Reset form and close modal
+      setFormData({
+        name: '',
+        companyName: '',
+        notes: '',
+        location: '',
+        interestLevel: 'warm',
+        status: 'door knocked',
+        businessUEN: '',
+        businessRegistrationDate: '',
+        businessAddress: '',
+      })
+      setShowCompanyName(false)
+      setShowAddModal(false)
+    } catch (error) {
+      console.error('Error adding client:', error)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleCloseModal = () => {
+    if (!isSubmitting) {
+      setShowAddModal(false)
+      // Reset form
+      setFormData({
+        name: '',
+        companyName: '',
+        notes: '',
+        location: '',
+        interestLevel: 'warm',
+        status: 'door knocked',
+        businessUEN: '',
+        businessRegistrationDate: '',
+        businessAddress: '',
+      })
+      setShowCompanyName(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -160,10 +292,36 @@ export default function ClientsPage() {
                 <p className="text-sm text-gray-600">Manage your client relationships</p>
               </div>
             </div>
-            <Button variant="primary" size="sm" className="flex items-center gap-2">
-              <Plus className="w-4 h-4" />
-              Add Client
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                type="button"
+                variant="outline" 
+                size="sm" 
+                className="flex items-center gap-2"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setShowImportModal(true)
+                }}
+              >
+                <FileSpreadsheet className="w-4 h-4" />
+                Import from Sheets
+              </Button>
+              <Button 
+                type="button"
+                variant="primary" 
+                size="sm" 
+                className="flex items-center gap-2"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setShowAddModal(true)
+                }}
+              >
+                <Plus className="w-4 h-4" />
+                Add Client
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -175,7 +333,7 @@ export default function ClientsPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Search clients by name, email, or phone..."
+              placeholder="Search clients by name, company, notes..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -197,9 +355,11 @@ export default function ClientsPage() {
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="all">All Status</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-              <option value="prospect">Prospect</option>
+              <option value="door knocked">Door Knocked</option>
+              <option value="to call">To Call</option>
+              <option value="to book appointment">To Book Appointment</option>
+              <option value="book appointment">Book Appointment</option>
+              <option value="closed">Closed</option>
             </select>
           </div>
         </div>
@@ -211,9 +371,9 @@ export default function ClientsPage() {
             <p className="text-2xl font-bold text-gray-900">{clients.length}</p>
           </div>
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-            <p className="text-sm text-gray-600 mb-1">Active</p>
-            <p className="text-2xl font-bold text-green-600">
-              {clients.filter(c => c.status === 'active').length}
+            <p className="text-sm text-gray-600 mb-1">To Call</p>
+            <p className="text-2xl font-bold text-orange-600">
+              {clients.filter(c => c.status === 'to call').length}
             </p>
           </div>
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
@@ -230,8 +390,111 @@ export default function ClientsPage() {
           </div>
         </div>
 
-        {/* Clients Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* View Toggle - Lead Tracker */}
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Users className="w-5 h-5 text-primary" />
+            <h2 className="text-lg font-semibold text-gray-900">Lead Tracker</h2>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setViewMode('grid')}
+              className={viewMode === 'grid' ? 'bg-primary/10 border-primary' : ''}
+            >
+              <Grid className="w-4 h-4 mr-2" />
+              Button View
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setViewMode('table')}
+              className={viewMode === 'table' ? 'bg-primary/10 border-primary' : ''}
+            >
+              <List className="w-4 h-4 mr-2" />
+              Sheet View
+            </Button>
+          </div>
+        </div>
+
+        {/* Sheet/Table View - Lead Tracker */}
+        {viewMode === 'table' && (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-gray-50 border-b border-gray-200">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
+                      COMPANY NAME
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
+                      CUS NAME
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
+                      ROLE
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
+                      STATUS
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                      REMARKS
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {filteredClients.map((client) => (
+                    <tr
+                      key={client.id}
+                      className="hover:bg-gray-50 transition-colors cursor-pointer"
+                      onClick={() => router.push(`/consultant/clients/${client.id}`)}
+                    >
+                      <td className="px-4 py-3 text-sm text-gray-900 border-r border-gray-200 font-medium">
+                        {client.companyName || '-'}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-700 border-r border-gray-200">
+                        {client.name}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-700 border-r border-gray-200">
+                        {client.type === 'business' ? 'Business Owner' : 'Personal Client'}
+                      </td>
+                      <td className="px-4 py-3 text-sm border-r border-gray-200">
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${
+                            client.status === 'closed'
+                              ? 'bg-green-100 text-green-700'
+                              : client.status === 'book appointment'
+                              ? 'bg-blue-100 text-blue-700'
+                              : client.status === 'to book appointment'
+                              ? 'bg-purple-100 text-purple-700'
+                              : client.status === 'to call'
+                              ? 'bg-orange-100 text-orange-700'
+                              : 'bg-gray-100 text-gray-700'
+                          }`}
+                        >
+                          {client.status.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-600 max-w-md">
+                        {client.notes || '-'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {filteredClients.length === 0 && (
+                <div className="text-center py-12">
+                  <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600">No clients found</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Button/Grid View - Lead Tracker */}
+        {viewMode === 'grid' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredClients.map((client) => (
             <div
               key={client.id}
@@ -253,29 +516,42 @@ export default function ClientsPage() {
                 </div>
                 <span
                   className={`px-2 py-1 text-xs font-medium rounded-full ${
-                    client.status === 'active'
+                    client.status === 'closed'
                       ? 'bg-green-100 text-green-700'
-                      : client.status === 'prospect'
+                      : client.status === 'book appointment'
                       ? 'bg-blue-100 text-blue-700'
+                      : client.status === 'to book appointment'
+                      ? 'bg-purple-100 text-purple-700'
+                      : client.status === 'to call'
+                      ? 'bg-orange-100 text-orange-700'
                       : 'bg-gray-100 text-gray-700'
                   }`}
                 >
-                  {client.status}
+                  {client.status.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                 </span>
               </div>
 
               <div className="space-y-2 mb-4">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Mail className="w-4 h-4" />
-                  <span className="truncate">{client.email}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Phone className="w-4 h-4" />
-                  <span>{client.phone}</span>
-                </div>
-                {client.businessUEN && (
-                  <div className="text-xs text-gray-500">
-                    UEN: {client.businessUEN}
+                {client.companyName && (
+                  <div className="text-sm font-medium text-gray-900">
+                    {client.companyName}
+                  </div>
+                )}
+                {client.email && (
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Mail className="w-4 h-4" />
+                    <span className="truncate">{client.email}</span>
+                  </div>
+                )}
+                {client.phone && (
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Phone className="w-4 h-4" />
+                    <span>{client.phone}</span>
+                  </div>
+                )}
+                {client.notes && (
+                  <div className="text-xs text-gray-600 line-clamp-2 mt-2">
+                    {client.notes}
                   </div>
                 )}
               </div>
@@ -321,19 +597,631 @@ export default function ClientsPage() {
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        )}
 
         {filteredClients.length === 0 && (
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
             <User className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <p className="text-gray-600 mb-4">No clients found</p>
-            <Button variant="primary" size="sm" className="flex items-center gap-2 mx-auto">
+            <Button 
+              type="button"
+              variant="primary" 
+              size="sm" 
+              className="flex items-center gap-2 mx-auto"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setShowAddModal(true)
+              }}
+            >
               <Plus className="w-4 h-4" />
               Add Your First Client
             </Button>
           </div>
         )}
       </main>
+
+      {/* Add Client Modal */}
+      <Modal
+        isOpen={showAddModal}
+        onClose={handleCloseModal}
+        title="Add New Client"
+        size="lg"
+      >
+        <form onSubmit={handleAddClient} className="space-y-6">
+          {/* Name */}
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              Name *
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              value={formData.name}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              placeholder="Enter client name"
+            />
+          </div>
+
+          {/* Company Name - Optional with Plus Button */}
+          <div>
+            {!showCompanyName ? (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowCompanyName(true)}
+                className="w-full flex items-center justify-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                Add Company Name (Optional)
+              </Button>
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label htmlFor="companyName" className="block text-sm font-medium text-gray-700">
+                      Company Name
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowCompanyName(false)
+                        setFormData(prev => ({ 
+                          ...prev, 
+                          companyName: '',
+                          businessUEN: '',
+                          businessRegistrationDate: '',
+                          businessAddress: ''
+                        }))
+                      }}
+                      className="text-gray-400 hover:text-gray-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    id="companyName"
+                    name="companyName"
+                    value={formData.companyName}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="Enter company name"
+                  />
+                </div>
+                
+                {/* Business Fields - Inline when company name is added */}
+                <div>
+                  <label htmlFor="businessUEN" className="block text-sm font-medium text-gray-700 mb-2">
+                    UEN (Unique Entity Number)
+                  </label>
+                  <input
+                    type="text"
+                    id="businessUEN"
+                    name="businessUEN"
+                    value={formData.businessUEN}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="201234567A"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="businessRegistrationDate" className="block text-sm font-medium text-gray-700 mb-2">
+                    Registration Date
+                  </label>
+                  <input
+                    type="date"
+                    id="businessRegistrationDate"
+                    name="businessRegistrationDate"
+                    value={formData.businessRegistrationDate}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="businessAddress" className="block text-sm font-medium text-gray-700 mb-2">
+                    Business Address
+                  </label>
+                  <textarea
+                    id="businessAddress"
+                    name="businessAddress"
+                    value={formData.businessAddress}
+                    onChange={handleInputChange}
+                    rows={2}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                    placeholder="Enter business address"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Location - Auto-captured */}
+          <div>
+            <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+              Location
+              <span className="ml-2 text-xs font-normal text-gray-500">(Auto-captured)</span>
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                id="location"
+                name="location"
+                value={formData.location}
+                onChange={handleInputChange}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Location will be auto-captured or enter manually"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={async () => {
+                  // Auto-capture location using browser geolocation
+                  if (typeof navigator !== 'undefined' && navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                      async (position) => {
+                        // In production, use reverse geocoding API to get address
+                        // For now, just show coordinates
+                        const lat = position.coords.latitude
+                        const lng = position.coords.longitude
+                        setFormData(prev => ({ 
+                          ...prev, 
+                          location: `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}` 
+                        }))
+                      },
+                      (error) => {
+                        console.error('Error getting location:', error)
+                        // Fallback to manual entry
+                        setFormData(prev => ({ ...prev, location: 'Location not available' }))
+                      }
+                    )
+                  }
+                }}
+                className="flex items-center gap-2"
+              >
+                <MapPin className="w-4 h-4" />
+                Capture
+              </Button>
+            </div>
+            <p className="mt-1 text-xs text-gray-500">Click &quot;Capture&quot; to auto-detect location or enter manually</p>
+          </div>
+
+          {/* Interest Level */}
+          <div>
+            <label htmlFor="interestLevel" className="block text-sm font-medium text-gray-700 mb-2">
+              Interest Level
+            </label>
+            <div className="flex gap-3">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="interestLevel"
+                  value="hot"
+                  checked={formData.interestLevel === 'hot'}
+                  onChange={handleInputChange}
+                  className="w-4 h-4 text-red-600 focus:ring-red-500"
+                />
+                <span className={`px-3 py-2 rounded-lg border-2 transition-all ${
+                  formData.interestLevel === 'hot' 
+                    ? 'border-red-500 bg-red-50 text-red-700 font-medium' 
+                    : 'border-gray-300 text-gray-700 hover:border-red-300'
+                }`}>
+                  Hot
+                </span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="interestLevel"
+                  value="warm"
+                  checked={formData.interestLevel === 'warm'}
+                  onChange={handleInputChange}
+                  className="w-4 h-4 text-orange-600 focus:ring-orange-500"
+                />
+                <span className={`px-3 py-2 rounded-lg border-2 transition-all ${
+                  formData.interestLevel === 'warm' 
+                    ? 'border-orange-500 bg-orange-50 text-orange-700 font-medium' 
+                    : 'border-gray-300 text-gray-700 hover:border-orange-300'
+                }`}>
+                  Warm
+                </span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="interestLevel"
+                  value="cold"
+                  checked={formData.interestLevel === 'cold'}
+                  onChange={handleInputChange}
+                  className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                />
+                <span className={`px-3 py-2 rounded-lg border-2 transition-all ${
+                  formData.interestLevel === 'cold' 
+                    ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium' 
+                    : 'border-gray-300 text-gray-700 hover:border-blue-300'
+                }`}>
+                  Cold
+                </span>
+              </label>
+            </div>
+          </div>
+
+          {/* Notes - Required */}
+          <div>
+            <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
+              Notes *
+              <span className="ml-2 text-xs font-normal text-gray-500">(Important for sales tracking)</span>
+            </label>
+            <textarea
+              id="notes"
+              name="notes"
+              required
+              value={formData.notes}
+              onChange={handleInputChange}
+              rows={4}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+              placeholder="Write notes about the client... (e.g., Initial contact, requirements, follow-up actions)"
+            />
+            <p className="mt-1 text-xs text-gray-500">These notes help track client interactions and sales progress</p>
+          </div>
+
+          {/* Status */}
+          <div>
+            <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
+              Status *
+            </label>
+            <select
+              id="status"
+              name="status"
+              required
+              value={formData.status}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            >
+              <option value="door knocked">Door Knocked</option>
+              <option value="to call">To Call</option>
+              <option value="to book appointment">To Book Appointment</option>
+              <option value="book appointment">Book Appointment</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+
+          {/* Form Actions */}
+          <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleCloseModal}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={isSubmitting}
+              className="flex items-center gap-2"
+            >
+              {isSubmitting ? (
+                'Adding...'
+              ) : (
+                <>
+                  <Plus className="w-4 h-4" />
+                  Add Client
+                </>
+              )}
+            </Button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Import from Google Sheets Modal */}
+      <Modal
+        isOpen={showImportModal}
+        onClose={() => {
+          if (!isImporting) {
+            setShowImportModal(false)
+            setExtractedClients([])
+            setSelectedClients(new Set())
+            setImportFile(null)
+          }
+        }}
+        title="Import Clients from Google Sheets"
+        size="xl"
+      >
+        <div className="space-y-6">
+          {extractedClients.length === 0 ? (
+            // File Upload Step
+            <div className="space-y-4">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition-colors">
+                <FileSpreadsheet className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <label htmlFor="sheet-file" className="cursor-pointer">
+                  <input
+                    type="file"
+                    id="sheet-file"
+                    accept=".xlsx,.xls,.csv"
+                    className="hidden"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0]
+                      if (file) {
+                        setImportFile(file)
+                        setIsImporting(true)
+                        try {
+                          // Create FormData to send file
+                          const formData = new FormData()
+                          formData.append('file', file)
+                          
+                          // Call API to extract clients
+                          const response = await fetch('/api/consultant/clients/import', {
+                            method: 'POST',
+                            body: formData,
+                          })
+                          
+                          if (!response.ok) {
+                            throw new Error('Failed to extract clients from file')
+                          }
+                          
+                          const data = await response.json()
+                          setExtractedClients(data.clients || [])
+                        } catch (error) {
+                          console.error('Error importing file:', error)
+                          alert('Failed to import file. Please make sure it is a valid Excel or CSV file.')
+                        } finally {
+                          setIsImporting(false)
+                        }
+                      }
+                    }}
+                  />
+                  <p className="text-lg font-medium text-gray-700 mb-2">
+                    Click to upload or drag and drop
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Supports Excel (.xlsx, .xls) and CSV files
+                  </p>
+                </label>
+              </div>
+              {importFile && (
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <FileSpreadsheet className="w-4 h-4" />
+                  <span>{importFile.name}</span>
+                </div>
+              )}
+              {isImporting && (
+                <div className="text-center py-4">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+                  <p className="text-sm text-gray-600">Extracting client information...</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            // Review and Select Clients Step
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Review Extracted Clients
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Select which clients you want to add. Review the extracted information to ensure it&apos;s correct.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      if (selectedClients.size === extractedClients.length) {
+                        setSelectedClients(new Set())
+                      } else {
+                        setSelectedClients(new Set(extractedClients.map((_, i) => i)))
+                      }
+                    }}
+                  >
+                    {selectedClients.size === extractedClients.length ? 'Deselect All' : 'Select All'}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="border border-gray-200 rounded-lg max-h-96 overflow-y-auto">
+                <div className="divide-y divide-gray-200">
+                  {extractedClients.map((client, index) => {
+                    const isSelected = selectedClients.has(index)
+                    const hasErrors = !client.name || (!client.email && !client.phone)
+                    
+                    return (
+                      <div
+                        key={index}
+                        className={`p-4 hover:bg-gray-50 transition-colors ${
+                          isSelected ? 'bg-primary/5 border-l-4 border-primary' : ''
+                        } ${hasErrors ? 'bg-red-50/50' : ''}`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={(e) => {
+                              const newSelected = new Set(selectedClients)
+                              if (e.target.checked) {
+                                newSelected.add(index)
+                              } else {
+                                newSelected.delete(index)
+                              }
+                              setSelectedClients(newSelected)
+                            }}
+                            className="mt-1 w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                          />
+                          <div className="flex-1">
+                            <div className="flex items-start justify-between mb-2">
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <h4 className="font-semibold text-gray-900">
+                                    {client.name || 'Unnamed Client'}
+                                  </h4>
+                                  {client.type === 'business' && (
+                                    <span className="px-2 py-0.5 text-xs font-medium bg-teal/10 text-teal rounded">
+                                      Business
+                                    </span>
+                                  )}
+                                  {client.type === 'personal' && (
+                                    <span className="px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary rounded">
+                                      Personal
+                                    </span>
+                                  )}
+                                  {hasErrors && (
+                                    <span className="px-2 py-0.5 text-xs font-medium bg-red-100 text-red-700 rounded flex items-center gap-1">
+                                      <AlertCircle className="w-3 h-3" />
+                                      Missing Info
+                                    </span>
+                                  )}
+                                </div>
+                                {client.companyName && (
+                                  <p className="text-sm text-gray-600 mt-1">
+                                    {client.companyName}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-3 text-sm">
+                              {client.email && (
+                                <div className="flex items-center gap-2 text-gray-600">
+                                  <Mail className="w-4 h-4" />
+                                  <span className="truncate">{client.email}</span>
+                                </div>
+                              )}
+                              {client.phone && (
+                                <div className="flex items-center gap-2 text-gray-600">
+                                  <Phone className="w-4 h-4" />
+                                  <span>{client.phone}</span>
+                                </div>
+                              )}
+                              {client.location && (
+                                <div className="flex items-center gap-2 text-gray-600">
+                                  <MapPin className="w-4 h-4" />
+                                  <span className="truncate">{client.location}</span>
+                                </div>
+                              )}
+                              {client.status && (
+                                <div className="flex items-center gap-2 text-gray-600">
+                                  <span className="text-xs font-medium">Status:</span>
+                                  <span className="capitalize">{client.status}</span>
+                                </div>
+                              )}
+                            </div>
+                            
+                            {client.notes && (
+                              <div className="mt-2 text-sm text-gray-600">
+                                <span className="font-medium">Notes: </span>
+                                <span>{client.notes}</span>
+                              </div>
+                            )}
+                            
+                            {client.businessUEN && (
+                              <div className="mt-2 text-sm text-gray-600">
+                                <span className="font-medium">UEN: </span>
+                                <span>{client.businessUEN}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                <div className="text-sm text-gray-600">
+                  <span className="font-semibold text-gray-900">{selectedClients.size}</span> of{' '}
+                  <span className="font-semibold text-gray-900">{extractedClients.length}</span> clients selected
+                </div>
+                <div className="flex gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setExtractedClients([])
+                      setSelectedClients(new Set())
+                      setImportFile(null)
+                    }}
+                    disabled={isSubmitting}
+                  >
+                    Start Over
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="primary"
+                    onClick={async () => {
+                      if (selectedClients.size === 0) {
+                        alert('Please select at least one client to add.')
+                        return
+                      }
+                      
+                      setIsSubmitting(true)
+                      try {
+                        const clientsToAdd = Array.from(selectedClients).map(
+                          (index) => extractedClients[index]
+                        )
+                        
+                        // Add selected clients
+                        const newClients: Client[] = clientsToAdd.map((clientData, idx) => ({
+                          id: String(clients.length + idx + 1),
+                          name: clientData.name || 'Unnamed Client',
+                          companyName: clientData.companyName,
+                          type: clientData.type || (clientData.companyName ? 'business' : 'personal'),
+                          email: clientData.email,
+                          phone: clientData.phone,
+                          status: clientData.status || 'door knocked',
+                          notes: clientData.notes || '',
+                          location: clientData.location,
+                          interestLevel: clientData.interestLevel || 'warm',
+                          assignedDate: new Date(),
+                          totalDeals: 0,
+                          totalLoanAmount: 0,
+                          businessUEN: clientData.businessUEN,
+                          businessRegistrationDate: clientData.businessRegistrationDate,
+                        }))
+                        
+                        setClients(prev => [...prev, ...newClients])
+                        
+                        // Reset and close
+                        setExtractedClients([])
+                        setSelectedClients(new Set())
+                        setImportFile(null)
+                        setShowImportModal(false)
+                      } catch (error) {
+                        console.error('Error adding clients:', error)
+                        alert('Failed to add clients. Please try again.')
+                      } finally {
+                        setIsSubmitting(false)
+                      }
+                    }}
+                    disabled={isSubmitting || selectedClients.size === 0}
+                    className="flex items-center gap-2"
+                  >
+                    {isSubmitting ? (
+                      'Adding...'
+                    ) : (
+                      <>
+                        <CheckCircle2 className="w-4 h-4" />
+                        Add Selected Clients ({selectedClients.size})
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </Modal>
     </div>
   )
 }

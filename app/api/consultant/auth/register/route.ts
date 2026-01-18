@@ -29,7 +29,7 @@ const generateConsultantId = () => {
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, username, email, phone, password, accessCode, director } = await request.json()
+    const { name, username, email, phone, birthday, showBirthday, password, accessCode, director } = await request.json()
 
     // Validation
     if (!name || !username || !email || !phone || !password || !accessCode || !director) {
@@ -96,6 +96,8 @@ export async function POST(request: NextRequest) {
       name,
       email: email.toLowerCase(),
       phone,
+      birthday: birthday ? new Date(birthday) : undefined,
+      showBirthday: showBirthday !== undefined ? showBirthday : true,
       director: director.toLowerCase(),
       accessCode,
       createdAt: new Date(),

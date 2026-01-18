@@ -1,0 +1,347 @@
+import { NextRequest, NextResponse } from 'next/server'
+import type { Task } from '@/types'
+import { shouldAutoArchiveTask, findSimilarTasks } from '@/lib/utils'
+import { createClient } from '@/lib/supabase/server'
+
+// Helper function to map database task to Task type
+function mapDbTaskToTask(dbTask: any, consultantName: string = 'You'): Task & { created?: Date; archived?: boolean } {
+  return {
+    id: dbTask.id,
+    title: dbTask.title,
+    startTime: dbTask.start_time ? new Date(dbTask.start_time) : new Date(),
+    endTime: dbTask.end_time ? new Date(dbTask.end_time) : new Date(),
+    type: 'task',
+    taskType: dbTask.task_type || 'other',
+    priority: dbTask.priority || 'medium',
+    status: dbTask.status || 'pending',
+    consultantId: dbTask.consultant_id,
+    consultantName: consultantName,
+    isMyItem: true,
+    clientId: dbTask.client_id,
+    clientName: dbTask.client_name || undefined,
+    estimatedDuration: dbTask.estimated_duration || 30,
+    deadline: dbTask.deadline ? new Date(dbTask.deadline) : undefined,
+    notes: dbTask.description,
+    aiSuggested: dbTask.ai_suggested || false,
+    aiRecommendations: dbTask.ai_recommendations || undefined,
+    created: dbTask.created_at ? new Date(dbTask.created_at) : new Date(),
+    archived: dbTask.archived || false,
+  }
+}
+
+// GET - Fetch all tasks for consultant
+export async function GET(request: NextRequest) {
+  try {
+    const consultantId = request.headers.get('x-consultant-id') || request.nextUrl.searchParams.get('consultantId')
+    const includeArchived = request.nextUrl.searchParams.get('includeArchived') === 'true'
+    
+    if (!consultantId) {
+      return NextResponse.json(
+        { error: 'Consultant ID is required' },
+        { status: 401 }
+      )
+    }
+
+    const supabase = await createClient()
+
+    // Get consultant name
+    const { data: consultant } = await supabase
+      .from('consultants')
+      .select('name')
+      .eq('id', consultantId)
+      .single()
+
+    const consultantName = consultant?.name || 'You'
+
+    // Build query
+    let query = supabase
+      .from('tasks')
+      .select(`
+        *,
+        clients:client_id(name)
+      `)
+      .eq('consultant_id', consultantId)
+
+    if (!includeArchived) {
+      query = query.eq('archived', false)
+    }
+
+    const { data: tasksData, error } = await query.order('created_at', { ascending: false })
+
+    if (error) {
+      console.error('[API] Supabase fetch error:', error)
+      return NextResponse.json(
+        { error: 'Failed to fetch tasks' },
+        { status: 500 }
+      )
+    }
+
+    // Auto-archive old tasks in database
+    const now = new Date()
+    const tasksToArchive: string[] = []
+    
+    tasksData?.forEach(task => {
+      if (shouldAutoArchiveTask({
+        status: task.status,
+        completedAt: task.completed_at ? new Date(task.completed_at) : undefined,
+        deadline: task.deadline ? new Date(task.deadline) : undefined,
+        created: task.created_at ? new Date(task.created_at) : undefined,
+      }, 90) && !task.archived) {
+        tasksToArchive.push(task.id)
+      }
+    })
+
+    // Archive old tasks in bulk
+    if (tasksToArchive.length > 0) {
+      await supabase
+        .from('tasks')
+        .update({ archived: true, status: 'cancelled' })
+        .in('id', tasksToArchive)
+    }
+
+    // Map to Task format and add client names
+    const tasks = (tasksData || []).map(task => {
+      const mapped = mapDbTaskToTask(task, consultantName)
+      // Add client name from join if available
+      if (task.clients && Array.isArray(task.clients) && task.clients[0]) {
+        mapped.clientName = task.clients[0].name
+      } else if (typeof task.clients === 'object' && task.clients?.name) {
+        mapped.clientName = task.clients.name
+      }
+      return mapped
+    })
+
+    // Get archived count
+    const { count: archivedCount } = await supabase
+      .from('tasks')
+      .select('*', { count: 'exact', head: true })
+      .eq('consultant_id', consultantId)
+      .eq('archived', true)
+
+    return NextResponse.json({
+      success: true,
+      tasks,
+      archivedCount: archivedCount || 0,
+    })
+  } catch (error) {
+    console.error('[API] Fetch tasks error:', error)
+    return NextResponse.json(
+      { error: 'Failed to fetch tasks' },
+      { status: 500 }
+    )
+  }
+}
+
+// POST - Create a new task
+export async function POST(request: NextRequest) {
+  try {
+    const consultantId = request.headers.get('x-consultant-id')
+    const body = await request.json()
+
+    if (!consultantId) {
+      return NextResponse.json(
+        { error: 'Consultant ID is required' },
+        { status: 401 }
+      )
+    }
+
+    const supabase = await createClient()
+
+    // Get existing tasks for duplicate check
+    const { data: existingTasksData } = await supabase
+      .from('tasks')
+      .select('*')
+      .eq('consultant_id', consultantId)
+      .eq('archived', false)
+
+    const existingTasks = (existingTasksData || []).map(t => ({
+      id: t.id,
+      title: t.title,
+      clientId: t.client_id,
+      clientName: t.client_name,
+      taskType: t.task_type,
+      status: t.status,
+      created: t.created_at ? new Date(t.created_at) : undefined,
+    }))
+
+    // Check for duplicates
+    const similarTasks = findSimilarTasks(
+      {
+        title: body.title,
+        clientId: body.clientId,
+        clientName: body.clientName,
+        taskType: body.taskType,
+      },
+      existingTasks
+    )
+
+    // Get client name if clientId provided
+    let clientName = body.clientName
+    if (body.clientId && !clientName) {
+      const { data: client } = await supabase
+        .from('clients')
+        .select('name')
+        .eq('id', body.clientId)
+        .single()
+      clientName = client?.name
+    }
+
+    // Create task in Supabase
+    const { data: newTask, error: insertError } = await supabase
+      .from('tasks')
+      .insert({
+        consultant_id: consultantId,
+        client_id: body.clientId || null,
+        title: body.title,
+        description: body.notes || body.description,
+        task_type: body.taskType || 'other',
+        priority: body.priority || 'medium',
+        status: body.status || 'pending',
+        start_time: body.startTime ? new Date(body.startTime).toISOString() : null,
+        end_time: body.endTime ? new Date(body.endTime).toISOString() : null,
+        estimated_duration: body.estimatedDuration || 30,
+        deadline: body.deadline ? new Date(body.deadline).toISOString() : null,
+        ai_suggested: body.aiSuggested || false,
+        ai_recommendations: body.aiRecommendations || null,
+        archived: false,
+      })
+      .select()
+      .single()
+
+    if (insertError || !newTask) {
+      console.error('[API] Supabase insert error:', insertError)
+      return NextResponse.json(
+        { error: 'Failed to create task' },
+        { status: 500 }
+      )
+    }
+
+    const mappedTask = mapDbTaskToTask(newTask)
+    if (clientName) mappedTask.clientName = clientName
+
+    return NextResponse.json({
+      success: true,
+      task: mappedTask,
+      duplicateWarning: similarTasks.length > 0 ? {
+        similarTasks: similarTasks.slice(0, 3),
+        message: `Found ${similarTasks.length} similar task(s). Are you sure you want to create a duplicate?`,
+      } : undefined,
+    })
+  } catch (error) {
+    console.error('[API] Create task error:', error)
+    return NextResponse.json(
+      { error: 'Failed to create task' },
+      { status: 500 }
+    )
+  }
+}
+
+// PUT - Update a task
+export async function PUT(request: NextRequest) {
+  try {
+    const consultantId = request.headers.get('x-consultant-id')
+    const body = await request.json()
+
+    if (!consultantId || !body.id) {
+      return NextResponse.json(
+        { error: 'Consultant ID and Task ID are required' },
+        { status: 401 }
+      )
+    }
+
+    const supabase = await createClient()
+
+    // Build update object
+    const updateData: any = {}
+    if (body.title !== undefined) updateData.title = body.title
+    if (body.description !== undefined || body.notes !== undefined) updateData.description = body.notes || body.description
+    if (body.taskType !== undefined) updateData.task_type = body.taskType
+    if (body.priority !== undefined) updateData.priority = body.priority
+    if (body.status !== undefined) {
+      updateData.status = body.status
+      if (body.status === 'completed' && !body.completedAt) {
+        updateData.completed_at = new Date().toISOString()
+      }
+    }
+    if (body.startTime !== undefined) updateData.start_time = new Date(body.startTime).toISOString()
+    if (body.endTime !== undefined) updateData.end_time = new Date(body.endTime).toISOString()
+    if (body.estimatedDuration !== undefined) updateData.estimated_duration = body.estimatedDuration
+    if (body.deadline !== undefined) updateData.deadline = body.deadline ? new Date(body.deadline).toISOString() : null
+    if (body.archived !== undefined) updateData.archived = body.archived
+    if (body.aiSuggested !== undefined) updateData.ai_suggested = body.aiSuggested
+    if (body.aiRecommendations !== undefined) updateData.ai_recommendations = body.aiRecommendations
+
+    // Update task in Supabase
+    const { data: updatedTask, error } = await supabase
+      .from('tasks')
+      .update(updateData)
+      .eq('id', body.id)
+      .eq('consultant_id', consultantId)
+      .select()
+      .single()
+
+    if (error || !updatedTask) {
+      console.error('[API] Supabase update error:', error)
+      return NextResponse.json(
+        { error: 'Failed to update task' },
+        { status: 500 }
+      )
+    }
+
+    const mappedTask = mapDbTaskToTask(updatedTask)
+
+    return NextResponse.json({
+      success: true,
+      task: mappedTask,
+    })
+  } catch (error) {
+    console.error('[API] Update task error:', error)
+    return NextResponse.json(
+      { error: 'Failed to update task' },
+      { status: 500 }
+    )
+  }
+}
+
+// DELETE - Delete a task
+export async function DELETE(request: NextRequest) {
+  try {
+    const consultantId = request.headers.get('x-consultant-id')
+    const taskId = request.nextUrl.searchParams.get('id')
+
+    if (!consultantId || !taskId) {
+      return NextResponse.json(
+        { error: 'Consultant ID and Task ID are required' },
+        { status: 401 }
+      )
+    }
+
+    const supabase = await createClient()
+
+    // Delete task from Supabase
+    const { error } = await supabase
+      .from('tasks')
+      .delete()
+      .eq('id', taskId)
+      .eq('consultant_id', consultantId)
+
+    if (error) {
+      console.error('[API] Supabase delete error:', error)
+      return NextResponse.json(
+        { error: 'Failed to delete task' },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Task deleted successfully',
+    })
+  } catch (error) {
+    console.error('[API] Delete task error:', error)
+    return NextResponse.json(
+      { error: 'Failed to delete task' },
+      { status: 500 }
+    )
+  }
+}

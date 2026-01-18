@@ -62,6 +62,11 @@ export default function DynamicBackground() {
     setParticles(generateParticles())
   }, [theme])
 
+  // Hide background on CRM pages (they have their own styling) - check AFTER all hooks
+  if (pathname?.startsWith('/crm')) {
+    return null
+  }
+
   return (
     <div
       className="fixed inset-0 -z-10 pointer-events-none overflow-hidden"

@@ -195,9 +195,9 @@ export default function AIDocsPage() {
               <Button
                 variant="primary"
                 onClick={() => {
-                  const prompt = prompt('Describe the document you need:')
-                  if (prompt) {
-                    setAiPrompt(prompt)
+                  const userPrompt = window.prompt('Describe the document you need:')
+                  if (userPrompt) {
+                    setAiPrompt(userPrompt)
                     setShowCreateModal(true)
                   }
                 }}

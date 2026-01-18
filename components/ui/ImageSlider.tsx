@@ -30,7 +30,7 @@ export default function ImageSlider({
     }, autoPlayInterval)
 
     return () => clearInterval(interval)
-  }, [autoPlay, autoPlayInterval, images.length])
+  }, [autoPlay, autoPlayInterval, images])
 
   const goToPrevious = () => {
     if (!images || images.length === 0) return

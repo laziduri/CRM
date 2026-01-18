@@ -53,6 +53,7 @@ export default function CRMSidebar() {
       defaultOpen: true,
       items: [
         { label: 'Dashboard', href: '/consultant/dashboard', icon: LayoutDashboard },
+        { label: 'Calendar', href: '/consultant/calendar', icon: CalendarIcon },
         { label: 'Clients', href: '/consultant/clients', icon: Users },
         { label: 'Pipeline', href: '/consultant/pipeline', icon: FolderKanban },
         { label: 'Messages', href: '/consultant/messages', icon: MessageSquare },
@@ -122,6 +123,7 @@ export default function CRMSidebar() {
       initial[cat.label] = cat.defaultOpen ?? false
     })
     setOpenCategories((prev) => ({ ...prev, ...initial }))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -175,20 +177,21 @@ export default function CRMSidebar() {
 
           {/* Navigation */}
           <nav className="flex-1 p-4 space-y-1">
-            {/* My Tasks - Quick Access */}
+            {/* Calendar - Core Feature */}
             <Link
-              href="/consultant/ai/tasks"
+              href="/consultant/calendar"
               onClick={handleNavClick}
               className={`
                 flex items-center gap-3 px-3 py-2 rounded-lg mb-4
                 transition-colors
-                ${isActive('/consultant/ai/tasks')
-                  ? 'bg-primary/10 text-primary font-medium'
-                  : 'text-gray-700 hover:bg-gray-100'}
+                ${isActive('/consultant/calendar')
+                  ? 'bg-primary text-white font-medium shadow-md'
+                  : 'bg-primary/10 text-primary hover:bg-primary/20 font-medium'}
               `}
             >
-              <CheckSquare className="w-5 h-5" />
-              <span className="text-sm font-medium">My Tasks</span>
+              <CalendarIcon className="w-5 h-5" />
+              <span className="text-sm font-medium">Calendar</span>
+              <span className="ml-auto px-2 py-0.5 bg-white/20 text-xs rounded-full">Core</span>
             </Link>
 
             {/* Workspaces Section */}

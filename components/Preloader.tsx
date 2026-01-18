@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 interface PreloaderProps {
   onComplete: () => void
@@ -18,35 +18,57 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   const [currentText, setCurrentText] = useState(loadingTexts[0])
   const [textIndex, setTextIndex] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
+  const onCompleteRef = useRef(onComplete)
+  const hasCalledOnComplete = useRef(false)
+
+  // Keep ref updated
+  useEffect(() => {
+    onCompleteRef.current = onComplete
+  }, [onComplete])
 
   useEffect(() => {
-    let progressInterval: NodeJS.Timeout
-    let textInterval: NodeJS.Timeout
+    let progressInterval: NodeJS.Timeout | null = null
+    let textInterval: NodeJS.Timeout | null = null
+    let completeTimeout: NodeJS.Timeout | null = null
+    let isMounted = true
 
-    // Fast progress bar animation (0-100% in ~2 seconds)
+    // Fast progress bar animation (0-100% in ~1.5 seconds)
     progressInterval = setInterval(() => {
+      if (!isMounted) return
+      
       setProgress((prev) => {
         if (prev >= 100) {
-          setIsComplete(true)
-          // Trigger fade out immediately
-          setTimeout(() => {
-            onComplete()
-          }, 200)
+          if (!hasCalledOnComplete.current) {
+            hasCalledOnComplete.current = true
+            setIsComplete(true)
+            // Trigger fade out and call onComplete once
+            completeTimeout = setTimeout(() => {
+              if (isMounted) {
+                try {
+                  onCompleteRef.current()
+                } catch (e) {
+                  console.error('Error in onComplete:', e)
+                }
+              }
+            }, 300) // Slightly longer to allow fade animation
+          }
           return 100
         }
-        // Faster increment for 2 second completion
-        let increment = 1.2
+        // Faster increment for quick completion
+        let increment = 2
         if (prev > 30 && prev < 80) {
-          increment = 2.5
+          increment = 3
         } else if (prev > 80) {
-          increment = 1.5
+          increment = 2
         }
         return Math.min(prev + increment, 100)
       })
-    }, 30) // Faster interval
+    }, 20) // Faster interval
 
     // Dynamic text changes - faster cycling
     textInterval = setInterval(() => {
+      if (!isMounted) return
+      
       setTextIndex((prev) => {
         const nextIndex = (prev + 1) % loadingTexts.length
         setCurrentText(loadingTexts[nextIndex])
@@ -54,11 +76,14 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       })
     }, 600) // Faster text changes
 
+    // Cleanup function
     return () => {
+      isMounted = false
       if (progressInterval) clearInterval(progressInterval)
       if (textInterval) clearInterval(textInterval)
+      if (completeTimeout) clearTimeout(completeTimeout)
     }
-  }, [onComplete])
+  }, []) // Empty dependency array - onComplete is in ref
 
   return (
     <div

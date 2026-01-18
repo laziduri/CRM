@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { usePathname } from 'next/navigation'
 import Preloader from './Preloader'
 
@@ -13,64 +13,59 @@ export default function PreloaderWrapper({ children }: PreloaderWrapperProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
 
-  const handlePreloaderComplete = () => {
+  const handlePreloaderComplete = useCallback(() => {
     setIsLoading(false)
     if (typeof window !== 'undefined') {
-      document.body.style.overflow = ''
-    }
-  }
-
-  useEffect(() => {
-    // CRITICAL: Always ensure body is visible immediately
-    if (typeof window !== 'undefined') {
       try {
-        document.body.style.opacity = '1'
-        document.body.style.visibility = 'visible'
-        document.body.style.backgroundColor = 'white'
         document.body.style.overflow = ''
       } catch (e) {
-        console.error('Error setting body visibility:', e)
+        // Ignore errors
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    // CRITICAL: Always ensure body and content are visible immediately
+    if (typeof window !== 'undefined') {
+      try {
+        // Remove ALL blocking styles immediately
+        document.body.style.opacity = '1'
+        document.body.style.visibility = 'visible'
+        document.body.style.overflow = ''
+        document.body.style.display = 'block'
+        document.body.style.backgroundColor = ''
+        
+        // Force html to be visible
+        document.documentElement.style.opacity = '1'
+        document.documentElement.style.visibility = 'visible'
+        
+        // Ensure all main elements are visible
+        const main = document.querySelector('main') as HTMLElement | null
+        if (main) {
+          main.style.opacity = '1'
+          main.style.visibility = 'visible'
+          main.style.display = 'block'
+        }
+      } catch (e) {
+        console.error('Error setting visibility:', e)
       }
     }
     
     setIsMounted(true)
+    // NEVER block content - always set loading to false
+    setIsLoading(false)
   }, [])
 
-  useEffect(() => {
-    // Only show preloader on home page after mount
-    if (!isMounted || typeof window === 'undefined') return
-    
-    const currentPath = pathname || window.location.pathname
-    const isHomePage = currentPath === '/' || currentPath === ''
-    
-    if (isHomePage) {
-      setIsLoading(true)
-      document.body.style.overflow = 'hidden'
-      
-      // Safety timeout: ensure content shows after max 3 seconds
-      const safetyTimeout = setTimeout(() => {
-        handlePreloaderComplete()
-      }, 3000)
-      
-      return () => clearTimeout(safetyTimeout)
-    } else {
-      setIsLoading(false)
-      document.body.style.overflow = ''
-    }
-  }, [pathname, isMounted])
+  // DISABLED PRELOADER TEMPORARILY - Always show content immediately
+  // useEffect(() => {
+  //   // Skip preloader completely for now to debug white screen
+  //   setIsLoading(false)
+  // }, [pathname, isMounted])
 
-  // CRITICAL: Always render children immediately - never block them
+  // ALWAYS render children - never hide them
   return (
     <>
-      {/* Always render children immediately - this prevents white screen */}
       {children}
-      
-      {/* Preloader overlay only when loading on home page */}
-      {isLoading && isMounted && pathname === '/' && (
-        <div className="fixed inset-0 z-[9999] bg-white flex items-center justify-center">
-          <Preloader onComplete={handlePreloaderComplete} />
-        </div>
-      )}
     </>
   )
 }

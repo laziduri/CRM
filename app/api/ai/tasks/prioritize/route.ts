@@ -59,9 +59,9 @@ export async function POST(request: NextRequest) {
     })
 
     // Sort by priority and deadline
-    const priorityOrder = { urgent: 4, high: 3, medium: 2, low: 1 }
+    const priorityOrder: Record<string, number> = { urgent: 4, high: 3, medium: 2, low: 1 }
     prioritizedTasks.sort((a: any, b: any) => {
-      const priorityDiff = priorityOrder[b.priority] - priorityOrder[a.priority]
+      const priorityDiff = (priorityOrder[b.priority] || 0) - (priorityOrder[a.priority] || 0)
       if (priorityDiff !== 0) return priorityDiff
 
       if (a.deadline && b.deadline) {

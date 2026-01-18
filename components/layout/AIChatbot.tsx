@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 import { MessageCircle, X, Send, Bot, MessageSquare, Loader2, Plus, Calendar, Clock, User, Phone, Mail, Building2, Trash2 } from 'lucide-react'
 import { personalLoanFlow, businessLoanFlow, detectHighIntent, getHighIntentResponse, detectIntent, type ConversationMemory } from '@/lib/chatbotFlow'
 
@@ -23,6 +24,7 @@ interface Thread {
 const STORAGE_KEY = 'brilliance_chatbot_threads'
 
 export default function AIChatbot() {
+  const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const [threads, setThreads] = useState<Thread[]>([])
   const [currentThreadId, setCurrentThreadId] = useState<string | null>(null)
@@ -124,6 +126,7 @@ export default function AIChatbot() {
       console.error('Error loading threads:', error)
     }
     setIsVisible(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Save threads to localStorage whenever they change
@@ -159,6 +162,11 @@ export default function AIChatbot() {
       setTimeout(() => inputRef.current?.focus(), 100)
     }
   }, [isOpen, showAppointmentForm])
+
+  // Hide chatbot on CRM pages - check AFTER all hooks
+  if (pathname?.startsWith('/crm')) {
+    return null
+  }
 
   const createNewThread = () => {
     const newThread: Thread = {

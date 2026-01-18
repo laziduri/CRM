@@ -122,7 +122,7 @@ export default function Hero() {
   }, [])
 
   return (
-    <section className="relative bg-gradient-to-br from-white via-gray-50 to-white text-gray-900 min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative bg-gradient-to-br from-white via-gray-50 to-white text-gray-900 min-h-screen flex items-center justify-center overflow-hidden w-full">
       {/* Dotted background - using brand colors */}
       <div className="absolute inset-0 bg-dots-pattern-white opacity-50"></div>
       
@@ -138,7 +138,7 @@ export default function Hero() {
       
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="text-center">
+        <div className="text-center w-full">
           {/* Animated heading with words coming down */}
           <div className="mb-6 overflow-visible">
             <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 text-primary leading-tight pb-2">

@@ -123,7 +123,7 @@ export default function ConsultantResourcesPage() {
         {/* Introduction */}
         <div className="mb-8">
           <p className="text-gray-600">
-            Quick reference guide for loan document requirements. Click the copy icon next to any document or use the "Copy All" button to copy the complete list for sharing with clients.
+            Quick reference guide for loan document requirements. Click the copy icon next to any document or use the &quot;Copy All&quot; button to copy the complete list for sharing with clients.
           </p>
         </div>
 
@@ -259,7 +259,7 @@ export default function ConsultantResourcesPage() {
               <h3 className="font-semibold text-blue-900 mb-2">Important Notes for Consultants</h3>
               <ul className="text-sm text-blue-800 space-y-2 list-disc list-inside">
                 <li>Documents must be clear, readable, and in PDF or image format (JPG, PNG)</li>
-                <li>For business loans, ensure all directors' documents are collected</li>
+                <li>For business loans, ensure all directors&apos; documents are collected</li>
                 <li>Bank statements should show consistent business activity</li>
                 <li>Financial statements should be from the same financial year end</li>
                 <li>CBS reports should be recent (within 30 days for accuracy)</li>

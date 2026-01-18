@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { 
@@ -12,7 +12,9 @@ import {
   Paperclip,
   Image as ImageIcon,
   CheckCircle2,
-  Clock
+  Clock,
+  MessageSquare,
+  Loader2
 } from 'lucide-react'
 import Button from '@/components/ui/Button'
 
@@ -38,7 +40,7 @@ interface Conversation {
   avatar?: string
 }
 
-export default function MessagesPage() {
+function MessagesContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const selectedClientId = searchParams.get('client')
@@ -354,5 +356,17 @@ export default function MessagesPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function MessagesPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      </div>
+    }>
+      <MessagesContent />
+    </Suspense>
   )
 }

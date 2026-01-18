@@ -214,7 +214,7 @@ export default function ClientDashboardPage() {
                 Loan Readiness Checklist
               </h3>
               <p className="text-sm text-gray-600 mb-4">
-                Track your progress and ensure you're ready to apply
+                Track your progress and ensure you&apos;re ready to apply
               </p>
               <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
                 <div className="bg-teal h-2 rounded-full" style={{ width: '65%' }}></div>

@@ -35,6 +35,7 @@ import {
 } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
+import Card from '@/components/ui/Card'
 import {
   BarChart,
   Bar,
@@ -114,6 +115,19 @@ interface Teammate {
 }
 
 type DashboardTab = 'overview' | 'resources' | 'notes' | 'appointments'
+
+interface MonthlyGoals {
+  month: string
+  year?: number
+  commissionTarget: number
+  dealsTarget: number
+  clientsTarget: number
+  successRateTarget: number
+  actualCommission?: number
+  actualDeals?: number
+  actualClients?: number
+  actualSuccessRate?: number
+}
 
 interface DocumentRequirement {
   id: string
@@ -909,7 +923,7 @@ export default function ConsultantDashboardPage() {
             {/* Today's Appointments */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-gray-900">Today's Appointments</h3>
+                <h3 className="font-semibold text-gray-900">Today&apos;s Appointments</h3>
                 <span className="px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full">
                   {todayAppointments.length}
                 </span>
@@ -964,7 +978,7 @@ export default function ConsultantDashboardPage() {
               </div>
               <div>
                 <h2 className="text-xl font-semibold text-gray-900">Team Performance</h2>
-                <p className="text-sm text-gray-600">View your team's statistics</p>
+                <p className="text-sm text-gray-600">View your team&apos;s statistics</p>
               </div>
             </div>
             <Link href="/consultant/team" className="text-sm text-primary hover:text-primary-dark font-medium">
@@ -1153,8 +1167,8 @@ export default function ConsultantDashboardPage() {
           <div className="space-y-6">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Loan Document Requirements</h2>
-              <p className="text-gray-600">
-                Quick reference guide for loan document requirements. Click the copy icon next to any document or use the "Copy All" button to copy the complete list for sharing with clients.
+                <p className="text-gray-600">
+                Quick reference guide for loan document requirements. Click the copy icon next to any document or use the &quot;Copy All&quot; button to copy the complete list for sharing with clients.
               </p>
             </div>
 
@@ -1287,7 +1301,7 @@ export default function ConsultantDashboardPage() {
                   <h3 className="font-semibold text-blue-900 mb-2">Important Notes for Consultants</h3>
                   <ul className="text-sm text-blue-800 space-y-2 list-disc list-inside">
                     <li>Documents must be clear, readable, and in PDF or image format (JPG, PNG)</li>
-                    <li>For business loans, ensure all directors' documents are collected</li>
+                    <li>For business loans, ensure all directors&apos; documents are collected</li>
                     <li>Bank statements should show consistent business activity</li>
                     <li>Financial statements should be from the same financial year end</li>
                     <li>CBS reports should be recent (within 30 days for accuracy)</li>
@@ -1358,9 +1372,9 @@ export default function ConsultantDashboardPage() {
           {/* Tabs */}
           <div className="flex gap-4 border-b border-gray-200">
             <button
-              onClick={() => setActiveTab('current')}
+              onClick={() => setGoalsModalTab('current')}
               className={`pb-3 px-1 font-medium text-sm transition-colors ${
-                activeTab === 'current'
+                goalsModalTab === 'current'
                   ? 'text-primary border-b-2 border-primary'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
@@ -1380,7 +1394,7 @@ export default function ConsultantDashboardPage() {
           </div>
 
           {/* Current Month Goals Tab */}
-          {activeTab === 'current' && (
+          {goalsModalTab === 'current' && (
             <div className="space-y-6">
               <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                 <p className="text-sm text-blue-800">
@@ -1523,17 +1537,17 @@ export default function ConsultantDashboardPage() {
           {goalsModalTab === 'history' && (
             <div className="space-y-4">
               <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                <p className="text-sm text-gray-600">
-                  View your past months' goals and actual achievements
+                  <p className="text-sm text-gray-600">
+                  View your past months&apos; goals and actual achievements
                 </p>
               </div>
 
               <div className="space-y-4 max-h-[500px] overflow-y-auto">
                 {pastMonthsGoals.map((goal, index) => {
-                  const commissionAchieved = goal.actualCommission >= goal.commissionTarget
-                  const dealsAchieved = goal.actualDeals >= goal.dealsTarget
-                  const clientsAchieved = goal.actualClients >= goal.clientsTarget
-                  const successRateAchieved = goal.actualSuccessRate >= goal.successRateTarget
+                  const commissionAchieved = (goal.actualCommission ?? 0) >= goal.commissionTarget
+                  const dealsAchieved = (goal.actualDeals ?? 0) >= goal.dealsTarget
+                  const clientsAchieved = (goal.actualClients ?? 0) >= goal.clientsTarget
+                  const successRateAchieved = (goal.actualSuccessRate ?? 0) >= goal.successRateTarget
                   const allTargetsMet = commissionAchieved && dealsAchieved && clientsAchieved && successRateAchieved
 
                   return (
@@ -1547,7 +1561,7 @@ export default function ConsultantDashboardPage() {
                     >
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="font-semibold text-gray-900">
-                          {goal.month} {goal.year}
+                          {goal.month} {goal.year || new Date().getFullYear()}
                         </h3>
                         {allTargetsMet ? (
                           <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full flex items-center gap-1">
@@ -1572,7 +1586,7 @@ export default function ConsultantDashboardPage() {
                           </div>
                           <div className="text-sm">
                             <span className="font-semibold text-gray-900">
-                              ${goal.actualCommission.toLocaleString()}
+                              ${(goal.actualCommission ?? 0).toLocaleString()}
                             </span>
                             <span className="text-gray-500"> / ${goal.commissionTarget.toLocaleString()}</span>
                           </div>
@@ -1582,7 +1596,7 @@ export default function ConsultantDashboardPage() {
                                 commissionAchieved ? 'bg-green-600' : 'bg-red-600'
                               }`}
                               style={{
-                                width: `${Math.min((goal.actualCommission / goal.commissionTarget) * 100, 100)}%`,
+                                width: `${Math.min(((goal.actualCommission ?? 0) / goal.commissionTarget) * 100, 100)}%`,
                               }}
                             ></div>
                           </div>
@@ -1597,7 +1611,7 @@ export default function ConsultantDashboardPage() {
                             </span>
                           </div>
                           <div className="text-sm">
-                            <span className="font-semibold text-gray-900">{goal.actualDeals}</span>
+                            <span className="font-semibold text-gray-900">{goal.actualDeals ?? 0}</span>
                             <span className="text-gray-500"> / {goal.dealsTarget}</span>
                           </div>
                           <div className="mt-1 w-full bg-gray-200 rounded-full h-1.5">
@@ -1606,7 +1620,7 @@ export default function ConsultantDashboardPage() {
                                 dealsAchieved ? 'bg-green-600' : 'bg-red-600'
                               }`}
                               style={{
-                                width: `${Math.min((goal.actualDeals / goal.dealsTarget) * 100, 100)}%`,
+                                width: `${Math.min(((goal.actualDeals ?? 0) / goal.dealsTarget) * 100, 100)}%`,
                               }}
                             ></div>
                           </div>
@@ -1621,7 +1635,7 @@ export default function ConsultantDashboardPage() {
                             </span>
                           </div>
                           <div className="text-sm">
-                            <span className="font-semibold text-gray-900">{goal.actualClients}</span>
+                            <span className="font-semibold text-gray-900">{goal.actualClients ?? 0}</span>
                             <span className="text-gray-500"> / {goal.clientsTarget}</span>
                           </div>
                           <div className="mt-1 w-full bg-gray-200 rounded-full h-1.5">
@@ -1630,7 +1644,7 @@ export default function ConsultantDashboardPage() {
                                 clientsAchieved ? 'bg-green-600' : 'bg-red-600'
                               }`}
                               style={{
-                                width: `${Math.min((goal.actualClients / goal.clientsTarget) * 100, 100)}%`,
+                                width: `${Math.min(((goal.actualClients ?? 0) / goal.clientsTarget) * 100, 100)}%`,
                               }}
                             ></div>
                           </div>
@@ -1645,7 +1659,7 @@ export default function ConsultantDashboardPage() {
                             </span>
                           </div>
                           <div className="text-sm">
-                            <span className="font-semibold text-gray-900">{goal.actualSuccessRate}%</span>
+                            <span className="font-semibold text-gray-900">{goal.actualSuccessRate ?? 0}%</span>
                             <span className="text-gray-500"> / {goal.successRateTarget}%</span>
                           </div>
                           <div className="mt-1 w-full bg-gray-200 rounded-full h-1.5">
@@ -1654,7 +1668,7 @@ export default function ConsultantDashboardPage() {
                                 successRateAchieved ? 'bg-green-600' : 'bg-red-600'
                               }`}
                               style={{
-                                width: `${Math.min((goal.actualSuccessRate / goal.successRateTarget) * 100, 100)}%`,
+                                width: `${Math.min(((goal.actualSuccessRate ?? 0) / goal.successRateTarget) * 100, 100)}%`,
                               }}
                             ></div>
                           </div>

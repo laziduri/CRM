@@ -19,6 +19,8 @@ import {
   X
 } from 'lucide-react'
 import Button from '@/components/ui/Button'
+import { getSuggestedNextStage, getAutoFillExplanation } from '@/lib/crm-autofill'
+import { Sparkles, CheckCircle2 as CheckCircle } from 'lucide-react'
 
 interface Deal {
   id: string
@@ -51,6 +53,8 @@ export default function PipelinePage() {
   const [draggedDeal, setDraggedDeal] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'personal' | 'business'>('all')
+  const [suggestedStage, setSuggestedStage] = useState<string | null>(null)
+  const [draggingToStage, setDraggingToStage] = useState<string | null>(null)
 
   useEffect(() => {
     const token = localStorage.getItem('consultant_token')
@@ -149,13 +153,61 @@ export default function PipelinePage() {
     setDraggedDeal(dealId)
   }
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDragOver = (e: React.DragEvent, status?: Deal['status']) => {
     e.preventDefault()
+    
+    // Show AI suggestion when hovering over a stage
+    if (status && draggedDeal) {
+      setDraggingToStage(status)
+      const deal = deals.find(d => d.id === draggedDeal)
+      if (deal) {
+        const suggested = getSuggestedNextStage({
+          currentStage: deal.status,
+          dealAmount: deal.loanAmount,
+          clientType: deal.clientType,
+          daysInCurrentStage: Math.floor(
+            (new Date().getTime() - deal.updatedAt.getTime()) / (1000 * 60 * 60 * 24)
+          ),
+          hasRequiredDocuments: deal.status !== 'new', // Mock: assume documents ready if not new
+        })
+        
+        // Show suggestion if dragging to suggested stage
+        if (suggested === status) {
+          setSuggestedStage(status)
+        } else {
+          setSuggestedStage(null)
+        }
+      }
+    }
+  }
+
+  const handleDragLeave = () => {
+    setDraggingToStage(null)
+    setSuggestedStage(null)
   }
 
   const handleDrop = (status: Deal['status']) => {
     if (!draggedDeal) return
 
+    // Get the deal being moved
+    const deal = deals.find(d => d.id === draggedDeal)
+    
+    // Check if AI suggests this stage
+    let aiSuggestion: string | null = null
+    if (deal) {
+      const suggested = getSuggestedNextStage({
+        currentStage: deal.status,
+        dealAmount: deal.loanAmount,
+        clientType: deal.clientType,
+        daysInCurrentStage: Math.floor(
+          (new Date().getTime() - deal.updatedAt.getTime()) / (1000 * 60 * 60 * 24)
+        ),
+        hasRequiredDocuments: deal.status !== 'new',
+      })
+      aiSuggestion = suggested
+    }
+
+    // Update deal
     setDeals(prev =>
       prev.map(deal =>
         deal.id === draggedDeal
@@ -163,7 +215,16 @@ export default function PipelinePage() {
           : deal
       )
     )
+    
+    // Show confirmation if AI suggested this
+    if (aiSuggestion === status) {
+      // You could show a toast notification here
+      console.log('AI suggestion followed!', { from: deal?.status, to: status })
+    }
+    
     setDraggedDeal(null)
+    setDraggingToStage(null)
+    setSuggestedStage(null)
   }
 
   const getPriorityColor = (priority: string) => {
@@ -290,7 +351,13 @@ export default function PipelinePage() {
                 onDragOver={handleDragOver}
                 onDrop={() => handleDrop(column.id as Deal['status'])}
               >
-                <div className={`${column.color} ${column.textColor} rounded-t-lg p-4 mb-2`}>
+                <div className={`${column.color} ${column.textColor} rounded-t-lg p-4 mb-2 relative`}>
+                  {draggingToStage === column.id && suggestedStage === column.id && (
+                    <div className="absolute top-2 right-2 flex items-center gap-1 text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
+                      <Sparkles className="w-3 h-3" />
+                      AI Suggested
+                    </div>
+                  )}
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-semibold">{column.title}</h3>
                     <span className="px-2 py-1 bg-white/50 rounded-full text-xs font-medium">

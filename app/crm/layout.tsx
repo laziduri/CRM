@@ -1,16 +1,11 @@
-import { Metadata } from 'next'
+import React from 'react'
+import { Metadata, Viewport } from 'next'
+import Script from 'next/script'
 
 export const metadata: Metadata = {
   title: 'Brilliance CRM - AI-Powered Loan Advisory CRM',
   description: 'Complete CRM platform for loan consultants with AI-powered tools, client management, and performance analytics',
   manifest: '/manifest.json',
-  themeColor: '#0066CC',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -23,6 +18,14 @@ export const metadata: Metadata = {
   },
 }
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: '#0066CC',
+}
+
 export default function CRMLayout({
   children,
 }: {
@@ -30,14 +33,11 @@ export default function CRMLayout({
 }) {
   return (
     <>
-      <link rel="manifest" href="/manifest.json" />
-      <meta name="theme-color" content="#0066CC" />
-      <meta name="apple-mobile-web-app-capable" content="yes" />
-      <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-      <meta name="apple-mobile-web-app-title" content="Brilliance CRM" />
       {children}
-      {/* PWA Install Prompt Script */}
-      <script
+      {/* PWA Install Prompt Script - Using Next.js Script component for proper SSR handling */}
+      <Script 
+        id="pwa-script" 
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
             if ('serviceWorker' in navigator && typeof window !== 'undefined') {
@@ -69,7 +69,7 @@ export default function CRMLayout({
                 }
               });
             }
-          `,
+          `
         }}
       />
     </>

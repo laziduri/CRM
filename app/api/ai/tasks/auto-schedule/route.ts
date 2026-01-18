@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     const workEnd = workingHours?.end || '18:00'
 
     // Calculate priority score
-    const priorityScores = {
+    const priorityScores: Record<string, number> = {
       urgent: 4,
       high: 3,
       medium: 2,
