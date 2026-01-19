@@ -1,5 +1,5 @@
 import "./globals.css"
-import { AuthProvider } from "@/contexts/AuthContext"
+import { ConditionalAuthProvider } from "@/components/ConditionalAuthProvider"
 
 export default function RootLayout({
   children,
@@ -9,9 +9,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AuthProvider>
+        <ConditionalAuthProvider>
           {children}
-        </AuthProvider>
+        </ConditionalAuthProvider>
       </body>
     </html>
   )

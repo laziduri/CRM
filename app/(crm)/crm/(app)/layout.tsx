@@ -1,3 +1,6 @@
+'use client'
+
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { AppShell } from "@/components/shell/AppShell"
 
 export default function CrmLayout({
@@ -5,5 +8,9 @@ export default function CrmLayout({
 }: {
   children: React.ReactNode
 }) {
-  return <AppShell>{children}</AppShell>
+  return (
+    <ErrorBoundary>
+      <AppShell>{children}</AppShell>
+    </ErrorBoundary>
+  )
 }

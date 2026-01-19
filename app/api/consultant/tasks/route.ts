@@ -5,11 +5,42 @@ import { createClient } from '@/lib/supabase/server'
 
 // Helper function to map database task to Task type
 function mapDbTaskToTask(dbTask: any, consultantName: string = 'You'): Task & { created?: Date; archived?: boolean } {
+  // Determine startTime - use start_time if available, otherwise use deadline or start_date
+  // For calendar display, tasks with dates (even without time) should appear
+  let startTime = dbTask.start_time ? new Date(dbTask.start_time) : undefined
+  if (!startTime && dbTask.deadline) {
+    // Use deadline date, set to start of day if no time specified
+    const deadlineDate = new Date(dbTask.deadline)
+    if (!dbTask.start_time) {
+      deadlineDate.setHours(0, 0, 0, 0)
+    }
+    startTime = deadlineDate
+  } else if (!startTime && dbTask.start_date) {
+    // Use start_date, set to start of day
+    const startDate = new Date(dbTask.start_date)
+    startDate.setHours(0, 0, 0, 0)
+    startTime = startDate
+  }
+
+  // Determine endTime - use end_time if available, otherwise calculate from startTime + duration
+  let endTime = dbTask.end_time ? new Date(dbTask.end_time) : undefined
+  if (!endTime && startTime) {
+    // If no specific time, make it an all-day task (end of day) or add duration
+    if (dbTask.start_time) {
+      // Has specific time, add duration
+      endTime = new Date(startTime.getTime() + (dbTask.estimated_duration || 30) * 60000)
+    } else {
+      // All-day task, set to end of day
+      endTime = new Date(startTime)
+      endTime.setHours(23, 59, 59, 999)
+    }
+  }
+
   return {
     id: dbTask.id,
     title: dbTask.title,
-    startTime: dbTask.start_time ? new Date(dbTask.start_time) : new Date(),
-    endTime: dbTask.end_time ? new Date(dbTask.end_time) : new Date(),
+    startTime: startTime || new Date(),
+    endTime: endTime || new Date(),
     type: 'task',
     taskType: dbTask.task_type || 'other',
     priority: dbTask.priority || 'medium',
@@ -21,6 +52,9 @@ function mapDbTaskToTask(dbTask: any, consultantName: string = 'You'): Task & { 
     clientName: dbTask.client_name || undefined,
     estimatedDuration: dbTask.estimated_duration || 30,
     deadline: dbTask.deadline ? new Date(dbTask.deadline) : undefined,
+    startDate: dbTask.start_date ? new Date(dbTask.start_date) : undefined,
+    assigneeId: dbTask.assignee_id || undefined,
+    assigneeName: dbTask.assignee_name || undefined,
     notes: dbTask.description,
     aiSuggested: dbTask.ai_suggested || false,
     aiRecommendations: dbTask.ai_recommendations || undefined,
@@ -187,6 +221,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Create task in Supabase
+    // Determine start_date from deadline or startTime
+    let startDate = null
+    if (body.startDate) {
+      startDate = new Date(body.startDate).toISOString().split('T')[0]
+    } else if (body.deadline) {
+      startDate = new Date(body.deadline).toISOString().split('T')[0]
+    } else if (body.startTime) {
+      startDate = new Date(body.startTime).toISOString().split('T')[0]
+    }
+
     const { data: newTask, error: insertError } = await supabase
       .from('tasks')
       .insert({
@@ -201,6 +245,8 @@ export async function POST(request: NextRequest) {
         end_time: body.endTime ? new Date(body.endTime).toISOString() : null,
         estimated_duration: body.estimatedDuration || 30,
         deadline: body.deadline ? new Date(body.deadline).toISOString() : null,
+        start_date: startDate,
+        assignee_id: body.assigneeId || null,
         ai_suggested: body.aiSuggested || false,
         ai_recommendations: body.aiRecommendations || null,
         archived: false,
@@ -267,6 +313,16 @@ export async function PUT(request: NextRequest) {
     if (body.endTime !== undefined) updateData.end_time = new Date(body.endTime).toISOString()
     if (body.estimatedDuration !== undefined) updateData.estimated_duration = body.estimatedDuration
     if (body.deadline !== undefined) updateData.deadline = body.deadline ? new Date(body.deadline).toISOString() : null
+    if (body.startDate !== undefined) {
+      updateData.start_date = body.startDate ? new Date(body.startDate).toISOString().split('T')[0] : null
+    } else if (body.deadline !== undefined && body.deadline) {
+      // If deadline is set but startDate isn't, derive start_date from deadline
+      updateData.start_date = new Date(body.deadline).toISOString().split('T')[0]
+    } else if (body.startTime !== undefined && body.startTime) {
+      // If startTime is set but startDate isn't, derive start_date from startTime
+      updateData.start_date = new Date(body.startTime).toISOString().split('T')[0]
+    }
+    if (body.assigneeId !== undefined) updateData.assignee_id = body.assigneeId || null
     if (body.archived !== undefined) updateData.archived = body.archived
     if (body.aiSuggested !== undefined) updateData.ai_suggested = body.aiSuggested
     if (body.aiRecommendations !== undefined) updateData.ai_recommendations = body.aiRecommendations

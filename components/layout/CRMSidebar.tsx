@@ -54,6 +54,7 @@ export default function CRMSidebar() {
       items: [
         { label: 'Dashboard', href: '/consultant/dashboard', icon: LayoutDashboard },
         { label: 'Calendar', href: '/consultant/calendar', icon: CalendarIcon },
+        { label: 'Tasks', href: '/consultant/tasks', icon: CheckSquare },
         { label: 'Clients', href: '/consultant/clients', icon: Users },
         { label: 'Pipeline', href: '/consultant/pipeline', icon: FolderKanban },
         { label: 'Messages', href: '/consultant/messages', icon: MessageSquare },

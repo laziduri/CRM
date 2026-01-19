@@ -32,7 +32,8 @@ import {
   Copy,
   Check,
   Building2,
-  MapPin
+  MapPin,
+  PhoneCall
 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
@@ -249,17 +250,22 @@ export default function ConsultantDashboardPage() {
   // Add Client Modal state
   const [showAddClientModal, setShowAddClientModal] = useState(false)
   const [isSubmittingClient, setIsSubmittingClient] = useState(false)
-  const [showCompanyName, setShowCompanyName] = useState(false)
+  const [currentStep, setCurrentStep] = useState(1)
+  const [showActionModal, setShowActionModal] = useState(false)
+  const [newClientInfo, setNewClientInfo] = useState<{ name: string; phone: string } | null>(null)
   const [clientFormData, setClientFormData] = useState({
     name: '',
-    companyName: '',
+    phone: '',
     notes: '',
     location: '',
     interestLevel: 'warm' as 'hot' | 'warm' | 'cold',
     status: 'door knocked' as 'door knocked' | 'to call' | 'to book appointment' | 'book appointment' | 'closed',
-    businessUEN: '',
-    businessRegistrationDate: '',
-    businessAddress: '',
+    companies: [] as Array<{
+      name: string
+      businessUEN?: string
+      businessRegistrationDate?: string
+      businessAddress?: string
+    }>,
   })
 
   useEffect(() => {
@@ -513,6 +519,101 @@ export default function ConsultantDashboardPage() {
     navigator.clipboard.writeText(text)
     setCopiedId(`${loanType}-${docName}`)
     setTimeout(() => setCopiedId(null), 2000)
+  }
+
+  // Client form helper functions
+  const validateStep = (step: number): boolean => {
+    switch (step) {
+      case 1:
+        return !!(clientFormData.name.trim() && clientFormData.phone.trim())
+      case 2:
+        return true // Optional step
+      case 3:
+        return !!(clientFormData.interestLevel && clientFormData.status)
+      case 4:
+        return !!clientFormData.notes.trim()
+      default:
+        return false
+    }
+  }
+
+  const nextStep = () => {
+    if (validateStep(currentStep) && currentStep < 4) {
+      setCurrentStep(prev => prev + 1)
+    }
+  }
+
+  const prevStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(prev => prev - 1)
+    }
+  }
+
+  const resetClientForm = () => {
+    setClientFormData({
+      name: '',
+      phone: '',
+      notes: '',
+      location: '',
+      interestLevel: 'warm',
+      status: 'door knocked',
+      companies: [],
+    })
+    setCurrentStep(1)
+    setShowAddClientModal(false)
+  }
+
+  const handleActionModalClose = () => {
+    setShowActionModal(false)
+    setNewClientInfo(null)
+    resetClientForm()
+  }
+
+  const handleWhatsApp = () => {
+    if (newClientInfo?.phone) {
+      const phoneNumber = newClientInfo.phone.replace(/[^0-9]/g, '')
+      const message = encodeURIComponent(`Hello ${newClientInfo.name}, this is from Brilliance Advisory.`)
+      window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank')
+    }
+    handleActionModalClose()
+  }
+
+  const handleCall = () => {
+    if (newClientInfo?.phone) {
+      window.location.href = `tel:${newClientInfo.phone}`
+    }
+    handleActionModalClose()
+  }
+
+  const addCompany = () => {
+    setClientFormData(prev => ({
+      ...prev,
+      companies: [
+        ...prev.companies,
+        {
+          name: '',
+          businessUEN: '',
+          businessRegistrationDate: '',
+          businessAddress: '',
+        },
+      ],
+    }))
+  }
+
+  const removeCompany = (index: number) => {
+    setClientFormData(prev => ({
+      ...prev,
+      companies: prev.companies.filter((_, i) => i !== index),
+    }))
+  }
+
+  const updateCompany = (index: number, field: string, value: string) => {
+    setClientFormData(prev => ({
+      ...prev,
+      companies: prev.companies.map((company, i) =>
+        i === index ? { ...company, [field]: value } : company
+      ),
+    }))
   }
 
   const tabs = [
@@ -1723,24 +1824,30 @@ export default function ConsultantDashboardPage() {
         isOpen={showAddClientModal}
         onClose={() => {
           if (!isSubmittingClient) {
-            setShowAddClientModal(false)
-            setClientFormData({
-              name: '',
-              companyName: '',
-              notes: '',
-              location: '',
-              interestLevel: 'warm',
-              status: 'door knocked',
-              businessUEN: '',
-              businessRegistrationDate: '',
-              businessAddress: '',
-            })
-            setShowCompanyName(false)
+            resetClientForm()
           }
         }}
         title="Add New Client"
         size="lg"
       >
+        {/* Progress Indicator */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-gray-700">
+              Step {currentStep} of 4
+            </span>
+            <span className="text-xs text-gray-500">
+              {Math.round((currentStep / 4) * 100)}% Complete
+            </span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div
+              className="bg-primary h-2 rounded-full transition-all duration-300"
+              style={{ width: `${(currentStep / 4) * 100}%` }}
+            />
+          </div>
+        </div>
+
         <form onSubmit={async (e) => {
           e.preventDefault()
           setIsSubmittingClient(true)
@@ -1748,331 +1855,355 @@ export default function ConsultantDashboardPage() {
             // In production, this would be an API call
             await new Promise(resolve => setTimeout(resolve, 1000))
             
-            // Reset form and close modal
-            setClientFormData({
-              name: '',
-              companyName: '',
-              notes: '',
-              location: '',
-              interestLevel: 'warm',
-              status: 'door knocked',
-              businessUEN: '',
-              businessRegistrationDate: '',
-              businessAddress: '',
+            // Store client info for action modal
+            setNewClientInfo({
+              name: clientFormData.name,
+              phone: clientFormData.phone,
             })
-            setShowCompanyName(false)
-            setShowAddClientModal(false)
-            
-            // Optionally redirect to clients page
-            router.push('/consultant/clients')
+
+            // Show action modal instead of closing
+            setShowActionModal(true)
+            setIsSubmittingClient(false)
           } catch (error) {
             console.error('Error adding client:', error)
-          } finally {
             setIsSubmittingClient(false)
           }
         }} className="space-y-6">
-          {/* Name */}
-          <div>
-            <label htmlFor="client-name" className="block text-sm font-medium text-gray-700 mb-2">
-              Name *
-            </label>
-            <input
-              type="text"
-              id="client-name"
-              name="name"
-              required
-              value={clientFormData.name}
-              onChange={(e) => setClientFormData(prev => ({ ...prev, name: e.target.value }))}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-              placeholder="Enter client name"
-            />
-          </div>
+          {/* Step 1: Name and Phone Number */}
+          {currentStep === 1 && (
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="client-name" className="block text-sm font-medium text-gray-700 mb-2">
+                  Name *
+                </label>
+                <input
+                  type="text"
+                  id="client-name"
+                  name="name"
+                  required
+                  value={clientFormData.name}
+                  onChange={(e) => setClientFormData(prev => ({ ...prev, name: e.target.value }))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  placeholder="Enter client name"
+                />
+              </div>
+              <div>
+                <label htmlFor="client-phone" className="block text-sm font-medium text-gray-700 mb-2">
+                  Phone Number *
+                </label>
+                <input
+                  type="tel"
+                  id="client-phone"
+                  name="phone"
+                  required
+                  value={clientFormData.phone}
+                  onChange={(e) => setClientFormData(prev => ({ ...prev, phone: e.target.value }))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  placeholder="+65 9123 4567"
+                />
+              </div>
+            </div>
+          )}
 
-          {/* Company Name - Optional with Plus Button */}
-          <div>
-            {!showCompanyName ? (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setShowCompanyName(true)}
-                className="w-full flex items-center justify-center gap-2"
-              >
-                <Plus className="w-4 h-4" />
-                Add Company Name (Optional)
-              </Button>
-            ) : (
-              <div className="space-y-4">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <label htmlFor="client-companyName" className="block text-sm font-medium text-gray-700">
-                      Company Name
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowCompanyName(false)
-                        setClientFormData(prev => ({ 
-                          ...prev, 
-                          companyName: '',
-                          businessUEN: '',
-                          businessRegistrationDate: '',
-                          businessAddress: ''
-                        }))
-                      }}
-                      className="text-gray-400 hover:text-gray-600"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                  <input
-                    type="text"
-                    id="client-companyName"
-                    name="companyName"
-                    value={clientFormData.companyName}
-                    onChange={(e) => setClientFormData(prev => ({ ...prev, companyName: e.target.value }))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="Enter company name"
-                  />
+          {/* Step 2: Companies (Optional) */}
+          {currentStep === 2 && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Companies (Optional)
+                </label>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={addCompany}
+                  className="flex items-center gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Company
+                </Button>
+              </div>
+              {clientFormData.companies.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  <Building2 className="w-12 h-12 mx-auto mb-2 text-gray-400" />
+                  <p className="text-sm">No companies added. Click &quot;Add Company&quot; to add one.</p>
                 </div>
-                
-                {/* Business Fields */}
-                <div>
-                  <label htmlFor="client-businessUEN" className="block text-sm font-medium text-gray-700 mb-2">
-                    UEN (Unique Entity Number)
-                  </label>
-                  <input
-                    type="text"
-                    id="client-businessUEN"
-                    name="businessUEN"
-                    value={clientFormData.businessUEN}
-                    onChange={(e) => setClientFormData(prev => ({ ...prev, businessUEN: e.target.value }))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="201234567A"
-                  />
+              ) : (
+                <div className="space-y-4">
+                  {clientFormData.companies.map((company, index) => (
+                    <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-sm font-medium text-gray-700">Company {index + 1}</h4>
+                        <button
+                          type="button"
+                          onClick={() => removeCompany(index)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Company Name
+                        </label>
+                        <input
+                          type="text"
+                          value={company.name}
+                          onChange={(e) => updateCompany(index, 'name', e.target.value)}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                          placeholder="Enter company name"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          UEN (Unique Entity Number)
+                        </label>
+                        <input
+                          type="text"
+                          value={company.businessUEN || ''}
+                          onChange={(e) => updateCompany(index, 'businessUEN', e.target.value)}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                          placeholder="201234567A"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Registration Date
+                        </label>
+                        <input
+                          type="date"
+                          value={company.businessRegistrationDate || ''}
+                          onChange={(e) => updateCompany(index, 'businessRegistrationDate', e.target.value)}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Business Address
+                        </label>
+                        <textarea
+                          value={company.businessAddress || ''}
+                          onChange={(e) => updateCompany(index, 'businessAddress', e.target.value)}
+                          rows={2}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                          placeholder="Enter business address"
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                
-                <div>
-                  <label htmlFor="client-businessRegistrationDate" className="block text-sm font-medium text-gray-700 mb-2">
-                    Registration Date
+              )}
+            </div>
+          )}
+
+          {/* Step 3: Interest Level and Status */}
+          {currentStep === 3 && (
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Interest Level
+                </label>
+                <div className="flex gap-3">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="interestLevel"
+                      value="hot"
+                      checked={clientFormData.interestLevel === 'hot'}
+                      onChange={(e) => setClientFormData(prev => ({ ...prev, interestLevel: e.target.value as 'hot' | 'warm' | 'cold' }))}
+                      className="w-4 h-4 text-red-600 focus:ring-red-500"
+                    />
+                    <span className={`px-3 py-2 rounded-lg border-2 transition-all ${
+                      clientFormData.interestLevel === 'hot' 
+                        ? 'border-red-500 bg-red-50 text-red-700 font-medium' 
+                        : 'border-gray-300 text-gray-700 hover:border-red-300'
+                    }`}>
+                      Hot
+                    </span>
                   </label>
-                  <input
-                    type="date"
-                    id="client-businessRegistrationDate"
-                    name="businessRegistrationDate"
-                    value={clientFormData.businessRegistrationDate}
-                    onChange={(e) => setClientFormData(prev => ({ ...prev, businessRegistrationDate: e.target.value }))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="client-businessAddress" className="block text-sm font-medium text-gray-700 mb-2">
-                    Business Address
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="interestLevel"
+                      value="warm"
+                      checked={clientFormData.interestLevel === 'warm'}
+                      onChange={(e) => setClientFormData(prev => ({ ...prev, interestLevel: e.target.value as 'hot' | 'warm' | 'cold' }))}
+                      className="w-4 h-4 text-orange-600 focus:ring-orange-500"
+                    />
+                    <span className={`px-3 py-2 rounded-lg border-2 transition-all ${
+                      clientFormData.interestLevel === 'warm' 
+                        ? 'border-orange-500 bg-orange-50 text-orange-700 font-medium' 
+                        : 'border-gray-300 text-gray-700 hover:border-orange-300'
+                    }`}>
+                      Warm
+                    </span>
                   </label>
-                  <textarea
-                    id="client-businessAddress"
-                    name="businessAddress"
-                    value={clientFormData.businessAddress}
-                    onChange={(e) => setClientFormData(prev => ({ ...prev, businessAddress: e.target.value }))}
-                    rows={2}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
-                    placeholder="Enter business address"
-                  />
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="interestLevel"
+                      value="cold"
+                      checked={clientFormData.interestLevel === 'cold'}
+                      onChange={(e) => setClientFormData(prev => ({ ...prev, interestLevel: e.target.value as 'hot' | 'warm' | 'cold' }))}
+                      className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                    />
+                    <span className={`px-3 py-2 rounded-lg border-2 transition-all ${
+                      clientFormData.interestLevel === 'cold' 
+                        ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium' 
+                        : 'border-gray-300 text-gray-700 hover:border-blue-300'
+                    }`}>
+                      Cold
+                    </span>
+                  </label>
                 </div>
               </div>
-            )}
-          </div>
+              <div>
+                <label htmlFor="client-status" className="block text-sm font-medium text-gray-700 mb-2">
+                  Status *
+                </label>
+                <select
+                  id="client-status"
+                  name="status"
+                  required
+                  value={clientFormData.status}
+                  onChange={(e) => setClientFormData(prev => ({ ...prev, status: e.target.value as any }))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                >
+                  <option value="door knocked">Door Knocked</option>
+                  <option value="to call">To Call</option>
+                  <option value="to book appointment">To Book Appointment</option>
+                  <option value="book appointment">Book Appointment</option>
+                  <option value="closed">Closed</option>
+                </select>
+              </div>
+            </div>
+          )}
 
-          {/* Location */}
-          <div>
-            <label htmlFor="client-location" className="block text-sm font-medium text-gray-700 mb-2">
-              Location
-              <span className="ml-2 text-xs font-normal text-gray-500">(Auto-captured)</span>
-            </label>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                id="client-location"
-                name="location"
-                value={clientFormData.location}
-                onChange={(e) => setClientFormData(prev => ({ ...prev, location: e.target.value }))}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Location will be auto-captured or enter manually"
+          {/* Step 4: Notes */}
+          {currentStep === 4 && (
+            <div>
+              <label htmlFor="client-notes" className="block text-sm font-medium text-gray-700 mb-2">
+                Notes *
+                <span className="ml-2 text-xs font-normal text-gray-500">(Important for sales tracking)</span>
+              </label>
+              <textarea
+                id="client-notes"
+                name="notes"
+                required
+                value={clientFormData.notes}
+                onChange={(e) => setClientFormData(prev => ({ ...prev, notes: e.target.value }))}
+                rows={6}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                placeholder="Write notes about the client... (e.g., Initial contact, requirements, follow-up actions)"
               />
+              <p className="mt-1 text-xs text-gray-500">These notes help track client interactions and sales progress</p>
+            </div>
+          )}
+
+          {/* Step Navigation */}
+          <div className="flex justify-between items-center pt-4 border-t border-gray-200">
+            <div>
+              {currentStep > 1 && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={prevStep}
+                  disabled={isSubmittingClient}
+                >
+                  Previous
+                </Button>
+              )}
+              {currentStep === 2 && clientFormData.companies.length === 0 && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={nextStep}
+                  className="ml-2"
+                >
+                  Skip
+                </Button>
+              )}
+            </div>
+            <div className="flex gap-3">
               <Button
                 type="button"
                 variant="outline"
-                size="sm"
-                onClick={async () => {
-                  if (typeof navigator !== 'undefined' && navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                      async (position) => {
-                        const lat = position.coords.latitude
-                        const lng = position.coords.longitude
-                        setClientFormData(prev => ({ 
-                          ...prev, 
-                          location: `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}` 
-                        }))
-                      },
-                      (error) => {
-                        console.error('Error getting location:', error)
-                        setClientFormData(prev => ({ ...prev, location: 'Location not available' }))
-                      }
-                    )
-                  }
-                }}
-                className="flex items-center gap-2"
+                onClick={resetClientForm}
+                disabled={isSubmittingClient}
               >
-                <MapPin className="w-4 h-4" />
-                Capture
+                Cancel
               </Button>
-            </div>
-            <p className="mt-1 text-xs text-gray-500">Click &quot;Capture&quot; to auto-detect location or enter manually</p>
-          </div>
-
-          {/* Interest Level */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Interest Level
-            </label>
-            <div className="flex gap-3">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="interestLevel"
-                  value="hot"
-                  checked={clientFormData.interestLevel === 'hot'}
-                  onChange={(e) => setClientFormData(prev => ({ ...prev, interestLevel: e.target.value as 'hot' | 'warm' | 'cold' }))}
-                  className="w-4 h-4 text-red-600 focus:ring-red-500"
-                />
-                <span className={`px-3 py-2 rounded-lg border-2 transition-all ${
-                  clientFormData.interestLevel === 'hot' 
-                    ? 'border-red-500 bg-red-50 text-red-700 font-medium' 
-                    : 'border-gray-300 text-gray-700 hover:border-red-300'
-                }`}>
-                  Hot
-                </span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="interestLevel"
-                  value="warm"
-                  checked={clientFormData.interestLevel === 'warm'}
-                  onChange={(e) => setClientFormData(prev => ({ ...prev, interestLevel: e.target.value as 'hot' | 'warm' | 'cold' }))}
-                  className="w-4 h-4 text-orange-600 focus:ring-orange-500"
-                />
-                <span className={`px-3 py-2 rounded-lg border-2 transition-all ${
-                  clientFormData.interestLevel === 'warm' 
-                    ? 'border-orange-500 bg-orange-50 text-orange-700 font-medium' 
-                    : 'border-gray-300 text-gray-700 hover:border-orange-300'
-                }`}>
-                  Warm
-                </span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="interestLevel"
-                  value="cold"
-                  checked={clientFormData.interestLevel === 'cold'}
-                  onChange={(e) => setClientFormData(prev => ({ ...prev, interestLevel: e.target.value as 'hot' | 'warm' | 'cold' }))}
-                  className="w-4 h-4 text-blue-600 focus:ring-blue-500"
-                />
-                <span className={`px-3 py-2 rounded-lg border-2 transition-all ${
-                  clientFormData.interestLevel === 'cold' 
-                    ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium' 
-                    : 'border-gray-300 text-gray-700 hover:border-blue-300'
-                }`}>
-                  Cold
-                </span>
-              </label>
+              {currentStep < 4 ? (
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={nextStep}
+                  disabled={!validateStep(currentStep)}
+                >
+                  Next
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  variant="primary"
+                  disabled={isSubmittingClient || !validateStep(currentStep)}
+                  className="flex items-center gap-2"
+                >
+                  {isSubmittingClient ? (
+                    'Adding...'
+                  ) : (
+                    <>
+                      <Plus className="w-4 h-4" />
+                      Add Client
+                    </>
+                  )}
+                </Button>
+              )}
             </div>
           </div>
+        </form>
+      </Modal>
 
-          {/* Notes - Required */}
-          <div>
-            <label htmlFor="client-notes" className="block text-sm font-medium text-gray-700 mb-2">
-              Notes *
-              <span className="ml-2 text-xs font-normal text-gray-500">(Important for sales tracking)</span>
-            </label>
-            <textarea
-              id="client-notes"
-              name="notes"
-              required
-              value={clientFormData.notes}
-              onChange={(e) => setClientFormData(prev => ({ ...prev, notes: e.target.value }))}
-              rows={4}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
-              placeholder="Write notes about the client... (e.g., Initial contact, requirements, follow-up actions)"
-            />
-            <p className="mt-1 text-xs text-gray-500">These notes help track client interactions and sales progress</p>
-          </div>
-
-          {/* Status */}
-          <div>
-            <label htmlFor="client-status" className="block text-sm font-medium text-gray-700 mb-2">
-              Status *
-            </label>
-            <select
-              id="client-status"
-              name="status"
-              required
-              value={clientFormData.status}
-              onChange={(e) => setClientFormData(prev => ({ ...prev, status: e.target.value as any }))}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+      {/* Action Modal - Post Submission */}
+      <Modal
+        isOpen={showActionModal}
+        onClose={handleActionModalClose}
+        title="Client Added Successfully!"
+        size="md"
+      >
+        <div className="space-y-6">
+          <p className="text-gray-600 text-center">
+            What would you like to do next?
+          </p>
+          <div className="flex flex-col gap-3">
+            <Button
+              type="button"
+              variant="primary"
+              onClick={handleWhatsApp}
+              className="w-full flex items-center justify-center gap-2"
             >
-              <option value="door knocked">Door Knocked</option>
-              <option value="to call">To Call</option>
-              <option value="to book appointment">To Book Appointment</option>
-              <option value="book appointment">Book Appointment</option>
-              <option value="closed">Closed</option>
-            </select>
-          </div>
-
-          {/* Form Actions */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+              <MessageSquare className="w-4 h-4" />
+              WhatsApp Client
+            </Button>
             <Button
               type="button"
               variant="outline"
-              onClick={() => {
-                if (!isSubmittingClient) {
-                  setShowAddClientModal(false)
-                  setClientFormData({
-                    name: '',
-                    companyName: '',
-                    notes: '',
-                    location: '',
-                    interestLevel: 'warm',
-                    status: 'door knocked',
-                    businessUEN: '',
-                    businessRegistrationDate: '',
-                    businessAddress: '',
-                  })
-                  setShowCompanyName(false)
-                }
-              }}
-              disabled={isSubmittingClient}
+              onClick={handleCall}
+              className="w-full flex items-center justify-center gap-2"
             >
-              Cancel
+              <PhoneCall className="w-4 h-4" />
+              Call Client
             </Button>
             <Button
-              type="submit"
-              variant="primary"
-              disabled={isSubmittingClient}
-              className="flex items-center gap-2"
+              type="button"
+              variant="outline"
+              onClick={handleActionModalClose}
+              className="w-full"
             >
-              {isSubmittingClient ? (
-                'Adding...'
-              ) : (
-                <>
-                  <Plus className="w-4 h-4" />
-                  Add Client
-                </>
-              )}
+              Close
             </Button>
           </div>
-        </form>
+        </div>
       </Modal>
     </div>
   )
