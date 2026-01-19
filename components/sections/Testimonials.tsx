@@ -1,7 +1,7 @@
 'use client'
 
 import { Star } from 'lucide-react'
-import Button from '@/components/ui/Button'
+import { Button } from '@/components/ui/Button'
 
 interface Review {
   id: number

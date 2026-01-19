@@ -18,7 +18,7 @@ import {
   Clock,
   X
 } from 'lucide-react'
-import Button from '@/components/ui/Button'
+import { Button } from '@/components/ui/Button'
 import { getSuggestedNextStage, getAutoFillExplanation } from '@/lib/crm-autofill'
 import { Sparkles, CheckCircle2 as CheckCircle } from 'lucide-react'
 
@@ -153,8 +153,16 @@ export default function PipelinePage() {
     setDraggedDeal(dealId)
   }
 
+  const handleDragEnd = () => {
+    setDraggedDeal(null)
+    setDraggingToStage(null)
+    setSuggestedStage(null)
+  }
+
   const handleDragOver = (e: React.DragEvent, status?: Deal['status']) => {
     e.preventDefault()
+    e.stopPropagation()
+    e.dataTransfer.dropEffect = 'move'
     
     // Show AI suggestion when hovering over a stage
     if (status && draggedDeal) {
@@ -186,7 +194,10 @@ export default function PipelinePage() {
     setSuggestedStage(null)
   }
 
-  const handleDrop = (status: Deal['status']) => {
+  const handleDrop = (e: React.DragEvent, status: Deal['status']) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
     if (!draggedDeal) return
 
     // Get the deal being moved
@@ -347,9 +358,12 @@ export default function PipelinePage() {
             return (
               <div
                 key={column.id}
-                className="flex-shrink-0 w-80"
-                onDragOver={handleDragOver}
-                onDrop={() => handleDrop(column.id as Deal['status'])}
+                className={`flex-shrink-0 w-80 transition-all ${
+                  draggingToStage === column.id ? 'ring-2 ring-primary ring-opacity-50' : ''
+                }`}
+                onDragOver={(e) => handleDragOver(e, column.id as Deal['status'])}
+                onDragLeave={handleDragLeave}
+                onDrop={(e) => handleDrop(e, column.id as Deal['status'])}
               >
                 <div className={`${column.color} ${column.textColor} rounded-t-lg p-4 mb-2 relative`}>
                   {draggingToStage === column.id && suggestedStage === column.id && (
@@ -371,13 +385,20 @@ export default function PipelinePage() {
                     </div>
                   )}
                 </div>
-                <div className="space-y-3 max-h-[calc(100vh-300px)] overflow-y-auto">
+                <div 
+                  className={`space-y-3 max-h-[calc(100vh-300px)] overflow-y-auto rounded-b-lg transition-all ${
+                    draggingToStage === column.id ? 'bg-blue-50/50 min-h-[200px]' : ''
+                  }`}
+                >
                   {columnDeals.map((deal) => (
                     <div
                       key={deal.id}
                       draggable
                       onDragStart={() => handleDragStart(deal.id)}
-                      className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow cursor-move"
+                      onDragEnd={handleDragEnd}
+                      className={`bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all cursor-move ${
+                        draggedDeal === deal.id ? 'opacity-50 scale-95' : ''
+                      }`}
                     >
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-2">
@@ -389,6 +410,12 @@ export default function PipelinePage() {
                           <Link
                             href={`/consultant/clients/${deal.clientId}`}
                             className="font-semibold text-gray-900 hover:text-primary"
+                            draggable={false}
+                            onClick={(e) => {
+                              if (draggedDeal) {
+                                e.preventDefault()
+                              }
+                            }}
                           >
                             {deal.clientName}
                           </Link>

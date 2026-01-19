@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import AccordionDark, { AccordionItemDark } from '@/components/ui/AccordionDark'
-import Button from '@/components/ui/Button'
+import { Button } from '@/components/ui/Button'
 import { ArrowRight } from 'lucide-react'
 
 const faqs = [

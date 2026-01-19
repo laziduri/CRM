@@ -1,64 +1,77 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from "tailwindcss"
 
 const config: Config = {
-  content: [
-    './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    darkMode: ["class"],
+    content: [
+    "./app/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./lib/**/*.{ts,tsx}",
   ],
   theme: {
-    extend: {
-      colors: {
-        primary: {
-          DEFAULT: '#1E3A5F', // Navy blue from logo - main brand color
-          light: '#2D4A6F', // Lighter navy for hovers
-          dark: '#152A4A', // Darker navy for depth
-          lighter: '#3D5A7F', // Very light navy
-          darkest: '#0F1F3A', // Darkest navy
-        },
-        teal: {
-          DEFAULT: '#0F766E', // Teal from logo - secondary brand color
-          light: '#14B8A6', // Lighter teal for accents
-          dark: '#0D5D56', // Darker teal
-          lighter: '#2DD4BF', // Very light teal
-          accent: '#5EEAD4', // Bright teal accent
-        },
-        secondary: {
-          DEFAULT: '#FFFFFF', // Pure white
-          white: '#FFFFFF', // Pure white for luxury feel
-          gray: '#FAFAFA', // Very light gray background - luxurious
-          gray2: '#F5F5F5', // Slightly darker gray - premium
-          gray3: '#E8E8E8', // Border gray - refined
-        },
-        accent: {
-          blue: '#E0F2FE', // Light blue background (navy tint)
-          blue2: '#BAE6FD', // Medium blue accent
-          teal: '#CCFBF1', // Light teal background
-          teal2: '#99F6E4', // Medium teal accent
-          gray: '#64748B', // Medium gray text
-          gray2: '#475569', // Darker gray text
-          success: '#10B981', // Green for success states
-          warning: '#F59E0B', // Amber for warnings
-          error: '#EF4444', // Red for errors
-        },
-        neutral: {
-          50: '#FAFAFA',
-          100: '#F5F5F5',
-          200: '#E5E5E5',
-          300: '#D4D4D4',
-          400: '#A3A3A3',
-          500: '#737373',
-          600: '#525252',
-          700: '#404040',
-          800: '#262626',
-          900: '#171717',
-        },
-      },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-      },
-    },
+  	extend: {
+  		borderRadius: {
+  			lg: 'var(--radius)',
+  			md: 'calc(var(--radius) - 2px)',
+  			sm: 'calc(var(--radius) - 4px)'
+  		},
+  		animation: {
+  			'gradient-shimmer': 'gradient-shimmer 3s ease-in-out infinite',
+  		},
+  		keyframes: {
+  			'gradient-shimmer': {
+  				'0%, 100%': { backgroundPosition: '0% 50%' },
+  				'50%': { backgroundPosition: '100% 50%' },
+  			},
+  		},
+  		colors: {
+  			background: 'hsl(var(--background))',
+  			foreground: 'hsl(var(--foreground))',
+  			card: {
+  				DEFAULT: 'hsl(var(--card))',
+  				foreground: 'hsl(var(--card-foreground))'
+  			},
+  			popover: {
+  				DEFAULT: 'hsl(var(--popover))',
+  				foreground: 'hsl(var(--popover-foreground))'
+  			},
+  			primary: {
+  				DEFAULT: 'hsl(var(--primary))',
+  				foreground: 'hsl(var(--primary-foreground))',
+  				dark: 'hsl(220 90% 40%)',
+  			},
+  			teal: {
+  				DEFAULT: 'hsl(173 80% 40%)',
+  			},
+  			secondary: {
+  				DEFAULT: 'hsl(var(--secondary))',
+  				foreground: 'hsl(var(--secondary-foreground))'
+  			},
+  			muted: {
+  				DEFAULT: 'hsl(var(--muted))',
+  				foreground: 'hsl(var(--muted-foreground))'
+  			},
+  			accent: {
+  				DEFAULT: 'hsl(var(--accent))',
+  				foreground: 'hsl(var(--accent-foreground))'
+  			},
+  			destructive: {
+  				DEFAULT: 'hsl(var(--destructive))',
+  				foreground: 'hsl(var(--destructive-foreground))'
+  			},
+  			border: 'hsl(var(--border))',
+  			input: 'hsl(var(--input))',
+  			ring: 'hsl(var(--ring))',
+  			chart: {
+  				'1': 'hsl(var(--chart-1))',
+  				'2': 'hsl(var(--chart-2))',
+  				'3': 'hsl(var(--chart-3))',
+  				'4': 'hsl(var(--chart-4))',
+  				'5': 'hsl(var(--chart-5))'
+  			}
+  		}
+  	}
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 }
+
 export default config

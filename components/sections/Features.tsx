@@ -1,5 +1,5 @@
 import { Shield, Zap, DollarSign } from 'lucide-react'
-import Card from '@/components/ui/Card'
+import { Card } from '@/components/ui/Card'
 
 const features = [
   {

@@ -14,7 +14,7 @@ import {
   Download,
   Clock
 } from 'lucide-react'
-import Button from '@/components/ui/Button'
+import { Button } from '@/components/ui/Button'
 
 interface CommissionRecord {
   id: string

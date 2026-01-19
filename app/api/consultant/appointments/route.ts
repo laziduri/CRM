@@ -8,6 +8,20 @@ function mapDbAppointmentToAppointment(dbAppointment: any, consultantName: strin
   const endTime = dbAppointment.end_time ? new Date(dbAppointment.end_time) : new Date()
   const duration = dbAppointment.duration || Math.round((endTime.getTime() - startTime.getTime()) / (1000 * 60))
 
+  // Parse joiners from JSON string if stored that way
+  let joiners: string[] = []
+  if (dbAppointment.joiners) {
+    try {
+      if (typeof dbAppointment.joiners === 'string') {
+        joiners = JSON.parse(dbAppointment.joiners)
+      } else if (Array.isArray(dbAppointment.joiners)) {
+        joiners = dbAppointment.joiners
+      }
+    } catch (e) {
+      console.error('Error parsing joiners:', e)
+    }
+  }
+
   return {
     id: dbAppointment.id,
     title: dbAppointment.title,
@@ -24,12 +38,12 @@ function mapDbAppointmentToAppointment(dbAppointment: any, consultantName: strin
     clientType: dbAppointment.client_type as Appointment['clientType'] || 'personal',
     location: dbAppointment.location || 'office',
     duration,
-    notes: dbAppointment.description,
+    notes: dbAppointment.description || undefined, // Notes are optional
     color: dbAppointment.color,
     reminder: undefined, // Can be added later if needed
     attendees: undefined, // Can be added later if needed
-    isJoinable: false,
-    joiners: [],
+    isJoinable: dbAppointment.is_joinable || false,
+    joiners: joiners,
     locationAddress: dbAppointment.location_address,
     googleMapsLink: dbAppointment.google_maps_link,
   }
@@ -133,13 +147,16 @@ export async function POST(request: NextRequest) {
     const duration = body.duration || Math.round((endTime.getTime() - startTime.getTime()) / (1000 * 60))
 
     // Create appointment in Supabase
+    // Handle joiners - store as JSON array if supported, otherwise as comma-separated string
+    const joinersData = body.joiners && Array.isArray(body.joiners) ? body.joiners : []
+    
     const { data: newAppointment, error: insertError } = await supabase
       .from('appointments')
       .insert({
         consultant_id: consultantId,
         client_id: body.clientId || null,
         title: body.title,
-        description: body.notes || body.description,
+        description: body.notes || body.description || null, // Notes are optional
         appointment_type: body.appointmentType || 'consultation',
         status: body.status || 'scheduled',
         start_time: startTime.toISOString(),
@@ -148,22 +165,36 @@ export async function POST(request: NextRequest) {
         location: body.location || 'office',
         location_address: body.locationAddress || null,
         google_maps_link: body.googleMapsLink || null,
+        latitude: body.latitude || null,
+        longitude: body.longitude || null,
         meeting_link: body.meetingLink || null,
         client_type: body.clientType || 'personal',
         color: body.color || null,
+        is_joinable: body.isJoinable || false,
+        joiners: joinersData.length > 0 ? JSON.stringify(joinersData) : null, // Store as JSON string
       })
       .select()
       .single()
 
     if (insertError || !newAppointment) {
       console.error('[API] Supabase insert error:', insertError)
+      console.error('[API] Request body:', JSON.stringify(body, null, 2))
       return NextResponse.json(
-        { error: 'Failed to create appointment' },
+        { error: 'Failed to create appointment', details: insertError?.message || insertError?.details || 'Unknown database error' },
         { status: 500 }
       )
     }
 
-    const mappedAppointment = mapDbAppointmentToAppointment(newAppointment)
+    // Get consultant name for the response
+    const { data: consultant } = await supabase
+      .from('consultants')
+      .select('name')
+      .eq('id', consultantId)
+      .single()
+
+    const consultantName = consultant?.name || 'You'
+
+    const mappedAppointment = mapDbAppointmentToAppointment(newAppointment, consultantName)
     if (clientName) mappedAppointment.clientName = clientName
 
     return NextResponse.json({

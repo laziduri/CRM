@@ -20,7 +20,7 @@ import {
   Phone,
   Mail
 } from 'lucide-react'
-import Button from '@/components/ui/Button'
+import { Button } from '@/components/ui/Button'
 
 interface Appointment {
   id: string

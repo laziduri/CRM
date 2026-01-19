@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, CheckCircle2, Circle, FileText, Plus, Building2, User, Trash2, Edit2 } from 'lucide-react'
-import Button from '@/components/ui/Button'
+import { Button } from '@/components/ui/Button'
 
 interface DocumentItem {
   id: string

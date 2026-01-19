@@ -1,7 +1,7 @@
 'use client'
 
 import { TrendingUp, Shield, Users, CheckCircle2, ArrowUp } from 'lucide-react'
-import Card from '@/components/ui/Card'
+import { Card } from '@/components/ui/Card'
 
 const features = [
   {

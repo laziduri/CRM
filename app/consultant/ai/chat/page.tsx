@@ -12,7 +12,7 @@ import {
   TrendingUp,
   Clock,
 } from 'lucide-react'
-import Button from '@/components/ui/Button'
+import { Button } from '@/components/ui/Button'
 
 interface ChatMessage {
   id: string

@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = "force-dynamic"
+
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -18,7 +20,7 @@ import {
   Bell,
   Shield
 } from 'lucide-react'
-import Button from '@/components/ui/Button'
+import { Button } from '@/components/ui/Button'
 import { useAuth } from '@/contexts/AuthContext'
 
 export default function SettingsPage() {

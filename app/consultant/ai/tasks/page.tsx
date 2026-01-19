@@ -18,7 +18,7 @@ import {
   TrendingUp,
   RefreshCw,
 } from 'lucide-react'
-import Button from '@/components/ui/Button'
+import { Button } from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
 import { getDefaultTaskDuration, getAutoFillExplanation } from '@/lib/crm-autofill'
 

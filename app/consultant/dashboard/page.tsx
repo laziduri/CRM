@@ -31,11 +31,12 @@ import {
   BookOpen,
   Copy,
   Check,
-  Building2
+  Building2,
+  MapPin
 } from 'lucide-react'
-import Button from '@/components/ui/Button'
+import { Button } from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
-import Card from '@/components/ui/Card'
+import { Card } from '@/components/ui/Card'
 import {
   BarChart,
   Bar,
@@ -244,172 +245,203 @@ export default function ConsultantDashboardPage() {
   const [pastMonthsGoals, setPastMonthsGoals] = useState<MonthlyGoals[]>([])
   const [goalsModalTab, setGoalsModalTab] = useState<'current' | 'history'>('current')
   const [isSavingGoals, setIsSavingGoals] = useState(false)
+  
+  // Add Client Modal state
+  const [showAddClientModal, setShowAddClientModal] = useState(false)
+  const [isSubmittingClient, setIsSubmittingClient] = useState(false)
+  const [showCompanyName, setShowCompanyName] = useState(false)
+  const [clientFormData, setClientFormData] = useState({
+    name: '',
+    companyName: '',
+    notes: '',
+    location: '',
+    interestLevel: 'warm' as 'hot' | 'warm' | 'cold',
+    status: 'door knocked' as 'door knocked' | 'to call' | 'to book appointment' | 'book appointment' | 'closed',
+    businessUEN: '',
+    businessRegistrationDate: '',
+    businessAddress: '',
+  })
 
   useEffect(() => {
     // Check if consultant is authenticated
-    const token = localStorage.getItem('consultant_token')
-    const consultantId = localStorage.getItem('consultant_id')
-
-    if (!token || !consultantId) {
-      // Only redirect if not already on login page
-      if (typeof window !== 'undefined' && !window.location.pathname.includes('login')) {
-        router.push('/consultant/login')
-      }
+    if (typeof window === 'undefined') {
+      setIsLoading(false)
       return
     }
 
-    // Mock data - in production, fetch from API
-    setConsultant({
-      id: '1',
-      consultantId: 'CON001',
-      username: 'consultant1',
-      name: 'Sarah Chen',
-      email: 'sarah.chen@brillianceadvisory.com',
-      phone: '+65 9123 4567',
-    })
+    const loadDashboardData = async () => {
+      try {
+        const token = localStorage.getItem('consultant_token')
+        const consultantId = localStorage.getItem('consultant_id')
 
-    // Mock performance metrics
-    setMetrics({
-      totalCommissions: 125000,
-      monthlyCommissions: 18500,
-      commissionGrowth: 12.5,
-      closedDeals: 87,
-      closedDealsGrowth: 8.3,
-      activeClients: 24,
-      clientGrowth: 15.0,
-      successRate: 87.5,
-      successRateChange: 3.2,
-      averageDealSize: 85000,
-      averageDealSizeChange: -2.1,
-      pendingApplications: 8,
-      todayAppointments: 3,
-    })
+        if (!token || !consultantId) {
+          // Redirect to login if not authenticated
+          setIsLoading(false)
+          if (!window.location.pathname.includes('login')) {
+            router.push('/consultant/login')
+          }
+          return
+        }
 
-    // Mock deal status data
-    setDealStatusData([
-      { status: 'New', count: 5, color: '#6B7280' },
-      { status: 'In Progress', count: 8, color: '#3B82F6' },
-      { status: 'Under Review', count: 6, color: '#F59E0B' },
-      { status: 'Approved', count: 4, color: '#8B5CF6' },
-      { status: 'Closed', count: 87, color: '#10B981' },
-      { status: 'Rejected', count: 3, color: '#EF4444' },
-    ])
+        // Mock data - in production, fetch from API
+        setConsultant({
+          id: '1',
+          consultantId: 'CON001',
+          username: 'consultant1',
+          name: 'Sarah Chen',
+          email: 'sarah.chen@brillianceadvisory.com',
+          phone: '+65 9123 4567',
+        })
 
-    // Mock loan type data
-    setLoanTypeData([
-      { name: 'Personal Loans', value: 45, color: '#3B82F6' },
-      { name: 'Business Loans', value: 35, color: '#10B981' },
-      { name: 'Home Loans', value: 15, color: '#F59E0B' },
-      { name: 'Other', value: 5, color: '#8B5CF6' },
-    ])
+        // Mock performance metrics
+        setMetrics({
+          totalCommissions: 125000,
+          monthlyCommissions: 18500,
+          commissionGrowth: 12.5,
+          closedDeals: 87,
+          closedDealsGrowth: 8.3,
+          activeClients: 24,
+          clientGrowth: 15.0,
+          successRate: 87.5,
+          successRateChange: 3.2,
+          averageDealSize: 85000,
+          averageDealSizeChange: -2.1,
+          pendingApplications: 8,
+          todayAppointments: 3,
+        })
 
-    // Mock appointments
-    const today = new Date()
-    setAppointments([
-      {
-        id: '1',
-        title: 'Initial Consultation',
-        clientName: 'John Doe',
-        consultantName: 'Sarah Chen',
-        consultantId: '1',
-        date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 10, 0),
-        time: '10:00 AM',
-        duration: 60,
-        type: 'consultation',
-        location: 'office',
-      },
-      {
-        id: '2',
-        title: 'Follow-up Meeting',
-        clientName: 'ABC Trading Pte Ltd',
-        consultantName: 'Sarah Chen',
-        consultantId: '1',
-        date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 14, 30),
-        time: '2:30 PM',
-        duration: 45,
-        type: 'follow-up',
-        location: 'online',
-      },
-      {
-        id: '3',
-        title: 'Closing Meeting',
-        clientName: 'Jane Smith',
-        consultantName: 'Sarah Chen',
-        consultantId: '1',
-        date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 16, 0),
-        time: '4:00 PM',
-        duration: 30,
-        type: 'closing',
-        location: 'office',
-      },
-      {
-        id: '4',
-        title: 'Client Meeting',
-        clientName: 'XYZ Services Ltd',
-        consultantName: 'Michael Tan',
-        consultantId: '2',
-        date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 11, 0),
-        time: '11:00 AM',
-        duration: 60,
-        type: 'consultation',
-        location: 'office',
-      },
-      {
-        id: '5',
-        title: 'Follow-up',
-        clientName: 'DEF Manufacturing',
-        consultantName: 'Emily Wong',
-        consultantId: '3',
-        date: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1, 9, 30),
-        time: '9:30 AM',
-        duration: 45,
-        type: 'follow-up',
-        location: 'online',
-      },
-    ])
+        // Mock deal status data
+        setDealStatusData([
+          { status: 'New', count: 5, color: '#6B7280' },
+          { status: 'In Progress', count: 8, color: '#3B82F6' },
+          { status: 'Under Review', count: 6, color: '#F59E0B' },
+          { status: 'Approved', count: 4, color: '#8B5CF6' },
+          { status: 'Closed', count: 87, color: '#10B981' },
+          { status: 'Rejected', count: 3, color: '#EF4444' },
+        ])
 
-    // Mock teammates
-    setTeammates([
-      {
-        id: '2',
-        consultantId: 'CON002',
-        name: 'Michael Tan',
-        email: 'michael.tan@brillianceadvisory.com',
-        role: 'Senior Consultant',
-        totalDeals: 95,
-        closedDeals: 82,
-        totalCommissions: 142000,
-        successRate: 86.3,
-        activeClients: 28,
-      },
-      {
-        id: '3',
-        consultantId: 'CON003',
-        name: 'Emily Wong',
-        email: 'emily.wong@brillianceadvisory.com',
-        role: 'Consultant',
-        totalDeals: 72,
-        closedDeals: 61,
-        totalCommissions: 98000,
-        successRate: 84.7,
-        activeClients: 19,
-      },
-      {
-        id: '4',
-        consultantId: 'CON004',
-        name: 'David Lim',
-        email: 'david.lim@brillianceadvisory.com',
-        role: 'Consultant',
-        totalDeals: 58,
-        closedDeals: 49,
-        totalCommissions: 78000,
-        successRate: 84.5,
-        activeClients: 16,
-      },
-    ])
+        // Mock loan type data
+        setLoanTypeData([
+          { name: 'Personal Loans', value: 45, color: '#3B82F6' },
+          { name: 'Business Loans', value: 35, color: '#10B981' },
+          { name: 'Home Loans', value: 15, color: '#F59E0B' },
+          { name: 'Other', value: 5, color: '#8B5CF6' },
+        ])
 
-    setIsLoading(false)
-  }, [router])
+        // Mock appointments
+        const today = new Date()
+        setAppointments([
+          {
+            id: '1',
+            title: 'Initial Consultation',
+            clientName: 'John Doe',
+            consultantName: 'Sarah Chen',
+            consultantId: '1',
+            date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 10, 0),
+            time: '10:00 AM',
+            duration: 60,
+            type: 'consultation',
+            location: 'office',
+          },
+          {
+            id: '2',
+            title: 'Follow-up Meeting',
+            clientName: 'ABC Trading Pte Ltd',
+            consultantName: 'Sarah Chen',
+            consultantId: '1',
+            date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 14, 30),
+            time: '2:30 PM',
+            duration: 45,
+            type: 'follow-up',
+            location: 'online',
+          },
+          {
+            id: '3',
+            title: 'Closing Meeting',
+            clientName: 'Jane Smith',
+            consultantName: 'Sarah Chen',
+            consultantId: '1',
+            date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 16, 0),
+            time: '4:00 PM',
+            duration: 30,
+            type: 'closing',
+            location: 'office',
+          },
+          {
+            id: '4',
+            title: 'Client Meeting',
+            clientName: 'XYZ Services Ltd',
+            consultantName: 'Michael Tan',
+            consultantId: '2',
+            date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 11, 0),
+            time: '11:00 AM',
+            duration: 60,
+            type: 'consultation',
+            location: 'office',
+          },
+          {
+            id: '5',
+            title: 'Follow-up',
+            clientName: 'DEF Manufacturing',
+            consultantName: 'Emily Wong',
+            consultantId: '3',
+            date: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1, 9, 30),
+            time: '9:30 AM',
+            duration: 45,
+            type: 'follow-up',
+            location: 'online',
+          },
+        ])
+
+        // Mock teammates
+        setTeammates([
+          {
+            id: '2',
+            consultantId: 'CON002',
+            name: 'Michael Tan',
+            email: 'michael.tan@brillianceadvisory.com',
+            role: 'Senior Consultant',
+            totalDeals: 95,
+            closedDeals: 82,
+            totalCommissions: 142000,
+            successRate: 86.3,
+            activeClients: 28,
+          },
+          {
+            id: '3',
+            consultantId: 'CON003',
+            name: 'Emily Wong',
+            email: 'emily.wong@brillianceadvisory.com',
+            role: 'Consultant',
+            totalDeals: 72,
+            closedDeals: 61,
+            totalCommissions: 98000,
+            successRate: 84.7,
+            activeClients: 19,
+          },
+          {
+            id: '4',
+            consultantId: 'CON004',
+            name: 'David Lim',
+            email: 'david.lim@brillianceadvisory.com',
+            role: 'Consultant',
+            totalDeals: 58,
+            closedDeals: 49,
+            totalCommissions: 78000,
+            successRate: 84.5,
+            activeClients: 16,
+          },
+        ])
+      } catch (error) {
+        console.error('Error loading dashboard data:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadDashboardData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const getDaysInMonth = (date: Date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
@@ -507,12 +539,15 @@ export default function ConsultantDashboardPage() {
                   Settings
                 </Button>
               </Link>
-              <Link href="/consultant/clients/new">
-                <Button variant="primary" size="sm" className="flex items-center gap-2">
-                  <Plus className="w-4 h-4" />
-                  New Client
-                </Button>
-              </Link>
+              <Button 
+                variant="primary" 
+                size="sm" 
+                className="flex items-center gap-2"
+                onClick={() => setShowAddClientModal(true)}
+              >
+                <Plus className="w-4 h-4" />
+                Add Client
+              </Button>
             </div>
           </div>
           
@@ -842,7 +877,7 @@ export default function ConsultantDashboardPage() {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-gray-900">Appointments Calendar</h3>
-                <Link href="/consultant/appointments" className="text-xs text-primary hover:text-primary-dark font-medium">
+                <Link href="/consultant/calendar" className="text-xs text-primary hover:text-primary-dark font-medium">
                   View all →
                 </Link>
               </div>
@@ -1681,6 +1716,363 @@ export default function ConsultantDashboardPage() {
             </div>
           )}
         </div>
+      </Modal>
+
+      {/* Add Client Modal */}
+      <Modal
+        isOpen={showAddClientModal}
+        onClose={() => {
+          if (!isSubmittingClient) {
+            setShowAddClientModal(false)
+            setClientFormData({
+              name: '',
+              companyName: '',
+              notes: '',
+              location: '',
+              interestLevel: 'warm',
+              status: 'door knocked',
+              businessUEN: '',
+              businessRegistrationDate: '',
+              businessAddress: '',
+            })
+            setShowCompanyName(false)
+          }
+        }}
+        title="Add New Client"
+        size="lg"
+      >
+        <form onSubmit={async (e) => {
+          e.preventDefault()
+          setIsSubmittingClient(true)
+          try {
+            // In production, this would be an API call
+            await new Promise(resolve => setTimeout(resolve, 1000))
+            
+            // Reset form and close modal
+            setClientFormData({
+              name: '',
+              companyName: '',
+              notes: '',
+              location: '',
+              interestLevel: 'warm',
+              status: 'door knocked',
+              businessUEN: '',
+              businessRegistrationDate: '',
+              businessAddress: '',
+            })
+            setShowCompanyName(false)
+            setShowAddClientModal(false)
+            
+            // Optionally redirect to clients page
+            router.push('/consultant/clients')
+          } catch (error) {
+            console.error('Error adding client:', error)
+          } finally {
+            setIsSubmittingClient(false)
+          }
+        }} className="space-y-6">
+          {/* Name */}
+          <div>
+            <label htmlFor="client-name" className="block text-sm font-medium text-gray-700 mb-2">
+              Name *
+            </label>
+            <input
+              type="text"
+              id="client-name"
+              name="name"
+              required
+              value={clientFormData.name}
+              onChange={(e) => setClientFormData(prev => ({ ...prev, name: e.target.value }))}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              placeholder="Enter client name"
+            />
+          </div>
+
+          {/* Company Name - Optional with Plus Button */}
+          <div>
+            {!showCompanyName ? (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowCompanyName(true)}
+                className="w-full flex items-center justify-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                Add Company Name (Optional)
+              </Button>
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label htmlFor="client-companyName" className="block text-sm font-medium text-gray-700">
+                      Company Name
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowCompanyName(false)
+                        setClientFormData(prev => ({ 
+                          ...prev, 
+                          companyName: '',
+                          businessUEN: '',
+                          businessRegistrationDate: '',
+                          businessAddress: ''
+                        }))
+                      }}
+                      className="text-gray-400 hover:text-gray-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    id="client-companyName"
+                    name="companyName"
+                    value={clientFormData.companyName}
+                    onChange={(e) => setClientFormData(prev => ({ ...prev, companyName: e.target.value }))}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="Enter company name"
+                  />
+                </div>
+                
+                {/* Business Fields */}
+                <div>
+                  <label htmlFor="client-businessUEN" className="block text-sm font-medium text-gray-700 mb-2">
+                    UEN (Unique Entity Number)
+                  </label>
+                  <input
+                    type="text"
+                    id="client-businessUEN"
+                    name="businessUEN"
+                    value={clientFormData.businessUEN}
+                    onChange={(e) => setClientFormData(prev => ({ ...prev, businessUEN: e.target.value }))}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="201234567A"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="client-businessRegistrationDate" className="block text-sm font-medium text-gray-700 mb-2">
+                    Registration Date
+                  </label>
+                  <input
+                    type="date"
+                    id="client-businessRegistrationDate"
+                    name="businessRegistrationDate"
+                    value={clientFormData.businessRegistrationDate}
+                    onChange={(e) => setClientFormData(prev => ({ ...prev, businessRegistrationDate: e.target.value }))}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="client-businessAddress" className="block text-sm font-medium text-gray-700 mb-2">
+                    Business Address
+                  </label>
+                  <textarea
+                    id="client-businessAddress"
+                    name="businessAddress"
+                    value={clientFormData.businessAddress}
+                    onChange={(e) => setClientFormData(prev => ({ ...prev, businessAddress: e.target.value }))}
+                    rows={2}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                    placeholder="Enter business address"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Location */}
+          <div>
+            <label htmlFor="client-location" className="block text-sm font-medium text-gray-700 mb-2">
+              Location
+              <span className="ml-2 text-xs font-normal text-gray-500">(Auto-captured)</span>
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                id="client-location"
+                name="location"
+                value={clientFormData.location}
+                onChange={(e) => setClientFormData(prev => ({ ...prev, location: e.target.value }))}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Location will be auto-captured or enter manually"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={async () => {
+                  if (typeof navigator !== 'undefined' && navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                      async (position) => {
+                        const lat = position.coords.latitude
+                        const lng = position.coords.longitude
+                        setClientFormData(prev => ({ 
+                          ...prev, 
+                          location: `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)}` 
+                        }))
+                      },
+                      (error) => {
+                        console.error('Error getting location:', error)
+                        setClientFormData(prev => ({ ...prev, location: 'Location not available' }))
+                      }
+                    )
+                  }
+                }}
+                className="flex items-center gap-2"
+              >
+                <MapPin className="w-4 h-4" />
+                Capture
+              </Button>
+            </div>
+            <p className="mt-1 text-xs text-gray-500">Click &quot;Capture&quot; to auto-detect location or enter manually</p>
+          </div>
+
+          {/* Interest Level */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Interest Level
+            </label>
+            <div className="flex gap-3">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="interestLevel"
+                  value="hot"
+                  checked={clientFormData.interestLevel === 'hot'}
+                  onChange={(e) => setClientFormData(prev => ({ ...prev, interestLevel: e.target.value as 'hot' | 'warm' | 'cold' }))}
+                  className="w-4 h-4 text-red-600 focus:ring-red-500"
+                />
+                <span className={`px-3 py-2 rounded-lg border-2 transition-all ${
+                  clientFormData.interestLevel === 'hot' 
+                    ? 'border-red-500 bg-red-50 text-red-700 font-medium' 
+                    : 'border-gray-300 text-gray-700 hover:border-red-300'
+                }`}>
+                  Hot
+                </span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="interestLevel"
+                  value="warm"
+                  checked={clientFormData.interestLevel === 'warm'}
+                  onChange={(e) => setClientFormData(prev => ({ ...prev, interestLevel: e.target.value as 'hot' | 'warm' | 'cold' }))}
+                  className="w-4 h-4 text-orange-600 focus:ring-orange-500"
+                />
+                <span className={`px-3 py-2 rounded-lg border-2 transition-all ${
+                  clientFormData.interestLevel === 'warm' 
+                    ? 'border-orange-500 bg-orange-50 text-orange-700 font-medium' 
+                    : 'border-gray-300 text-gray-700 hover:border-orange-300'
+                }`}>
+                  Warm
+                </span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="interestLevel"
+                  value="cold"
+                  checked={clientFormData.interestLevel === 'cold'}
+                  onChange={(e) => setClientFormData(prev => ({ ...prev, interestLevel: e.target.value as 'hot' | 'warm' | 'cold' }))}
+                  className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                />
+                <span className={`px-3 py-2 rounded-lg border-2 transition-all ${
+                  clientFormData.interestLevel === 'cold' 
+                    ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium' 
+                    : 'border-gray-300 text-gray-700 hover:border-blue-300'
+                }`}>
+                  Cold
+                </span>
+              </label>
+            </div>
+          </div>
+
+          {/* Notes - Required */}
+          <div>
+            <label htmlFor="client-notes" className="block text-sm font-medium text-gray-700 mb-2">
+              Notes *
+              <span className="ml-2 text-xs font-normal text-gray-500">(Important for sales tracking)</span>
+            </label>
+            <textarea
+              id="client-notes"
+              name="notes"
+              required
+              value={clientFormData.notes}
+              onChange={(e) => setClientFormData(prev => ({ ...prev, notes: e.target.value }))}
+              rows={4}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+              placeholder="Write notes about the client... (e.g., Initial contact, requirements, follow-up actions)"
+            />
+            <p className="mt-1 text-xs text-gray-500">These notes help track client interactions and sales progress</p>
+          </div>
+
+          {/* Status */}
+          <div>
+            <label htmlFor="client-status" className="block text-sm font-medium text-gray-700 mb-2">
+              Status *
+            </label>
+            <select
+              id="client-status"
+              name="status"
+              required
+              value={clientFormData.status}
+              onChange={(e) => setClientFormData(prev => ({ ...prev, status: e.target.value as any }))}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            >
+              <option value="door knocked">Door Knocked</option>
+              <option value="to call">To Call</option>
+              <option value="to book appointment">To Book Appointment</option>
+              <option value="book appointment">Book Appointment</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+
+          {/* Form Actions */}
+          <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                if (!isSubmittingClient) {
+                  setShowAddClientModal(false)
+                  setClientFormData({
+                    name: '',
+                    companyName: '',
+                    notes: '',
+                    location: '',
+                    interestLevel: 'warm',
+                    status: 'door knocked',
+                    businessUEN: '',
+                    businessRegistrationDate: '',
+                    businessAddress: '',
+                  })
+                  setShowCompanyName(false)
+                }
+              }}
+              disabled={isSubmittingClient}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={isSubmittingClient}
+              className="flex items-center gap-2"
+            >
+              {isSubmittingClient ? (
+                'Adding...'
+              ) : (
+                <>
+                  <Plus className="w-4 h-4" />
+                  Add Client
+                </>
+              )}
+            </Button>
+          </div>
+        </form>
       </Modal>
     </div>
   )

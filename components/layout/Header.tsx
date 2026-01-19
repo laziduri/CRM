@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import { Menu, X, ChevronDown, User, LogOut, Settings, FileText, FolderKanban, CheckSquare, Calendar, BarChart3, GitBranch, Mic, MessageSquare, LayoutDashboard } from 'lucide-react'
-import Button from '@/components/ui/Button'
+import { Button } from '@/components/ui/Button'
 import { useAuth } from '@/contexts/AuthContext'
 
 export default function Header() {
@@ -78,11 +78,6 @@ export default function Header() {
     }
   }, [isProfileDropdownOpen])
 
-  // Hide header on CRM pages (they have their own header) - check AFTER all hooks
-  if (pathname?.startsWith('/crm')) {
-    return null
-  }
-
   const navLinks = [
     { href: '/aboutus', label: 'About' },
     { href: '/faq', label: 'FAQ' },
@@ -109,9 +104,9 @@ export default function Header() {
   return (
     <header className="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-40 border-b border-secondary-gray3/30 w-full">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-16 flex-nowrap">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 flex-shrink-0 min-w-0">
             <div className="relative h-8 w-8 flex-shrink-0">
               <img
                 src="/images/brilliance-logo.svg"
@@ -125,11 +120,11 @@ export default function Header() {
                 }}
               />
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-primary to-teal bg-clip-text text-transparent">Brilliance Advisory</span>
+            <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-teal bg-clip-text text-transparent whitespace-nowrap">Brilliance Advisory</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8 relative z-10">
+          <div className="hidden md:flex items-center space-x-4 lg:space-x-6 flex-nowrap relative z-10">
             {/* Home Link */}
             <Link
               href="/"
@@ -272,7 +267,7 @@ export default function Header() {
           </div>
 
           {/* CTA Buttons / Profile */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-3 flex-shrink-0">
             {(isAuthenticated && client) || isConsultant ? (
               <div 
                 className="relative" 

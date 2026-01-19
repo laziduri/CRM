@@ -12,6 +12,7 @@ import {
   Building2,
   Mail,
   Phone,
+  PhoneCall,
   MoreVertical,
   Eye,
   Edit,
@@ -26,9 +27,15 @@ import {
   CheckCircle2,
   AlertCircle
 } from 'lucide-react'
-import Button from '@/components/ui/Button'
+import { Button } from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
-import Input from '@/components/ui/Input'
+import { Input } from '@/components/ui/Input'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
 interface Client {
   id: string
@@ -544,10 +551,42 @@ export default function ClientsPage() {
                   </div>
                 )}
                 {client.phone && (
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <Phone className="w-4 h-4" />
-                    <span>{client.phone}</span>
-                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        type="button"
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer hover:text-primary transition-colors text-left"
+                      >
+                        <Phone className="w-4 h-4" />
+                        <span>{client.phone}</span>
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="w-48">
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          window.location.href = `tel:${client.phone}`
+                        }}
+                        className="cursor-pointer"
+                      >
+                        <PhoneCall className="w-4 h-4 mr-2" />
+                        Quick Call
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          const phoneNumber = client.phone?.replace(/[^0-9]/g, '')
+                          const message = encodeURIComponent(`Hello ${client.name}, this is from Brilliance Advisory.`)
+                          window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank')
+                        }}
+                        className="cursor-pointer"
+                      >
+                        <MessageSquare className="w-4 h-4 mr-2" />
+                        WhatsApp
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 )}
                 {client.notes && (
                   <div className="text-xs text-gray-600 line-clamp-2 mt-2">

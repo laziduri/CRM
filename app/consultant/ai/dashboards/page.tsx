@@ -15,7 +15,7 @@ import {
   Zap,
   RefreshCw,
 } from 'lucide-react'
-import Button from '@/components/ui/Button'
+import { Button } from '@/components/ui/Button'
 import {
   LineChart,
   Line,

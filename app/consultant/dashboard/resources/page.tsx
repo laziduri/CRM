@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Copy, CheckCircle2, FileText, User, Building2, Check } from 'lucide-react'
-import Card from '@/components/ui/Card'
-import Button from '@/components/ui/Button'
+import { Card } from '@/components/ui/Card'
+import { Button } from '@/components/ui/Button'
 
 interface DocumentRequirement {
   id: string

@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, User, Lock, Camera, Save, AlertCircle, CheckCircle2, Mail, Calendar as CalendarIcon, Link2, Bell, ExternalLink, RefreshCw, Cake, Eye, EyeOff } from 'lucide-react'
-import Button from '@/components/ui/Button'
-import Card from '@/components/ui/Card'
-import Input from '@/components/ui/Input'
+import { Button } from '@/components/ui/Button'
+import { Card } from '@/components/ui/Card'
+import { Input } from '@/components/ui/Input'
 
 export default function ConsultantSettingsPage() {
   const router = useRouter()

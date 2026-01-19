@@ -1,16 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import { Facebook, Twitter, Linkedin, Instagram } from 'lucide-react'
 
 export default function Footer() {
-  const pathname = usePathname()
-  
-  // Hide footer on CRM pages (they have their own footer)
-  if (pathname?.startsWith('/crm')) {
-    return null
-  }
   const footerLinks = {
     company: [
       { href: '/aboutus', label: 'About Us' },

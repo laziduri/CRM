@@ -81,3 +81,29 @@ export function getSecurityHeaders() {
     'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
   }
 }
+
+/**
+ * Admin role checking utilities
+ * For v1, admin is determined by consultant ID
+ * In production, this should check against database or user roles
+ */
+
+// Admin consultant IDs (can be moved to environment variable later)
+const ADMIN_CONSULTANT_IDS = ['1'] // Default admin is consultant ID '1'
+
+/**
+ * Check if a consultant has admin privileges
+ * @param consultantId - The consultant ID to check
+ * @returns true if consultant is an admin, false otherwise
+ */
+export function isAdmin(consultantId: string | null | undefined): boolean {
+  if (!consultantId) return false
+  return ADMIN_CONSULTANT_IDS.includes(consultantId)
+}
+
+/**
+ * Get admin consultant IDs (for reference)
+ */
+export function getAdminIds(): string[] {
+  return [...ADMIN_CONSULTANT_IDS]
+}

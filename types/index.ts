@@ -63,7 +63,7 @@ export interface Job {
 // Calendar & Task Types
 export type CalendarItemType = 'appointment' | 'task'
 export type TaskType = 'remind-customer' | 'follow-up-payment' | 'call' | 'email' | 'document' | 'other'
-export type AppointmentType = 'consultation' | 'follow-up' | 'meeting' | 'door-knocking' | 'closing' | 'internal'
+export type AppointmentType = 'consultation' | 'follow-up' | 'meeting' | 'door-knocking' | 'closing' | 'internal' | 'celebration' | 'team-bonding'
 export type CalendarViewMode = 'month' | 'week' | 'day'
 export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent'
 export type TaskStatus = 'pending' | 'in-progress' | 'completed' | 'cancelled'

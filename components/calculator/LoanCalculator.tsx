@@ -3,9 +3,9 @@
 import { useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts'
 import { DollarSign, TrendingUp, Calculator, Calendar, Info, ChevronDown } from 'lucide-react'
-import Card from '@/components/ui/Card'
+import { Card } from '@/components/ui/Card'
 import Slider from '@/components/ui/Slider'
-import Input from '@/components/ui/Input'
+import { Input } from '@/components/ui/Input'
 import { calculateLoanPayment, formatCurrency } from '@/lib/utils'
 
 // Using website's color scheme: navy blue (#1E3A5F) and teal (#0F766E, #14B8A6)

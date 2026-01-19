@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import Button from '@/components/ui/Button'
+import { Button } from '@/components/ui/Button'
 import { Mail, Lock, AlertCircle, ArrowRight, User, Phone, CheckCircle2, Shield } from 'lucide-react'
 
 export default function ConsultantLoginPage() {

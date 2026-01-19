@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import Card from '@/components/ui/Card'
-import Button from '@/components/ui/Button'
+import { Card } from '@/components/ui/Card'
+import { Button } from '@/components/ui/Button'
 import { Job } from '@/types'
 import {
   ArrowLeft,
