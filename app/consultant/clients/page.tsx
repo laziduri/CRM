@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { 
@@ -25,7 +25,9 @@ import {
   Upload,
   FileSpreadsheet,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  ChevronDown,
+  Trash2
 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
@@ -63,6 +65,7 @@ export default function ClientsPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [filterType, setFilterType] = useState<'all' | 'personal' | 'business'>('all')
   const [filterStatus, setFilterStatus] = useState<'all' | 'door knocked' | 'to call' | 'to book appointment' | 'book appointment' | 'closed'>('all')
+  const [sortBy, setSortBy] = useState<'most-recent' | 'oldest-first' | 'name-asc' | 'name-desc' | 'last-contact' | 'total-deals'>('most-recent')
   const [showAddModal, setShowAddModal] = useState(false)
   const [showImportModal, setShowImportModal] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -71,6 +74,12 @@ export default function ClientsPage() {
   const [extractedClients, setExtractedClients] = useState<any[]>([])
   const [selectedClients, setSelectedClients] = useState<Set<number>>(new Set())
   const [importFile, setImportFile] = useState<File | null>(null)
+  
+  // Stats and modal state
+  const [showStats, setShowStats] = useState(false) // hidden on mobile by default
+  const [showClientModal, setShowClientModal] = useState(false)
+  const [modalTitle, setModalTitle] = useState('')
+  const [filteredClientsForModal, setFilteredClientsForModal] = useState<Client[]>([])
   
   // Form state
   const [formData, setFormData] = useState({
@@ -93,13 +102,26 @@ export default function ClientsPage() {
 
   useEffect(() => {
     const token = localStorage.getItem('consultant_token')
-    if (!token) {
+    const consultantId = localStorage.getItem('consultant_id')
+    if (!token || !consultantId) {
       router.push('/client/login')
       return
     }
 
-    // Mock data
-    const mockClients: Client[] = [
+    // Load clients from API
+    const loadClients = async () => {
+      try {
+        const response = await fetch('/api/consultant/clients', {
+          headers: {
+            'x-consultant-id': consultantId,
+          },
+        })
+        if (response.ok) {
+          const data = await response.json()
+          setClients(data.clients || [])
+        } else {
+          // Fallback to mock data if API fails
+          const mockClients: Client[] = [
       {
         id: '1',
         name: 'John Doe',
@@ -189,21 +211,138 @@ export default function ClientsPage() {
         businessUEN: '203456789C',
         businessRegistrationDate: new Date('2018-07-10'),
       },
-    ]
+          ]
+          setClients(mockClients)
+        }
+      } catch (error) {
+        console.error('Error loading clients:', error)
+        // Fallback to empty array or mock data
+        setClients([])
+      }
+    }
 
-    setClients(mockClients)
+    loadClients()
   }, [router])
 
-  const filteredClients = clients.filter(client => {
-    const matchesSearch = client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         (client.companyName && client.companyName.toLowerCase().includes(searchQuery.toLowerCase())) ||
-                         (client.email && client.email.toLowerCase().includes(searchQuery.toLowerCase())) ||
-                         (client.phone && client.phone.includes(searchQuery)) ||
-                         (client.notes && client.notes.toLowerCase().includes(searchQuery.toLowerCase()))
-    const matchesType = filterType === 'all' || client.type === filterType
-    const matchesStatus = filterStatus === 'all' || client.status === filterStatus
-    return matchesSearch && matchesType && matchesStatus
-  })
+  const fetchClients = async () => {
+    try {
+      const consultantId = localStorage.getItem('consultant_id') || '1'
+      const response = await fetch('/api/consultant/clients', {
+        headers: {
+          'x-consultant-id': consultantId,
+        },
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setClients(data.clients || [])
+      } else {
+        // Fallback to mock data if API fails
+        const mockClients: Client[] = [
+          {
+            id: '1',
+            name: 'John Doe',
+            type: 'personal',
+            email: 'john.doe@example.com',
+            phone: '+65 9123 4567',
+            status: 'to book appointment',
+            notes: 'Interested in personal loan for home renovation. Follow up next week.',
+            assignedDate: new Date('2024-01-15'),
+            totalDeals: 2,
+            totalLoanAmount: 125000,
+            tags: ['VIP', 'High Value'],
+          },
+        ]
+        setClients(mockClients)
+      }
+    } catch (error) {
+      console.error('Error fetching clients:', error)
+      setClients([])
+    }
+  }
+
+  const handleDeleteClient = async (clientId: string) => {
+    // First confirmation
+    const firstConfirm = confirm('Are you sure you want to delete this client? This action cannot be undone.')
+    if (!firstConfirm) {
+      return
+    }
+
+    // Second confirmation
+    const secondConfirm = confirm('This is your final warning. Once deleted, this client and all associated data cannot be recovered. Are you absolutely sure you want to delete this client?')
+    if (!secondConfirm) {
+      return
+    }
+
+    try {
+      const consultantId = localStorage.getItem('consultant_id') || '1'
+      
+      const response = await fetch(`/api/consultant/clients?clientId=${clientId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-consultant-id': consultantId,
+        },
+      })
+
+      const responseData = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        const errorMessage = responseData?.error || `HTTP ${response.status}: Failed to delete client`
+        console.error('Delete failed:', errorMessage, responseData)
+        throw new Error(errorMessage)
+      }
+
+      console.log('Client deleted successfully:', responseData)
+
+      // Refresh clients list
+      await fetchClients()
+    } catch (error: any) {
+      console.error('Error deleting client:', error)
+      alert(`Failed to delete client: ${error.message}`)
+    }
+  }
+
+  const sortedClients = useMemo(() => {
+    const filtered = clients.filter(client => {
+      const matchesSearch = client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           (client.companyName && client.companyName.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                           (client.email && client.email.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                           (client.phone && client.phone.includes(searchQuery)) ||
+                           (client.notes && client.notes.toLowerCase().includes(searchQuery.toLowerCase()))
+      const matchesType = filterType === 'all' || client.type === filterType
+      const matchesStatus = filterStatus === 'all' || client.status === filterStatus
+      return matchesSearch && matchesType && matchesStatus
+    })
+    
+    // Apply sorting
+    return [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'most-recent':
+          // Sort by assignedDate descending (newest first)
+          return new Date(b.assignedDate).getTime() - new Date(a.assignedDate).getTime()
+        case 'oldest-first':
+          // Sort by assignedDate ascending (oldest first)
+          return new Date(a.assignedDate).getTime() - new Date(b.assignedDate).getTime()
+        case 'name-asc':
+          // Sort by name A-Z
+          return a.name.localeCompare(b.name)
+        case 'name-desc':
+          // Sort by name Z-A
+          return b.name.localeCompare(a.name)
+        case 'last-contact':
+          // Sort by lastContact descending (most recent contact first)
+          const aDate = a.lastContact ? new Date(a.lastContact).getTime() : 0
+          const bDate = b.lastContact ? new Date(b.lastContact).getTime() : 0
+          return bDate - aDate
+        case 'total-deals':
+          // Sort by totalDeals descending (highest first)
+          return b.totalDeals - a.totalDeals
+        default:
+          return 0
+      }
+    })
+  }, [clients, searchQuery, filterType, filterStatus, sortBy])
 
 
   const handleAddClient = async (e: React.FormEvent) => {
@@ -211,8 +350,12 @@ export default function ClientsPage() {
     setIsSubmitting(true)
 
     try {
-      // In production, this would be an API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      const consultantId = localStorage.getItem('consultant_id')
+      if (!consultantId) {
+        alert('Please log in to add clients')
+        setIsSubmitting(false)
+        return
+      }
 
       // Auto-capture location if available
       let capturedLocation = formData.location
@@ -224,23 +367,34 @@ export default function ClientsPage() {
       // Use first company if available, otherwise undefined
       const firstCompany = formData.companies.length > 0 ? formData.companies[0] : null
 
-      // Create new client
-      const newClient: Client = {
-        id: String(clients.length + 1),
-        name: formData.name,
-        phone: formData.phone || undefined,
-        companyName: firstCompany?.name || undefined,
-        type: firstCompany ? 'business' : 'personal',
-        status: formData.status,
-        notes: formData.notes,
-        location: capturedLocation || undefined,
-        interestLevel: formData.interestLevel,
-        assignedDate: new Date(),
-        totalDeals: 0,
-        totalLoanAmount: 0,
-        businessUEN: firstCompany?.businessUEN || undefined,
-        businessRegistrationDate: firstCompany?.businessRegistrationDate ? new Date(firstCompany.businessRegistrationDate) : undefined,
+      // Call API to create client
+      const response = await fetch('/api/consultant/clients', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-consultant-id': consultantId,
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone || undefined,
+          companyName: firstCompany?.name || undefined,
+          businessUEN: firstCompany?.businessUEN || undefined,
+          businessRegistrationDate: firstCompany?.businessRegistrationDate || undefined,
+          businessAddress: firstCompany?.businessAddress || undefined,
+          location: capturedLocation || undefined,
+          interestLevel: formData.interestLevel,
+          status: formData.status,
+          notes: formData.notes,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.details || errorData.error || 'Failed to create client')
       }
+
+      const data = await response.json()
+      const newClient = data.client
 
       // Add to clients list
       setClients(prev => [...prev, newClient])
@@ -256,6 +410,7 @@ export default function ClientsPage() {
       setIsSubmitting(false)
     } catch (error) {
       console.error('Error adding client:', error)
+      alert(error instanceof Error ? error.message : 'Failed to add client. Please try again.')
       setIsSubmitting(false)
     }
   }
@@ -362,6 +517,13 @@ export default function ClientsPage() {
     }))
   }
 
+  const handleStatClick = (filterType: 'to book appointment' | 'book appointment', title: string) => {
+    const filtered = clients.filter(c => c.status === filterType)
+    setFilteredClientsForModal(filtered)
+    setModalTitle(title)
+    setShowClientModal(true)
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -446,11 +608,32 @@ export default function ClientsPage() {
               <option value="book appointment">Book Appointment</option>
               <option value="closed">Closed</option>
             </select>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            >
+              <option value="most-recent">Most Recent Added</option>
+              <option value="oldest-first">Oldest First</option>
+              <option value="name-asc">Name A-Z</option>
+              <option value="name-desc">Name Z-A</option>
+              <option value="last-contact">Last Contact Date</option>
+              <option value="total-deals">Total Deals (High to Low)</option>
+            </select>
           </div>
         </div>
 
+        {/* Mobile Stats Toggle Button */}
+        <button
+          onClick={() => setShowStats(!showStats)}
+          className="md:hidden w-full mb-2 flex items-center justify-between p-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg border border-gray-200 transition-colors"
+        >
+          <span>Quick Stats</span>
+          <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${showStats ? 'rotate-180' : ''}`} />
+        </button>
+
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className={`${showStats ? 'grid' : 'hidden md:grid'} grid-cols-1 md:grid-cols-4 gap-4 mb-6`}>
           <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
             <p className="text-sm text-gray-600 mb-1">Total Clients</p>
             <p className="text-2xl font-bold text-gray-900">{clients.length}</p>
@@ -461,16 +644,22 @@ export default function ClientsPage() {
               {clients.filter(c => c.status === 'to call').length}
             </p>
           </div>
-          <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-            <p className="text-sm text-gray-600 mb-1">Personal</p>
-            <p className="text-2xl font-bold text-primary">
-              {clients.filter(c => c.type === 'personal').length}
+          <div 
+            onClick={() => handleStatClick('to book appointment', 'Clients To Book Appointment')}
+            className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
+          >
+            <p className="text-sm text-gray-600 mb-1">To Book Appointment</p>
+            <p className="text-2xl font-bold text-purple-600">
+              {clients.filter(c => c.status === 'to book appointment').length}
             </p>
           </div>
-          <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-            <p className="text-sm text-gray-600 mb-1">Business</p>
-            <p className="text-2xl font-bold text-teal">
-              {clients.filter(c => c.type === 'business').length}
+          <div 
+            onClick={() => handleStatClick('book appointment', 'Scheduled Appointments')}
+            className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors"
+          >
+            <p className="text-sm text-gray-600 mb-1">Appointments Scheduled</p>
+            <p className="text-2xl font-bold text-green-600">
+              {clients.filter(c => c.status === 'book appointment').length}
             </p>
           </div>
         </div>
@@ -511,10 +700,13 @@ export default function ClientsPage() {
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-200">
                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
-                      COMPANY NAME
+                      PERSON NAME / COMPANY NAME
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
-                      CUS NAME
+                      NAME
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
+                      PHONE
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
                       ROLE
@@ -522,28 +714,53 @@ export default function ClientsPage() {
                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
                       STATUS
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">
                       REMARKS
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                      ACTIONS
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredClients.map((client) => (
+                  {sortedClients.map((client) => (
                     <tr
                       key={client.id}
-                      className="hover:bg-gray-50 transition-colors cursor-pointer"
-                      onClick={() => router.push(`/consultant/clients/${client.id}`)}
+                      className="hover:bg-gray-50 transition-colors"
                     >
-                      <td className="px-4 py-3 text-sm text-gray-900 border-r border-gray-200 font-medium">
-                        {client.companyName || '-'}
+                      <td 
+                        className="px-4 py-3 text-sm text-gray-900 border-r border-gray-200 font-medium cursor-pointer"
+                        onClick={() => router.push(`/consultant/clients/${client.id}`)}
+                      >
+                        <div>
+                          <div className="font-semibold">{client.name}</div>
+                          {client.companyName && (
+                            <div className="text-xs text-gray-600 mt-1">{client.companyName}</div>
+                          )}
+                        </div>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-700 border-r border-gray-200">
+                      <td 
+                        className="px-4 py-3 text-sm text-gray-700 border-r border-gray-200 cursor-pointer"
+                        onClick={() => router.push(`/consultant/clients/${client.id}`)}
+                      >
                         {client.name}
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-700 border-r border-gray-200">
+                      <td 
+                        className="px-4 py-3 text-sm text-gray-700 border-r border-gray-200 whitespace-nowrap cursor-pointer"
+                        onClick={() => router.push(`/consultant/clients/${client.id}`)}
+                      >
+                        {client.phone || '-'}
+                      </td>
+                      <td 
+                        className="px-4 py-3 text-sm text-gray-700 border-r border-gray-200 cursor-pointer"
+                        onClick={() => router.push(`/consultant/clients/${client.id}`)}
+                      >
                         {client.type === 'business' ? 'Business Owner' : 'Personal Client'}
                       </td>
-                      <td className="px-4 py-3 text-sm border-r border-gray-200">
+                      <td 
+                        className="px-4 py-3 text-sm border-r border-gray-200 cursor-pointer"
+                        onClick={() => router.push(`/consultant/clients/${client.id}`)}
+                      >
                         <span
                           className={`px-2 py-1 text-xs font-medium rounded-full ${
                             client.status === 'closed'
@@ -560,14 +777,39 @@ export default function ClientsPage() {
                           {client.status.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-600 max-w-md">
+                      <td 
+                        className="px-4 py-3 text-sm text-gray-600 max-w-xs cursor-pointer"
+                        onClick={() => router.push(`/consultant/clients/${client.id}`)}
+                      >
                         {client.notes || '-'}
+                      </td>
+                      <td className="px-4 py-3 text-sm">
+                        <div className="flex items-center gap-2">
+                          <Link
+                            href={`/consultant/clients/${client.id}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="p-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors"
+                            title="View Details"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Link>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleDeleteClient(client.id)
+                            }}
+                            className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Delete Client"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              {filteredClients.length === 0 && (
+              {sortedClients.length === 0 && (
                 <div className="text-center py-12">
                   <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                   <p className="text-gray-600">No clients found</p>
@@ -580,10 +822,11 @@ export default function ClientsPage() {
         {/* Button/Grid View - Lead Tracker */}
         {viewMode === 'grid' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredClients.map((client) => (
+          {sortedClients.map((client) => (
             <div
               key={client.id}
-              className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow"
+              onClick={() => router.push(`/consultant/clients/${client.id}`)}
+              className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
@@ -698,6 +941,7 @@ export default function ClientsPage() {
                 <div className="flex gap-2">
                   <Link
                     href={`/consultant/clients/${client.id}`}
+                    onClick={(e) => e.stopPropagation()}
                     className="p-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors"
                     title="View Details"
                   >
@@ -705,11 +949,22 @@ export default function ClientsPage() {
                   </Link>
                   <Link
                     href={`/consultant/messages?client=${client.id}`}
+                    onClick={(e) => e.stopPropagation()}
                     className="p-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors"
                     title="Message"
                   >
                     <MessageSquare className="w-4 h-4" />
                   </Link>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleDeleteClient(client.id)
+                    }}
+                    className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                    title="Delete Client"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -717,7 +972,7 @@ export default function ClientsPage() {
           </div>
         )}
 
-        {filteredClients.length === 0 && (
+        {sortedClients.length === 0 && (
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
             <User className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <p className="text-gray-600 mb-4">No clients found</p>
@@ -1099,6 +1354,57 @@ export default function ClientsPage() {
               Close
             </Button>
           </div>
+        </div>
+      </Modal>
+
+      {/* Client List Modal */}
+      <Modal
+        isOpen={showClientModal}
+        onClose={() => setShowClientModal(false)}
+        title={modalTitle}
+        size="lg"
+      >
+        <div className="space-y-4">
+          {filteredClientsForModal.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              <p>No clients found</p>
+            </div>
+          ) : (
+            <div className="space-y-3 max-h-[60vh] overflow-y-auto">
+              {filteredClientsForModal.map((client) => (
+                <div
+                  key={client.id}
+                  onClick={() => {
+                    setShowClientModal(false)
+                    router.push(`/consultant/clients/${client.id}`)
+                  }}
+                  className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900">{client.name}</h3>
+                      {client.companyName && (
+                        <p className="text-sm text-gray-600 mt-1">{client.companyName}</p>
+                      )}
+                      {client.phone && (
+                        <p className="text-sm text-gray-600 mt-1">{client.phone}</p>
+                      )}
+                    </div>
+                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                      client.interestLevel === 'hot' ? 'bg-red-100 text-red-700' :
+                      client.interestLevel === 'warm' ? 'bg-orange-100 text-orange-700' :
+                      'bg-blue-100 text-blue-700'
+                    }`}>
+                      {client.interestLevel || 'N/A'}
+                    </span>
+                  </div>
+                  {client.notes && (
+                    <p className="text-sm text-gray-600 mt-2 line-clamp-2">{client.notes}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </Modal>
 

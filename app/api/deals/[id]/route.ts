@@ -79,7 +79,11 @@ export async function PATCH(
 
     // If products are being updated, recalculate
     if (body.products) {
-      updateData.products = body.products.map(p => calculateDealProductTotals(p))
+      updateData.products = body.products.map(p => {
+        // Ensure costing is included (default to 0 if not provided)
+        const productWithCosting = { ...p, costing: p.costing ?? 0 }
+        return calculateDealProductTotals(productWithCosting)
+      })
     }
 
     const updatedDeal = updateDeal(dealId, updateData)

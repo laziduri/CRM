@@ -10,7 +10,11 @@ export default function PublicLayout({
   children: React.ReactNode
 }) {
   return (
-    <ErrorBoundary>
+    <ErrorBoundary
+      onError={(error, errorInfo) => {
+        console.error('PublicLayout error:', error, errorInfo)
+      }}
+    >
       <Header />
       <main>{children}</main>
       <Footer />

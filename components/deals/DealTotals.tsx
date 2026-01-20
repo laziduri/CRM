@@ -41,7 +41,7 @@ export default function DealTotals({ products, className = '' }: DealTotalsProps
 
       <div className="p-6 bg-white rounded-xl border border-gray-200 shadow-sm">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Commission Totals</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <p className="text-sm text-gray-600 mb-1">Total Commission (With SFEC)</p>
             <p className="text-2xl font-bold text-green-600">{formatCurrency(totals.totalCommissionWithSfec)}</p>
@@ -49,6 +49,19 @@ export default function DealTotals({ products, className = '' }: DealTotalsProps
           <div>
             <p className="text-sm text-gray-600 mb-1">Total Commission (Without SFEC)</p>
             <p className="text-2xl font-bold text-green-600">{formatCurrency(totals.totalCommissionWithoutSfec)}</p>
+          </div>
+        </div>
+        <div className="border-t border-gray-200 pt-4 mt-4">
+          <h4 className="text-md font-semibold text-gray-900 mb-3">Take-Home Commission</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Take-Home (With SFEC)</p>
+              <p className="text-2xl font-bold text-primary">{formatCurrency(totals.totalTakeHomeCommissionWithSfec)}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Take-Home (Without SFEC)</p>
+              <p className="text-2xl font-bold text-primary">{formatCurrency(totals.totalTakeHomeCommissionWithoutSfec)}</p>
+            </div>
           </div>
         </div>
       </div>

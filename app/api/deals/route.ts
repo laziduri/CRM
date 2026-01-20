@@ -68,7 +68,11 @@ export async function POST(request: NextRequest) {
       clientName: body.clientName,
       name: body.name,
       description: body.description,
-      products: body.products.map(p => calculateDealProductTotals(p)),
+      products: body.products.map(p => {
+        // Ensure costing is included (default to 0 if not provided)
+        const productWithCosting = { ...p, costing: p.costing ?? 0 }
+        return calculateDealProductTotals(productWithCosting)
+      }),
       status: body.status || 'draft',
     })
 

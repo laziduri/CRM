@@ -9,6 +9,8 @@ export interface DealProduct {
   unitSfecAmount: number
   unitCommissionWithSfec: number
   unitCommissionWithoutSfec: number
+  consultantCharge?: number // For MCPP and similar products requiring consultant charge input
+  costing: number // Costing amount (e.g., iPhone cost, kickback) - affects take-home commission
   // Computed per product (unit × quantity)
   totalCost: number
   totalPsgAmount: number
@@ -17,6 +19,8 @@ export interface DealProduct {
   totalBalanceWithoutSfec: number
   totalCommissionWithSfec: number
   totalCommissionWithoutSfec: number
+  totalTakeHomeCommissionWithSfec: number // Commission - (costing × quantity)
+  totalTakeHomeCommissionWithoutSfec: number // Commission - (costing × quantity)
 }
 
 export interface Deal {
@@ -32,6 +36,8 @@ export interface Deal {
   totalBalanceWithoutSfec: number
   totalCommissionWithSfec: number
   totalCommissionWithoutSfec: number
+  totalTakeHomeCommissionWithSfec: number
+  totalTakeHomeCommissionWithoutSfec: number
   status: 'draft' | 'sent' | 'accepted' | 'rejected' | 'closed'
   createdAt: string
   updatedAt: string
@@ -42,7 +48,7 @@ export interface CreateDealInput {
   clientName?: string
   name: string
   description?: string
-  products: Omit<DealProduct, 'totalCost' | 'totalPsgAmount' | 'totalSfecAmount' | 'totalBalanceWithSfec' | 'totalBalanceWithoutSfec' | 'totalCommissionWithSfec' | 'totalCommissionWithoutSfec'>[]
+  products: Omit<DealProduct, 'totalCost' | 'totalPsgAmount' | 'totalSfecAmount' | 'totalBalanceWithSfec' | 'totalBalanceWithoutSfec' | 'totalCommissionWithSfec' | 'totalCommissionWithoutSfec' | 'totalTakeHomeCommissionWithSfec' | 'totalTakeHomeCommissionWithoutSfec'>[]
   status?: 'draft' | 'sent' | 'accepted' | 'rejected' | 'closed'
 }
 

@@ -111,11 +111,18 @@ export default function TasksPage() {
         // Reload to get updated list
         await loadData()
       } else {
-        throw new Error('Failed to create task')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to create task' }))
+        const errorMessage = errorData.details || errorData.error || 'Failed to create task'
+        console.error('API Error:', errorData)
+        alert(`Failed to add task: ${errorMessage}`)
+        throw new Error(errorMessage)
       }
     } catch (error) {
       console.error('Error adding task:', error)
-      alert('Failed to add task. Please try again.')
+      // Only show alert if we haven't already shown one
+      if (error instanceof Error && !error.message.includes('Failed to add task:')) {
+        alert('Failed to add task. Please try again.')
+      }
     }
   }
 

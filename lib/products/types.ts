@@ -1,4 +1,4 @@
-export type ProductCategory = 'Grants' | 'Digital' | 'HRMS' | 'Accounting' | 'CRM' | 'AI'
+export type ProductCategory = 'PSG Grant' | 'Manpower Grant' | 'Loan'
 
 export interface Product {
   id: string
@@ -13,6 +13,8 @@ export interface Product {
   commissionWithoutSfec: number
   description?: string
   isActive: boolean
+  requiresConsultantCharge?: boolean // If true, product needs consultant charge input
+  isLoanProduct?: boolean // Flag to identify loan products
   createdAt: string
   updatedAt: string
   // Computed fields (not stored, calculated)
@@ -31,6 +33,7 @@ export interface CreateProductInput {
   commissionWithoutSfec: number
   description?: string
   isActive?: boolean
+  requiresConsultantCharge?: boolean
 }
 
 export interface UpdateProductInput extends Partial<CreateProductInput> {
@@ -47,7 +50,7 @@ export function calculateBalanceWithoutSfec(cost: number, psgAmount: number): nu
 }
 
 // Product category constants
-export const PRODUCT_CATEGORIES: ProductCategory[] = ['Grants', 'Digital', 'HRMS', 'Accounting', 'CRM', 'AI']
+export const PRODUCT_CATEGORIES: ProductCategory[] = ['PSG Grant', 'Manpower Grant', 'Loan']
 
 // Vendor suggestions
 export const VENDOR_SUGGESTIONS = ['DST', 'Code Nova', 'Time Access', 'Xero', 'Microsoft', 'Salesforce', 'Oracle']

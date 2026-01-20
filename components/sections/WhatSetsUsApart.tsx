@@ -239,13 +239,17 @@ export default function WhatSetsUsApart() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-20">
           {features.map((feature, index) => {
             const Icon = feature.icon
+            if (!Icon) {
+              console.warn(`Icon missing for feature at index ${index}`)
+              return null
+            }
             return (
               <Card key={index} hover className="flex flex-col p-0 card-hover-lift animate-fade-in-up-stagger overflow-visible relative z-20" style={{ animationDelay: `${index * 0.2}s` }}>
                 <div className="p-6 flex flex-col items-center text-center relative z-20">
                   {/* Icon */}
                   <div className="mb-4 relative z-10">
                     <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
-                      <Icon className="w-8 h-8 text-white" />
+                      {Icon && <Icon className="w-8 h-8 text-white" />}
                     </div>
                   </div>
                   

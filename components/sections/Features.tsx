@@ -42,11 +42,15 @@ export default function Features() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {features.map((feature, index) => {
             const Icon = feature.icon
+            if (!Icon) {
+              console.warn(`Icon missing for feature at index ${index}`)
+              return null
+            }
             return (
               <Card key={index} hover className="text-center card-hover-lift animate-fade-in-up-stagger" style={{ animationDelay: `${index * 0.2}s` }}>
                 <div className="flex justify-center mb-4">
                   <div className="bg-gradient-to-br from-primary to-teal p-3 rounded-full border-2 border-teal-light shadow-lg">
-                    <Icon className="w-8 h-8 text-white" />
+                    {Icon && <Icon className="w-8 h-8 text-white" />}
                   </div>
                 </div>
                 <h3 className="text-xl font-semibold mb-2 text-gray-900">

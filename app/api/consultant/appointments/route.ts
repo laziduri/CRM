@@ -130,6 +130,13 @@ export async function POST(request: NextRequest) {
 
     const supabase = await createClient()
 
+    // Get consultant name early (needed for fallback)
+    const { data: consultant } = await supabase
+      .from('consultants')
+      .select('name')
+      .eq('id', consultantId)
+      .single()
+
     // Get client name if clientId provided
     let clientName = body.clientName
     if (body.clientId && !clientName) {
@@ -147,51 +154,98 @@ export async function POST(request: NextRequest) {
     const duration = body.duration || Math.round((endTime.getTime() - startTime.getTime()) / (1000 * 60))
 
     // Create appointment in Supabase
-    // Handle joiners - store as JSON array if supported, otherwise as comma-separated string
+    // Build insert object with core required columns first
+    const insertData: any = {
+      consultant_id: consultantId,
+      client_id: body.clientId || null,
+      title: body.title,
+      description: body.notes || body.description || null,
+      status: body.status || 'scheduled',
+      start_time: startTime.toISOString(),
+      end_time: endTime.toISOString(),
+      meeting_link: body.meetingLink || null,
+    }
+
+    // Add optional columns that might exist in database
+    // These will be skipped if columns don't exist (graceful degradation)
+    if (body.appointmentType) insertData.appointment_type = body.appointmentType
+    if (duration) insertData.duration = duration
+    if (body.location) insertData.location = body.location
+    if (body.locationAddress) insertData.location_address = body.locationAddress
+    if (body.googleMapsLink) insertData.google_maps_link = body.googleMapsLink
+    if (body.latitude !== undefined && body.latitude !== null) insertData.latitude = body.latitude
+    if (body.longitude !== undefined && body.longitude !== null) insertData.longitude = body.longitude
+    if (body.clientType) insertData.client_type = body.clientType
+    if (body.color) insertData.color = body.color
+    if (body.isJoinable !== undefined) insertData.is_joinable = body.isJoinable
+    
+    // Handle joiners - store as JSON string if column exists
     const joinersData = body.joiners && Array.isArray(body.joiners) ? body.joiners : []
+    if (joinersData.length > 0) {
+      insertData.joiners = JSON.stringify(joinersData)
+    }
     
     const { data: newAppointment, error: insertError } = await supabase
       .from('appointments')
-      .insert({
-        consultant_id: consultantId,
-        client_id: body.clientId || null,
-        title: body.title,
-        description: body.notes || body.description || null, // Notes are optional
-        appointment_type: body.appointmentType || 'consultation',
-        status: body.status || 'scheduled',
-        start_time: startTime.toISOString(),
-        end_time: endTime.toISOString(),
-        duration,
-        location: body.location || 'office',
-        location_address: body.locationAddress || null,
-        google_maps_link: body.googleMapsLink || null,
-        latitude: body.latitude || null,
-        longitude: body.longitude || null,
-        meeting_link: body.meetingLink || null,
-        client_type: body.clientType || 'personal',
-        color: body.color || null,
-        is_joinable: body.isJoinable || false,
-        joiners: joinersData.length > 0 ? JSON.stringify(joinersData) : null, // Store as JSON string
-      })
+      .insert(insertData)
       .select()
       .single()
 
     if (insertError || !newAppointment) {
       console.error('[API] Supabase insert error:', insertError)
       console.error('[API] Request body:', JSON.stringify(body, null, 2))
+      
+      // If error is due to missing columns, try again with only core columns
+      if (insertError?.code === '42703' || insertError?.message?.includes('column') || insertError?.message?.includes('does not exist')) {
+        console.log('[API] Retrying with core columns only...')
+        const fallbackData: any = {
+          consultant_id: consultantId,
+          client_id: body.clientId || null,
+          title: body.title,
+          description: body.notes || body.description || null,
+          status: body.status || 'scheduled',
+          start_time: startTime.toISOString(),
+          end_time: endTime.toISOString(),
+          meeting_link: body.meetingLink || null,
+        }
+
+        const { data: fallbackAppointment, error: fallbackError } = await supabase
+          .from('appointments')
+          .insert(fallbackData)
+          .select()
+          .single()
+
+        if (fallbackError || !fallbackAppointment) {
+          console.error('[API] Fallback insert error:', fallbackError)
+          return NextResponse.json(
+            { 
+              error: 'Failed to create appointment',
+              details: fallbackError?.message || insertError?.message || 'Unknown database error'
+            },
+            { status: 500 }
+          )
+        }
+
+        const consultantName = consultant?.name || 'You'
+        const mappedAppointment = mapDbAppointmentToAppointment(fallbackAppointment, consultantName)
+        if (clientName) mappedAppointment.clientName = clientName
+
+        return NextResponse.json({
+          success: true,
+          appointment: mappedAppointment,
+        })
+      }
+
       return NextResponse.json(
-        { error: 'Failed to create appointment', details: insertError?.message || insertError?.details || 'Unknown database error' },
+        { 
+          error: 'Failed to create appointment',
+          details: insertError?.message || insertError?.details || 'Unknown database error'
+        },
         { status: 500 }
       )
     }
 
-    // Get consultant name for the response
-    const { data: consultant } = await supabase
-      .from('consultants')
-      .select('name')
-      .eq('id', consultantId)
-      .single()
-
+    // Use consultant name from earlier fetch
     const consultantName = consultant?.name || 'You'
 
     const mappedAppointment = mapDbAppointmentToAppointment(newAppointment, consultantName)

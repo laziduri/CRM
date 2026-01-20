@@ -56,6 +56,17 @@ export default function AppointmentsPage() {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [formData, setFormData] = useState({
+    title: '',
+    date: new Date().toISOString().split('T')[0],
+    time: '',
+    duration: 60,
+    clientId: '',
+    type: 'consultation' as 'consultation' | 'follow-up' | 'closing' | 'other',
+    location: 'office' as 'office' | 'online' | 'client-site',
+    notes: '',
+  })
 
   useEffect(() => {
     const token = localStorage.getItem('consultant_token')
@@ -702,11 +713,105 @@ export default function AppointmentsPage() {
                 </button>
               </div>
 
-              <form className="space-y-6">
+              <form onSubmit={async (e) => {
+                e.preventDefault()
+                if (!formData.title.trim()) {
+                  alert('Please enter a title for the appointment')
+                  return
+                }
+                if (!formData.date || !formData.time) {
+                  alert('Please select both date and time')
+                  return
+                }
+                if (formData.type !== 'other' && !formData.clientId) {
+                  alert('Please select a client')
+                  return
+                }
+
+                setIsSubmitting(true)
+                try {
+                  const consultantId = localStorage.getItem('consultant_id')
+                  if (!consultantId) {
+                    alert('Please log in to create appointments')
+                    setIsSubmitting(false)
+                    return
+                  }
+
+                  const startTime = new Date(`${formData.date}T${formData.time}`)
+                  const endTime = new Date(startTime.getTime() + formData.duration * 60000)
+
+                  const response = await fetch('/api/consultant/appointments', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'x-consultant-id': consultantId,
+                    },
+                    body: JSON.stringify({
+                      title: formData.title,
+                      clientId: formData.clientId || null,
+                      appointmentType: formData.type,
+                      startTime: startTime.toISOString(),
+                      endTime: endTime.toISOString(),
+                      duration: formData.duration,
+                      location: formData.location,
+                      notes: formData.notes || null,
+                    }),
+                  })
+
+                  if (!response.ok) {
+                    const errorData = await response.json()
+                    throw new Error(errorData.details || errorData.error || 'Failed to create appointment')
+                  }
+
+                  const data = await response.json()
+                  
+                  // Add to appointments list
+                  const newAppointment: Appointment = {
+                    id: data.appointment.id,
+                    title: data.appointment.title,
+                    clientId: data.appointment.clientId || '',
+                    clientName: data.appointment.clientName || '',
+                    clientType: data.appointment.clientType || 'personal',
+                    consultantId: data.appointment.consultantId,
+                    consultantName: data.appointment.consultantName || '',
+                    date: new Date(data.appointment.startTime),
+                    startTime: new Date(data.appointment.startTime).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+                    endTime: new Date(data.appointment.endTime).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+                    duration: data.appointment.duration,
+                    type: formData.type,
+                    location: data.appointment.location,
+                    status: 'scheduled',
+                    notes: data.appointment.notes,
+                  }
+
+                  setAppointments(prev => [...prev, newAppointment])
+                  setShowCreateModal(false)
+                  
+                  // Reset form
+                  setFormData({
+                    title: '',
+                    date: new Date().toISOString().split('T')[0],
+                    time: '',
+                    duration: 60,
+                    clientId: '',
+                    type: 'consultation',
+                    location: 'office',
+                    notes: '',
+                  })
+                } catch (error) {
+                  console.error('Error creating appointment:', error)
+                  alert(error instanceof Error ? error.message : 'Failed to create appointment. Please try again.')
+                } finally {
+                  setIsSubmitting(false)
+                }
+              }} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Title</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
                   <input
                     type="text"
+                    required
+                    value={formData.title}
+                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                     placeholder="e.g., Initial Consultation"
                   />
@@ -714,17 +819,22 @@ export default function AppointmentsPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Date *</label>
                     <input
                       type="date"
+                      required
+                      value={formData.date}
+                      onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                      defaultValue={selectedDate.toISOString().split('T')[0]}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Time</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Time *</label>
                     <input
                       type="time"
+                      required
+                      value={formData.time}
+                      onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
                   </div>
@@ -734,6 +844,10 @@ export default function AppointmentsPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Duration (minutes)</label>
                   <input
                     type="number"
+                    min="15"
+                    step="15"
+                    value={formData.duration}
+                    onChange={(e) => setFormData(prev => ({ ...prev, duration: parseInt(e.target.value) || 60 }))}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                     placeholder="60"
                   />
@@ -741,7 +855,11 @@ export default function AppointmentsPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Client</label>
-                  <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                  <select 
+                    value={formData.clientId}
+                    onChange={(e) => setFormData(prev => ({ ...prev, clientId: e.target.value }))}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  >
                     <option value="">Select a client...</option>
                     <option value="1">John Doe (Personal)</option>
                     <option value="2">ABC Trading Pte Ltd (Business)</option>
@@ -752,7 +870,11 @@ export default function AppointmentsPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
-                    <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                    <select 
+                      value={formData.type}
+                      onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value as any }))}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    >
                       <option value="consultation">Consultation</option>
                       <option value="follow-up">Follow-up</option>
                       <option value="closing">Closing</option>
@@ -761,7 +883,11 @@ export default function AppointmentsPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
-                    <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                    <select 
+                      value={formData.location}
+                      onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value as any }))}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    >
                       <option value="office">Office</option>
                       <option value="online">Online</option>
                       <option value="client-site">Client Site</option>
@@ -773,6 +899,8 @@ export default function AppointmentsPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Notes</label>
                   <textarea
                     rows={4}
+                    value={formData.notes}
+                    onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
                     placeholder="Add any notes or details about this appointment..."
                   ></textarea>
@@ -780,15 +908,40 @@ export default function AppointmentsPage() {
 
                 <div className="flex gap-3 pt-4 border-t">
                   <Button
+                    type="button"
                     variant="secondary"
                     className="flex-1"
-                    onClick={() => setShowCreateModal(false)}
+                    onClick={() => {
+                      setShowCreateModal(false)
+                      setFormData({
+                        title: '',
+                        date: new Date().toISOString().split('T')[0],
+                        time: '',
+                        duration: 60,
+                        clientId: '',
+                        type: 'consultation',
+                        location: 'office',
+                        notes: '',
+                      })
+                    }}
+                    disabled={isSubmitting}
                   >
                     Cancel
                   </Button>
-                  <Button variant="primary" className="flex-1 flex items-center justify-center gap-2">
-                    <Plus className="w-4 h-4" />
-                    Create Appointment
+                  <Button 
+                    type="submit" 
+                    variant="primary" 
+                    className="flex-1 flex items-center justify-center gap-2"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      'Creating...'
+                    ) : (
+                      <>
+                        <Plus className="w-4 h-4" />
+                        Create Appointment
+                      </>
+                    )}
                   </Button>
                 </div>
               </form>

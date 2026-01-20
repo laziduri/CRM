@@ -221,46 +221,124 @@ export async function POST(request: NextRequest) {
     }
 
     // Create task in Supabase
-    // Determine start_date from deadline or startTime
-    let startDate = null
-    if (body.startDate) {
-      startDate = new Date(body.startDate).toISOString().split('T')[0]
-    } else if (body.deadline) {
-      startDate = new Date(body.deadline).toISOString().split('T')[0]
-    } else if (body.startTime) {
-      startDate = new Date(body.startTime).toISOString().split('T')[0]
+    // Build insert object with only existing columns (null-safe)
+    // Note: start_date and assignee_id columns don't exist in the database, so we don't include them
+    const insertData: any = {
+      consultant_id: consultantId,
+      client_id: body.clientId || null,
+      title: body.title,
+      description: body.notes || body.description || null,
+      task_type: body.taskType || 'other',
+      priority: body.priority || 'medium',
+      status: body.status || 'pending',
+      start_time: body.startTime ? new Date(body.startTime).toISOString() : null,
+      end_time: body.endTime ? new Date(body.endTime).toISOString() : null,
+      estimated_duration: body.estimatedDuration || 30,
+      deadline: body.deadline ? new Date(body.deadline).toISOString() : null,
+      ai_suggested: body.aiSuggested || false,
+      ai_recommendations: body.aiRecommendations || null,
+      archived: false,
     }
+
+    // Log the insert data for debugging (without sensitive info)
+    console.log('[API] Creating task with data:', {
+      consultant_id: consultantId,
+      title: body.title,
+      has_client_id: !!body.clientId,
+      has_start_time: !!body.startTime,
+      has_deadline: !!body.deadline,
+      priority: body.priority || 'medium',
+      status: body.status || 'pending',
+    })
 
     const { data: newTask, error: insertError } = await supabase
       .from('tasks')
-      .insert({
-        consultant_id: consultantId,
-        client_id: body.clientId || null,
-        title: body.title,
-        description: body.notes || body.description,
-        task_type: body.taskType || 'other',
-        priority: body.priority || 'medium',
-        status: body.status || 'pending',
-        start_time: body.startTime ? new Date(body.startTime).toISOString() : null,
-        end_time: body.endTime ? new Date(body.endTime).toISOString() : null,
-        estimated_duration: body.estimatedDuration || 30,
-        deadline: body.deadline ? new Date(body.deadline).toISOString() : null,
-        start_date: startDate,
-        assignee_id: body.assigneeId || null,
-        ai_suggested: body.aiSuggested || false,
-        ai_recommendations: body.aiRecommendations || null,
-        archived: false,
-      })
+      .insert(insertData)
       .select()
       .single()
 
     if (insertError || !newTask) {
-      console.error('[API] Supabase insert error:', insertError)
+      console.error('[API] Supabase insert error:', {
+        code: insertError?.code,
+        message: insertError?.message,
+        details: insertError?.details,
+        hint: insertError?.hint,
+        fullError: insertError,
+      })
+      
+      // If error is due to missing columns, try again without optional columns
+      // This is a safety net in case we missed something
+      if (insertError?.code === '42703' || 
+          insertError?.message?.includes('column') || 
+          insertError?.message?.includes('does not exist') ||
+          insertError?.hint?.includes('column')) {
+        console.log('[API] Column error detected, retrying without optional columns...')
+        const fallbackData: any = {
+          consultant_id: consultantId,
+          client_id: body.clientId || null,
+          title: body.title,
+          description: body.notes || body.description || null,
+          task_type: body.taskType || 'other',
+          priority: body.priority || 'medium',
+          status: body.status || 'pending',
+          start_time: body.startTime ? new Date(body.startTime).toISOString() : null,
+          end_time: body.endTime ? new Date(body.endTime).toISOString() : null,
+          estimated_duration: body.estimatedDuration || 30,
+          deadline: body.deadline ? new Date(body.deadline).toISOString() : null,
+          ai_suggested: body.aiSuggested || false,
+          ai_recommendations: body.aiRecommendations || null,
+          archived: false,
+        }
+
+        const { data: fallbackTask, error: fallbackError } = await supabase
+          .from('tasks')
+          .insert(fallbackData)
+          .select()
+          .single()
+
+        if (fallbackError || !fallbackTask) {
+          console.error('[API] Fallback insert error:', {
+            code: fallbackError?.code,
+            message: fallbackError?.message,
+            details: fallbackError?.details,
+            hint: fallbackError?.hint,
+            fullError: fallbackError,
+          })
+          return NextResponse.json(
+            { 
+              error: 'Failed to create task',
+              details: fallbackError?.message || fallbackError?.details || insertError?.message || 'Unknown database error'
+            },
+            { status: 500 }
+          )
+        }
+
+        console.log('[API] Task created successfully via fallback')
+        const mappedTask = mapDbTaskToTask(fallbackTask)
+        if (clientName) mappedTask.clientName = clientName
+
+        return NextResponse.json({
+          success: true,
+          task: mappedTask,
+          duplicateWarning: similarTasks.length > 0 ? {
+            similarTasks: similarTasks.slice(0, 3),
+            message: `Found ${similarTasks.length} similar task(s). Are you sure you want to create a duplicate?`,
+          } : undefined,
+        })
+      }
+
+      // Return detailed error information
       return NextResponse.json(
-        { error: 'Failed to create task' },
+        { 
+          error: 'Failed to create task',
+          details: insertError?.message || insertError?.details || insertError?.hint || 'Unknown database error',
+          code: insertError?.code || 'UNKNOWN_ERROR'
+        },
         { status: 500 }
       )
     }
+
+    console.log('[API] Task created successfully:', newTask.id)
 
     const mappedTask = mapDbTaskToTask(newTask)
     if (clientName) mappedTask.clientName = clientName

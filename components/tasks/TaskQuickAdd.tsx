@@ -97,6 +97,28 @@ export default function TaskQuickAdd({ onAddTask, clients = [], teammates = [] }
         />
       </div>
 
+      {/* Client selector - always visible for quick add */}
+      {clients.length > 0 && (
+        <div className="mt-3">
+          <label className="flex items-center gap-2 text-sm text-gray-700 mb-1">
+            <User className="w-4 h-4" />
+            Client (optional)
+          </label>
+          <select
+            value={clientId}
+            onChange={(e) => setClientId(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
+          >
+            <option value="">Select client...</option>
+            {clients.map((client) => (
+              <option key={client.id} value={client.id}>
+                {client.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
       {/* Optional fields - expandable */}
       {isExpanded && (
         <div className="mt-3 space-y-3">
@@ -113,28 +135,6 @@ export default function TaskQuickAdd({ onAddTask, clients = [], teammates = [] }
               className="w-full"
             />
           </div>
-
-          {/* Client selector */}
-          {clients.length > 0 && (
-            <div>
-              <label className="flex items-center gap-2 text-sm text-gray-700 mb-1">
-                <User className="w-4 h-4" />
-                Client (optional)
-              </label>
-              <select
-                value={clientId}
-                onChange={(e) => setClientId(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
-              >
-                <option value="">Select client...</option>
-                {clients.map((client) => (
-                  <option key={client.id} value={client.id}>
-                    {client.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
 
           {/* Assign to teammate/director */}
           {teammates.length > 0 && (

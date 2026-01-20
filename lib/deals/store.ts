@@ -37,7 +37,7 @@ export function getDeal(id: string): Deal | null {
   return deals.find(d => d.id === id) || null
 }
 
-export function createDeal(deal: Omit<Deal, 'id' | 'createdAt' | 'updatedAt' | 'totalBalanceWithSfec' | 'totalBalanceWithoutSfec' | 'totalCommissionWithSfec' | 'totalCommissionWithoutSfec'>): Deal {
+export function createDeal(deal: Omit<Deal, 'id' | 'createdAt' | 'updatedAt' | 'totalBalanceWithSfec' | 'totalBalanceWithoutSfec' | 'totalCommissionWithSfec' | 'totalCommissionWithoutSfec' | 'totalTakeHomeCommissionWithSfec' | 'totalTakeHomeCommissionWithoutSfec'>): Deal {
   const deals = readDeals()
   
   // Calculate product totals

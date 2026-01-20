@@ -16,7 +16,8 @@ import {
   AlertCircle,
   CheckCircle2,
   Clock,
-  X
+  X,
+  FileText
 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { getSuggestedNextStage, getAutoFillExplanation } from '@/lib/crm-autofill'
@@ -29,7 +30,7 @@ interface Deal {
   clientType: 'personal' | 'business'
   loanType: string
   loanAmount: number
-  status: 'new' | 'in-progress' | 'under-review' | 'approved' | 'closed' | 'rejected'
+  status: 'new' | 'appointment' | 'apply' | 'close' | 'rejected'
   priority: 'high' | 'medium' | 'low'
   estimatedCommission: number
   createdAt: Date
@@ -40,10 +41,9 @@ interface Deal {
 
 const columns = [
   { id: 'new', title: 'New', color: 'bg-gray-100', textColor: 'text-gray-700' },
-  { id: 'in-progress', title: 'In Progress', color: 'bg-blue-100', textColor: 'text-blue-700' },
-  { id: 'under-review', title: 'Under Review', color: 'bg-yellow-100', textColor: 'text-yellow-700' },
-  { id: 'approved', title: 'Approved', color: 'bg-purple-100', textColor: 'text-purple-700' },
-  { id: 'closed', title: 'Closed', color: 'bg-green-100', textColor: 'text-green-700' },
+  { id: 'appointment', title: 'Appointment', color: 'bg-blue-100', textColor: 'text-blue-700' },
+  { id: 'apply', title: 'Apply', color: 'bg-yellow-100', textColor: 'text-yellow-700' },
+  { id: 'close', title: 'Close', color: 'bg-green-100', textColor: 'text-green-700' },
   { id: 'rejected', title: 'Rejected', color: 'bg-red-100', textColor: 'text-red-700' },
 ]
 
@@ -86,7 +86,7 @@ export default function PipelinePage() {
         clientType: 'business',
         loanType: 'Business Loan',
         loanAmount: 150000,
-        status: 'in-progress',
+        status: 'appointment',
         priority: 'high',
         estimatedCommission: 7500,
         createdAt: new Date('2024-01-10'),
@@ -100,7 +100,7 @@ export default function PipelinePage() {
         clientType: 'personal',
         loanType: 'Personal Loan',
         loanAmount: 30000,
-        status: 'under-review',
+        status: 'apply',
         priority: 'medium',
         estimatedCommission: 1500,
         createdAt: new Date('2024-01-05'),
@@ -113,7 +113,7 @@ export default function PipelinePage() {
         clientType: 'business',
         loanType: 'Business Loan',
         loanAmount: 200000,
-        status: 'approved',
+        status: 'apply',
         priority: 'high',
         estimatedCommission: 10000,
         createdAt: new Date('2023-12-20'),
@@ -126,7 +126,7 @@ export default function PipelinePage() {
         clientType: 'personal',
         loanType: 'Personal Loan',
         loanAmount: 75000,
-        status: 'closed',
+        status: 'close',
         priority: 'high',
         estimatedCommission: 3750,
         createdAt: new Date('2023-11-15'),
@@ -149,7 +149,9 @@ export default function PipelinePage() {
     setDeals(mockDeals)
   }, [router])
 
-  const handleDragStart = (dealId: string) => {
+  const handleDragStart = (e: React.DragEvent, dealId: string) => {
+    e.dataTransfer.setData('dealId', dealId)
+    e.dataTransfer.effectAllowed = 'move'
     setDraggedDeal(dealId)
   }
 
@@ -194,14 +196,21 @@ export default function PipelinePage() {
     setSuggestedStage(null)
   }
 
-  const handleDrop = (e: React.DragEvent, status: Deal['status']) => {
+  const handleDrop = async (e: React.DragEvent, status: Deal['status']) => {
     e.preventDefault()
     e.stopPropagation()
     
-    if (!draggedDeal) return
+    // Get dealId from both dataTransfer and state (for reliability)
+    const dealIdFromTransfer = e.dataTransfer.getData('dealId')
+    const dealId = dealIdFromTransfer || draggedDeal
+    
+    if (!dealId) {
+      console.warn('No deal ID found in drop event')
+      return
+    }
 
     // Get the deal being moved
-    const deal = deals.find(d => d.id === draggedDeal)
+    const deal = deals.find(d => d.id === dealId)
     
     // Check if AI suggests this stage
     let aiSuggestion: string | null = null
@@ -218,14 +227,39 @@ export default function PipelinePage() {
       aiSuggestion = suggested
     }
 
-    // Update deal
+    // Update deal locally first (optimistic update)
+    const previousStatus = deal?.status
     setDeals(prev =>
-      prev.map(deal =>
-        deal.id === draggedDeal
-          ? { ...deal, status, updatedAt: new Date() }
-          : deal
+      prev.map(d =>
+        d.id === dealId
+          ? { ...d, status, updatedAt: new Date() }
+          : d
       )
     )
+    
+    // Update deal via API (but don't revert on error if deal doesn't exist - it's mock data)
+    try {
+      const consultantId = localStorage.getItem('consultant_id')
+      const response = await fetch(`/api/consultant/deals/${dealId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-consultant-id': consultantId || '',
+        },
+        body: JSON.stringify({ status, updatedAt: new Date() }),
+      })
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        // Only log error, don't revert - deal might not exist in DB yet (mock data)
+        console.warn('API update failed (deal may not exist in DB yet):', errorData)
+      } else {
+        console.log('Deal updated successfully via API')
+      }
+    } catch (error) {
+      // Network errors or other issues - log but don't revert for mock data
+      console.warn('Error updating deal via API (continuing with local state):', error)
+    }
     
     // Show confirmation if AI suggested this
     if (aiSuggestion === status) {
@@ -255,13 +289,11 @@ export default function PipelinePage() {
     switch (status) {
       case 'new':
         return <Plus className="w-4 h-4" />
-      case 'in-progress':
-        return <Clock className="w-4 h-4" />
-      case 'under-review':
-        return <AlertCircle className="w-4 h-4" />
-      case 'approved':
-        return <CheckCircle2 className="w-4 h-4" />
-      case 'closed':
+      case 'appointment':
+        return <Calendar className="w-4 h-4" />
+      case 'apply':
+        return <FileText className="w-4 h-4" />
+      case 'close':
         return <CheckCircle2 className="w-4 h-4" />
       case 'rejected':
         return <X className="w-4 h-4" />
@@ -394,7 +426,7 @@ export default function PipelinePage() {
                     <div
                       key={deal.id}
                       draggable
-                      onDragStart={() => handleDragStart(deal.id)}
+                      onDragStart={(e) => handleDragStart(e, deal.id)}
                       onDragEnd={handleDragEnd}
                       className={`bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all cursor-move ${
                         draggedDeal === deal.id ? 'opacity-50 scale-95' : ''

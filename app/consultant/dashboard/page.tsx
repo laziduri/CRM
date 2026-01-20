@@ -1852,8 +1852,41 @@ export default function ConsultantDashboardPage() {
           e.preventDefault()
           setIsSubmittingClient(true)
           try {
-            // In production, this would be an API call
-            await new Promise(resolve => setTimeout(resolve, 1000))
+            const consultantId = localStorage.getItem('consultant_id')
+            if (!consultantId) {
+              alert('Please log in to add clients')
+              setIsSubmittingClient(false)
+              return
+            }
+
+            // Extract first company if available
+            const firstCompany = clientFormData.companies.length > 0 ? clientFormData.companies[0] : null
+
+            // Call API to create client
+            const response = await fetch('/api/consultant/clients', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-consultant-id': consultantId,
+              },
+              body: JSON.stringify({
+                name: clientFormData.name,
+                phone: clientFormData.phone || undefined,
+                companyName: firstCompany?.name || undefined,
+                businessUEN: firstCompany?.businessUEN || undefined,
+                businessRegistrationDate: firstCompany?.businessRegistrationDate || undefined,
+                businessAddress: firstCompany?.businessAddress || undefined,
+                location: clientFormData.location || undefined,
+                interestLevel: clientFormData.interestLevel,
+                status: clientFormData.status,
+                notes: clientFormData.notes,
+              }),
+            })
+
+            if (!response.ok) {
+              const errorData = await response.json()
+              throw new Error(errorData.details || errorData.error || 'Failed to create client')
+            }
             
             // Store client info for action modal
             setNewClientInfo({
@@ -1866,6 +1899,7 @@ export default function ConsultantDashboardPage() {
             setIsSubmittingClient(false)
           } catch (error) {
             console.error('Error adding client:', error)
+            alert(error instanceof Error ? error.message : 'Failed to add client. Please try again.')
             setIsSubmittingClient(false)
           }
         }} className="space-y-6">

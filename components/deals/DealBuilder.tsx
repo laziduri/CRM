@@ -67,12 +67,9 @@ export default function DealBuilder({ products, selectedProducts, onProductsChan
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
-      Grants: 'bg-blue-100 text-blue-700',
-      Digital: 'bg-purple-100 text-purple-700',
-      HRMS: 'bg-green-100 text-green-700',
-      Accounting: 'bg-yellow-100 text-yellow-700',
-      CRM: 'bg-pink-100 text-pink-700',
-      AI: 'bg-indigo-100 text-indigo-700',
+      'PSG Grant': 'bg-blue-100 text-blue-700',
+      'Manpower Grant': 'bg-green-100 text-green-700',
+      'Loan': 'bg-orange-100 text-orange-700',
     }
     return colors[category] || 'bg-gray-100 text-gray-700'
   }
@@ -101,12 +98,9 @@ export default function DealBuilder({ products, selectedProducts, onProductsChan
             className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
           >
             <option value="All">All Categories</option>
-            <option value="Grants">Grants</option>
-            <option value="Digital">Digital</option>
-            <option value="HRMS">HRMS</option>
-            <option value="Accounting">Accounting</option>
-            <option value="CRM">CRM</option>
-            <option value="AI">AI</option>
+            <option value="All Grants">All Grants</option>
+            <option value="PSG Grant">PSG Grant</option>
+            <option value="Manpower Grant">Manpower Grant</option>
           </select>
         </div>
 

@@ -66,3 +66,25 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  /* Dots pattern background */
+  .bg-dots-pattern-white {
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  
+  .bg-modern-dots {
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Radial glow effects */
+  .radial-glow-teal {
+    background: radial-gradient(ellipse at center, rgba(20, 184, 166, 0.15) 0%, transparent 70%);
+  }
+  
+  .radial-glow-teal-intense {
+    background: radial-gradient(ellipse at center, rgba(20, 184, 166, 0.25) 0%, transparent 60%);
+  }
+}

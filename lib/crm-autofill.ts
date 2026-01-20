@@ -19,7 +19,7 @@ export interface FollowUpContext {
   clientName: string
   clientType: 'personal' | 'business'
   lastContactDate?: Date
-  dealStage?: 'new' | 'in-progress' | 'under-review' | 'approved' | 'closed' | 'rejected'
+  dealStage?: 'new' | 'appointment' | 'apply' | 'close' | 'rejected'
   priority?: 'high' | 'medium' | 'low'
   lastInteractionType?: 'call' | 'email' | 'meeting' | 'whatsapp'
   daysSinceLastContact?: number
@@ -29,14 +29,14 @@ export interface WhatsAppContext {
   clientName: string
   clientType: 'personal' | 'business'
   purpose: 'follow-up' | 'document-request' | 'appointment-confirmation' | 'status-update' | 'greeting' | 'reminder'
-  dealStage?: 'new' | 'in-progress' | 'under-review' | 'approved' | 'closed' | 'rejected'
+  dealStage?: 'new' | 'appointment' | 'apply' | 'close' | 'rejected'
   dealAmount?: number
   documentType?: string
   appointmentDate?: Date
 }
 
 export interface StageTransitionContext {
-  currentStage: 'new' | 'in-progress' | 'under-review' | 'approved' | 'closed' | 'rejected'
+  currentStage: 'new' | 'appointment' | 'apply' | 'close' | 'rejected'
   dealAmount?: number
   clientType?: 'personal' | 'business'
   daysInCurrentStage?: number
@@ -126,8 +126,8 @@ export function getDefaultFollowUpTime(context: FollowUpContext): number {
   // High priority clients - follow up sooner
   if (priority === 'high') {
     if (dealStage === 'new') return 1 // Next day for new high-priority
-    if (dealStage === 'in-progress') return 2
-    if (dealStage === 'under-review') return 3
+    if (dealStage === 'appointment') return 2
+    if (dealStage === 'apply') return 3
     return 5
   }
   
@@ -136,16 +136,16 @@ export function getDefaultFollowUpTime(context: FollowUpContext): number {
     return 2 // Follow up within 2 days for new deals
   }
   
-  if (dealStage === 'in-progress') {
+  if (dealStage === 'appointment') {
     return 3 // Check in every 3 days
   }
   
-  if (dealStage === 'under-review') {
-    return 5 // Weekly check-ins during review
+  if (dealStage === 'apply') {
+    return 5 // Weekly check-ins during application
   }
   
-  if (dealStage === 'approved') {
-    return 7 // Less frequent after approval
+  if (dealStage === 'close') {
+    return 7 // Less frequent after closing
   }
   
   // Interaction type-based
@@ -189,7 +189,7 @@ I wanted to follow up on our discussion about your loan application. Have you ha
 Let me know if you have any questions or would like to proceed further!`
       }
       
-      if (dealStage === 'in-progress') {
+      if (dealStage === 'appointment') {
         return `Hi ${clientName}! 👋
 
 Just checking in on your loan application progress. Is there anything you need help with or any questions I can answer?
@@ -231,18 +231,18 @@ Looking forward to meeting with you. If you need to reschedule, please let me kn
 See you soon! 🙏`
     
     case 'status-update':
-      if (dealStage === 'approved') {
+      if (dealStage === 'close') {
         return `Hi ${clientName}! 🎉
 
-Great news! Your loan application has been approved!
+Great news! Your loan application has been approved and closed!
 
 I'll send you the details shortly. Congratulations! 🎊`
       }
       
-      if (dealStage === 'under-review') {
+      if (dealStage === 'apply') {
         return `Hi ${clientName}! 👋
 
-Just an update: Your loan application is currently under review.
+Just an update: Your loan application is currently being processed.
 
 I'll keep you updated as soon as I have more information. Thank you for your patience! 🙏`
       }
@@ -270,42 +270,34 @@ Thank you for contacting Brilliance Advisory. How can I assist you today?`
 /**
  * Auto-suggest next pipeline stage based on current context
  */
-export function getSuggestedNextStage(context: StageTransitionContext): 'new' | 'in-progress' | 'under-review' | 'approved' | 'closed' | 'rejected' | null {
+export function getSuggestedNextStage(context: StageTransitionContext): 'new' | 'appointment' | 'apply' | 'close' | 'rejected' | null {
   const { currentStage, dealAmount, hasRequiredDocuments, daysInCurrentStage = 0, lastActivity } = context
   
-  // Normal progression flow
+  // Normal progression flow: new → appointment → apply → close
   switch (currentStage) {
     case 'new':
-      // Move to in-progress when documents are ready or after initial contact
-      if (hasRequiredDocuments || daysInCurrentStage >= 1) {
-        return 'in-progress'
+      // Move to appointment after initial contact
+      if (daysInCurrentStage >= 1) {
+        return 'appointment'
       }
-      return null // Stay in new if documents not ready
+      return null // Stay in new
     
-    case 'in-progress':
-      // Move to under-review when all documents submitted
-      if (hasRequiredDocuments && daysInCurrentStage >= 2) {
-        return 'under-review'
-      }
-      // Can move if consultant manually progresses
-      return 'under-review'
-    
-    case 'under-review':
-      // Typically approved or rejected - but default to approved if high value
-      if (dealAmount && dealAmount > 100000) {
-        return 'approved' // High-value deals more likely approved
-      }
-      // Cannot auto-determine approval - requires manual decision
-      return null
-    
-    case 'approved':
-      // Once approved, next logical step is closed (when funds disbursed)
-      if (daysInCurrentStage >= 3) {
-        return 'closed'
+    case 'appointment':
+      // Move to apply when appointment is completed or documents are ready
+      if (hasRequiredDocuments || daysInCurrentStage >= 2) {
+        return 'apply'
       }
       return null
     
-    case 'closed':
+    case 'apply':
+      // Move to close when application is approved (high value more likely)
+      if (dealAmount && dealAmount > 100000 && daysInCurrentStage >= 3) {
+        return 'close'
+      }
+      // Cannot auto-determine - requires manual decision
+      return null
+    
+    case 'close':
     case 'rejected':
       // Terminal states - no next stage
       return null
