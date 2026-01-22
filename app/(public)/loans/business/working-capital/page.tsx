@@ -68,7 +68,6 @@ export default function WorkingCapitalLoanPage() {
             </Link>
           </div>
           <div className="max-w-4xl mx-auto text-center">
-            <Badge variant="primary" className="mb-6 animate-scale-in">Working Capital Loan</Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-gradient-text animate-float-up">
               Working Capital Loans
             </h1>
@@ -180,17 +179,15 @@ export default function WorkingCapitalLoanPage() {
             <Card className="p-8 animate-scale-in transform hover:scale-[1.02] transition-transform duration-300">
               <div className="space-y-4">
                 {eligibilityCriteria.map((criterion, index) => {
-                  const delays = ['', '0.1s', '0.2s', '0.3s', '0.4s', '0.5s', '0.6s', '0.7s', '0.8s']
                   return (
                     <div 
                       key={index} 
-                      className="flex items-start gap-4 animate-slide-in-right"
+                      className="flex items-start gap-4 animate-float-up"
                       style={{ 
-                        animationDelay: delays[index] || `${index * 0.1}s`,
-                        opacity: 0
+                        animationDelay: `${index * 0.1}s`
                       }}
                     >
-                      <div className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center mt-0.5 animate-pulse-glow">
+                      <div className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center mt-0.5">
                         <CheckCircle2 className="w-4 h-4 text-white" />
                       </div>
                       <p className="text-gray-700 flex-grow">{criterion}</p>
@@ -215,31 +212,6 @@ export default function WorkingCapitalLoanPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-primary via-teal to-primary-dark text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-modern-dots opacity-10"></div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Apply for a Working Capital Loan?
-          </h2>
-          <p className="text-xl mb-8 text-white/90 max-w-2xl mx-auto">
-            Get started today and unlock the funding your business needs to grow.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/apply">
-              <Button variant="outline" size="lg" className="bg-white text-primary border-white hover:bg-white/90 text-lg px-8 py-6 inline-flex items-center justify-center gap-2">
-                Apply Now
-                <ArrowRight className="w-5 h-5" />
-              </Button>
-            </Link>
-            <Link href="/contact">
-              <Button variant="outline" size="lg" className="border-2 border-white text-white hover:bg-white/10 text-lg px-8 py-6 inline-flex items-center justify-center">
-                Speak to an Expert
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
     </div>
   )
 }

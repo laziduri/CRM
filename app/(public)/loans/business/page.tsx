@@ -1,6 +1,8 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
+import { motion } from 'motion/react'
 import { 
   Briefcase, 
   Building2, 
@@ -163,40 +165,51 @@ export default function BusinessLoansPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative py-20 md:py-28 bg-white overflow-hidden bg-business-stars">
-        {/* Animated stars background */}
-        <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-teal-light/10 rounded-full blur-3xl opacity-40 animate-pulse-glow"></div>
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl opacity-40 animate-pulse-glow" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-teal-light/5 rounded-full blur-3xl opacity-30 animate-float"></div>
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden w-full">
+        {/* Background Image Layer with Zoom Animation */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/images/Capitaspring_BIG_Finbarr_Fallon_29-scaled-1-1280x1600.jpg"
+            alt="Business financing solutions"
+            fill
+            priority
+            className="object-cover object-center animate-zoom-in-slow"
+            quality={90}
+            sizes="100vw"
+          />
+        </div>
         
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            {/* Left Side - Text Content */}
-            <div className="text-left lg:text-center">
-              <Badge variant="primary" className="mb-6 animate-scale-in">Business Financing</Badge>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-gradient-text animate-float-up">
-                Working Capital Loans to Fuel Your Business Growth
-              </h1>
-              <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed animate-float-up-delay-2">
-                Get up to S$500,000 in working capital financing to manage operations and fuel growth. Connect with Singapore&apos;s leading banks through our platform.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 animate-float-up-delay-3 justify-center lg:justify-center">
-                <Link href="/apply" className="w-full sm:w-auto">
-                  <Button variant="primary" size="lg" className="text-lg px-8 py-6 w-full sm:w-auto min-w-[240px] inline-flex items-center justify-center gap-2">
-                    Get Started Today
-                    <ArrowRight className="w-5 h-5" />
-                  </Button>
-                </Link>
-                <Link href="/contact" className="w-full sm:w-auto">
-                  <Button variant="outline" size="lg" className="text-lg px-8 py-6 border-2 border-primary text-primary hover:bg-primary hover:text-white w-full sm:w-auto min-w-[240px] inline-flex items-center justify-center">
-                    Speak to an Expert
-                  </Button>
-                </Link>
-              </div>
+        {/* Solid White Overlay for Text Readability - No fade */}
+        <div className="absolute inset-0 z-[1] bg-white/65" />
+        
+        {/* Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
+          <div className="text-center w-full">
+            <Badge variant="primary" className="mb-6 animate-scale-in">Business Financing</Badge>
+            <motion.h1 
+              className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight animate-gradient-text"
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1.5, ease: 'easeOut' }}
+            >
+              Working Capital Loans to Fuel Your Business Growth
+            </motion.h1>
+            <p className="text-xl md:text-2xl lg:text-3xl text-gray-700 mb-12 leading-relaxed animate-float-up-delay-2 max-w-4xl mx-auto">
+              Get up to S$500,000 in working capital financing to manage operations and fuel growth. Connect with Singapore&apos;s leading banks through our platform.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center animate-float-up-delay-3">
+              <Link href="/apply" className="w-full sm:w-auto">
+                <Button variant="primary" size="lg" className="text-lg px-8 py-6 w-full sm:w-auto min-w-[240px] inline-flex items-center justify-center gap-2 shadow-2xl">
+                  Get Started Today
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
+        
+        {/* Bottom gradient fade - seamless transition to next section */}
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-[2]"></div>
       </section>
 
       {/* Types of Business Loans Section */}
@@ -204,13 +217,26 @@ export default function BusinessLoansPage() {
         <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
         <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl opacity-30 animate-pulse-glow"></div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-text animate-rotate-in">
-              Types of Business Loans We Offer
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-float-up-delay-2">
-              Unlock cashflow, leverage on your properties, or simply get a loan to finance your business.
-            </p>
+          <div className="text-center mb-16 relative">
+            {/* Faded background word "LOANS" */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+              <span className="text-[120px] md:text-[180px] lg:text-[240px] xl:text-[300px] font-bold text-gray-200/30 select-none" style={{ 
+                letterSpacing: '-0.02em',
+                lineHeight: 1,
+                fontFamily: 'inherit'
+              }}>
+                LOANS
+              </span>
+            </div>
+            {/* Foreground content */}
+            <div className="relative z-10">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-text animate-rotate-in" style={{ color: '#333366' }}>
+                Types of Business Loans We Offer
+              </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-float-up-delay-2">
+                Unlock cashflow, leverage on your properties, or simply get a loan to finance your business.
+              </p>
+            </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -234,7 +260,6 @@ export default function BusinessLoansPage() {
                     <div className="w-14 h-14 bg-gradient-to-br from-primary to-teal rounded-lg flex items-center justify-center mb-4 group-hover:bg-white group-hover:from-white group-hover:to-white transition-all duration-300">
                       <Icon className="w-7 h-7 text-white group-hover:text-primary transition-colors duration-300" />
                     </div>
-                    <Badge variant="success" className="mb-3 group-hover:bg-white/20 group-hover:text-white group-hover:border-white/30">{loan.highlight}</Badge>
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-white transition-colors duration-300">{loan.title}</h3>
                   <p className="text-gray-600 flex-grow group-hover:text-white/95 transition-colors duration-300">{loan.description}</p>
@@ -248,6 +273,49 @@ export default function BusinessLoansPage() {
                 </Card>
               )
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Us Section */}
+      <section className="py-20 bg-white relative overflow-hidden bg-business-stars">
+        <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] h-[80%] pointer-events-none radial-glow-teal opacity-40 animate-pulse-glow"></div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-text animate-slide-in-left">
+              Why Get Your Business Financing Through Brilliance Advisory?
+            </h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <Card hover className="p-8">
+              <div className="flex items-start gap-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0">
+                  <Users className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">A Team That Will Support You</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    We have a dedicated team that will walk you through your entire loan process and help you do the market research you need.
+                  </p>
+                </div>
+              </div>
+            </Card>
+            
+            <Card hover className="p-8">
+              <div className="flex items-start gap-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0">
+                  <TrendingUp className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">We Let Lenders Compete for Your Loan</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Be ready to be spoilt for choice when we help you compare the best deals across all banks and non-banks so you only get the lowest interest rate and the highest cash out amount. Our rates are same as what the banks can offer or even better.
+                  </p>
+                </div>
+              </div>
+            </Card>
           </div>
         </div>
       </section>
@@ -381,49 +449,6 @@ export default function BusinessLoansPage() {
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
-      <section className="py-20 bg-white relative overflow-hidden bg-business-stars">
-        <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] h-[80%] pointer-events-none radial-glow-teal opacity-40 animate-pulse-glow"></div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-text animate-slide-in-left">
-              Why Get Your Working Capital Loan Through Brilliance Advisory?
-            </h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <Card hover className="p-8">
-              <div className="flex items-start gap-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0">
-                  <Users className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">A Team That Will Support You</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    We have a dedicated team that will walk you through your entire loan process and help you do the market research you need.
-                  </p>
-                </div>
-              </div>
-            </Card>
-            
-            <Card hover className="p-8">
-              <div className="flex items-start gap-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0">
-                  <TrendingUp className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">We Let Lenders Compete for Your Loan</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Be ready to be spoilt for choice when we help you compare the best deals across all banks and non-banks so you only get the lowest interest rate and the highest cash out amount. Our rates are same as what the banks can offer or even better.
-                  </p>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
-      </section>
-
       {/* FAQ Section */}
       <section className="py-20 bg-white relative overflow-hidden bg-business-stars">
         <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
@@ -467,32 +492,6 @@ export default function BusinessLoansPage() {
                 ))}
               </AccordionDark>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-primary via-teal to-primary-dark text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-modern-dots opacity-10"></div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Take your business to the next level with the financial boost it needs!
-          </h2>
-          <p className="text-xl mb-8 text-white/90 max-w-2xl mx-auto">
-            Apply for a business loan today and unlock growth opportunities like never before.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/apply">
-              <Button variant="outline" size="lg" className="bg-white text-primary border-white hover:bg-white/90 text-lg px-8 py-6 inline-flex items-center justify-center gap-2">
-                Apply for a Business Loan
-                <ArrowRight className="w-5 h-5" />
-              </Button>
-            </Link>
-            <Link href="/contact">
-              <Button variant="outline" size="lg" className="border-2 border-white text-white hover:bg-white/10 text-lg px-8 py-6 inline-flex items-center justify-center">
-                Speak to an Expert
-              </Button>
-            </Link>
           </div>
         </div>
       </section>

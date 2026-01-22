@@ -1,6 +1,8 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
+import { motion } from 'motion/react'
 import { 
   Wallet, 
   Home, 
@@ -64,64 +66,24 @@ const personalLoanTypes = [
   },
 ]
 
-const benefits = [
-  {
-    icon: Shield,
-    title: 'Personalized Advisory',
-    description: 'Our experienced financial consultants take time to understand your unique circumstances, offering tailored recommendations that align with your financial goals and repayment capacity.',
-  },
-  {
-    icon: Clock,
-    title: 'Flexible Terms',
-    description: 'Choose from various loan tenures and repayment structures that complement your income flow and lifestyle, ensuring comfortable monthly installments.',
-  },
-  {
-    icon: TrendingUp,
-    title: 'Competitive Rates',
-    description: 'Access preferential interest rates from our extensive network of trusted banking partners, secured through our established relationships and your creditworthiness.',
-  },
-  {
-    icon: Users,
-    title: 'Dedicated Support',
-    description: 'Experience white-glove service with a dedicated consultant who guides you through every step—from initial consultation to final disbursement and beyond.',
-  },
-]
-
-const eligibilityCriteria = [
-  'Singapore Citizens, Permanent Residents, or foreigners with valid employment passes',
-  'Minimum age of 21 years and maximum age of 65 years at loan maturity',
-  'Minimum annual income of S$20,000 for Singapore Citizens and PRs (higher thresholds apply for foreigners)',
-  'Stable employment with at least 6 months in current position for salaried individuals',
-  'Good credit standing with no recent defaults or bankruptcy records',
-  'Demonstrable repayment capacity through consistent income documentation',
-  'Residential address in Singapore (proof of residence required)',
-  'Valid identification documents (NRIC, Passport, or Employment Pass)',
-]
-
 const requiredDocuments = [
   {
-    icon: FileText,
-    name: 'Identification Documents',
+    icon: FileCheck,
+    name: '2 Years NOA',
     importance: 'Required',
-    description: 'NRIC for Singaporeans/PRs, or Passport and valid work pass for foreigners',
+    description: 'Notice of Assessment from IRAS for the past 2 years',
+  },
+  {
+    icon: FileText,
+    name: 'CBS Report',
+    importance: 'Required',
+    description: 'Credit Bureau Singapore (CBS) credit report',
   },
   {
     icon: FileCheck,
     name: 'Income Verification',
     importance: 'Required',
-    description: 'Recent payslips (last 3 months), CPF contribution statements, or latest Notice of Assessment',
-  },
-  {
-    icon: FileText,
-    name: 'Address Proof',
-    importance: 'Required',
-    description: 'Recent utility bill, bank statement, or tenancy agreement showing Singapore address',
-  },
-  {
-    icon: FileCheck,
-    name: 'Employment Proof',
-    importance: 'Important',
-    description: 'Employment letter or employment contract for income verification purposes',
+    description: 'Recent payslips and CPF contribution statements',
   },
 ]
 
@@ -202,22 +164,42 @@ export default function PersonalLoansPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative py-20 md:py-28 bg-white overflow-hidden bg-business-stars">
-        {/* Animated stars background */}
-        <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-teal-light/10 rounded-full blur-3xl opacity-40 animate-pulse-glow"></div>
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl opacity-40 animate-pulse-glow" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-teal-light/5 rounded-full blur-3xl opacity-30 animate-float"></div>
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden w-full">
+        {/* Background Image Layer with Zoom Animation */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/images/922dd29d-a92d-4734-bd06-65935a20cb06.png"
+            alt="Personal financing solutions"
+            fill
+            priority
+            className="object-cover object-center animate-zoom-in-slow"
+            quality={90}
+            sizes="100vw"
+          />
+        </div>
         
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Solid White Overlay for Text Readability - No fade */}
+        <div className="absolute inset-0 z-[1] bg-white/65" />
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
           <div className="text-center max-w-4xl mx-auto">
             <Badge variant="primary" className="mb-6 animate-scale-in">Personal Financing</Badge>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-gradient-text animate-float-up">
-              Personalized Loan Solutions Tailored to Your Financial Goals
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed animate-float-up-delay-2">
-              Experience premium financial advisory with one-on-one consultations. Our expert consultants work directly with you to secure personalized loan solutions that align with your unique needs, whether for home improvements, education, debt consolidation, or life&apos;s important moments.
-            </p>
+            <motion.h1 
+              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-gradient-text"
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1.5, ease: 'easeOut' }}
+            >
+              Personal Financing Made Simple
+            </motion.h1>
+            <motion.p 
+              className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed"
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1.5, ease: 'easeOut', delay: 0.3 }}
+            >
+              No hidden steps. Just structured guidance and clarity.
+            </motion.p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-float-up-delay-3">
               <Link href="/apply" className="w-full sm:w-auto">
                 <Button variant="primary" size="lg" className="text-lg px-8 py-6 w-full sm:w-auto min-w-[240px] inline-flex items-center justify-center gap-2">
@@ -225,14 +207,12 @@ export default function PersonalLoansPage() {
                   <ArrowRight className="w-5 h-5" />
                 </Button>
               </Link>
-              <Link href="/contact" className="w-full sm:w-auto">
-                <Button variant="outline" size="lg" className="text-lg px-8 py-6 border-2 border-primary text-primary hover:bg-primary hover:text-white w-full sm:w-auto min-w-[240px] inline-flex items-center justify-center">
-                  Speak with an Advisor
-                </Button>
-              </Link>
             </div>
           </div>
         </div>
+        
+        {/* Bottom gradient fade - seamless transition to next section */}
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-[2]"></div>
       </section>
 
       {/* What are Personal Loans Section */}
@@ -310,10 +290,9 @@ export default function PersonalLoansPage() {
                   className={`p-6 h-full flex flex-col ${delayClasses[index] || 'animate-float-up'} transform hover:scale-105 transition-all duration-300`}
                 >
                   <div className="mb-4">
-                    <div className="w-14 h-14 bg-gradient-to-br from-primary to-teal rounded-lg flex items-center justify-center mb-4 animate-pulse-glow">
-                      <Icon className="w-7 h-7 text-white" />
+                    <div className="w-14 h-14 bg-gradient-to-br from-primary to-teal rounded-lg flex items-center justify-center mb-4 shadow-lg">
+                      <Icon className="w-7 h-7 text-white" strokeWidth={2.5} />
                     </div>
-                    <Badge variant="success" className="mb-3">{loan.highlight}</Badge>
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-3">{loan.title}</h3>
                   <p className="text-gray-600 flex-grow">{loan.description}</p>
@@ -324,100 +303,6 @@ export default function PersonalLoansPage() {
                 </Card>
               )
             })}
-          </div>
-        </div>
-      </section>
-
-      {/* How Personal Loans Work Section */}
-      <section className="py-20 bg-white relative overflow-hidden bg-business-stars">
-        <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] h-[80%] pointer-events-none radial-glow-teal opacity-30 animate-pulse-glow"></div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-text animate-slide-in-left">
-              How Our Personal Loan Advisory Works
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto mt-4 animate-slide-in-right">
-              Unlike automated platforms, our human-led approach ensures every recommendation is carefully tailored to your unique financial profile and personal circumstances.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {benefits.map((benefit, index) => {
-              const Icon = benefit.icon
-              const delayClasses = [
-                'animate-float-up-delay-1',
-                'animate-float-up-delay-2',
-                'animate-float-up-delay-3',
-                'animate-float-up-delay-4',
-              ]
-              return (
-                <Card 
-                  key={index} 
-                  hover 
-                  className={`p-6 text-center ${delayClasses[index] || 'animate-float-up'} transform hover:scale-105 transition-all duration-300`}
-                >
-                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse-glow">
-                    <Icon className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">{benefit.title}</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">{benefit.description}</p>
-                </Card>
-              )
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Eligibility Criteria Section */}
-      <section className="py-20 bg-white relative overflow-hidden bg-business-stars">
-        <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-        <div className="absolute top-0 right-1/4 w-[400px] h-[400px] bg-teal-light/5 rounded-full blur-3xl opacity-30 animate-float"></div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-text animate-rotate-in">
-                Eligibility Criteria for Personal Loans
-              </h2>
-              <p className="text-lg text-gray-600 animate-slide-in-right">
-                While eligibility requirements vary by lender, our consultants work with you to identify options that best match your profile and optimize your approval prospects.
-              </p>
-            </div>
-            
-            <Card className="p-8 animate-scale-in transform hover:scale-[1.02] transition-transform duration-300">
-              <div className="space-y-4">
-                {eligibilityCriteria.map((criterion, index) => {
-                  const delays = ['', '0.1s', '0.2s', '0.3s', '0.4s', '0.5s', '0.6s', '0.7s']
-                  return (
-                    <div 
-                      key={index} 
-                      className="flex items-start gap-4 animate-slide-in-right"
-                      style={{ 
-                        animationDelay: delays[index] || `${index * 0.1}s`,
-                        opacity: 0
-                      }}
-                    >
-                      <div className="flex-shrink-0 w-6 h-6 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center mt-0.5 animate-pulse-glow">
-                        <CheckCircle2 className="w-4 h-4 text-white" />
-                      </div>
-                      <p className="text-gray-700 flex-grow">{criterion}</p>
-                    </div>
-                  )
-                })}
-              </div>
-            </Card>
-            
-            <div className="mt-8 text-center">
-              <p className="text-gray-600 mb-4">
-                <strong>Note:</strong> Meeting minimum eligibility criteria doesn&apos;t guarantee approval. Lenders assess multiple factors including credit history, debt-to-income ratio, and employment stability. Our consultants provide personalized guidance on improving your application profile and can recommend lenders whose criteria align best with your situation.
-              </p>
-              <Link href="/contact">
-                <Button variant="primary" size="lg" className="inline-flex items-center justify-center gap-2">
-                  Assess Your Eligibility
-                  <ArrowRight className="w-5 h-5" />
-                </Button>
-              </Link>
-            </div>
           </div>
         </div>
       </section>
@@ -510,7 +395,7 @@ export default function PersonalLoansPage() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="flex flex-wrap justify-center gap-6 max-w-4xl mx-auto">
             {requiredDocuments.map((doc, index) => {
               const Icon = doc.icon
               const delayClasses = [
@@ -523,11 +408,11 @@ export default function PersonalLoansPage() {
                 <Card 
                   key={index} 
                   hover 
-                  className={`p-6 text-center ${delayClasses[index] || 'animate-scale-in'} transform hover:scale-105 transition-all duration-300`}
+                  className={`p-6 text-center w-full sm:w-[280px] ${delayClasses[index] || 'animate-scale-in'} transform hover:scale-105 transition-all duration-300`}
                   style={{ animationDelay: `${index * 0.15}s` }}
                 >
-                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-lg flex items-center justify-center mx-auto mb-4 animate-pulse-glow">
-                    <Icon className="w-8 h-8 text-white" />
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-lg flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <Icon className="w-8 h-8 text-white" strokeWidth={2.5} />
                   </div>
                   <Badge 
                     variant={doc.importance === 'Required' ? 'primary' : 'warning'} 
@@ -581,8 +466,8 @@ export default function PersonalLoansPage() {
             
             <Card hover className="p-8 animate-slide-in-right transform hover:scale-105 transition-all duration-300">
               <div className="flex items-start gap-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0 animate-pulse-glow">
-                  <Target className="w-8 h-8 text-white" />
+                <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <Target className="w-8 h-8 text-white" strokeWidth={2.5} />
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">Strategic Loan Structuring</h3>
@@ -597,8 +482,8 @@ export default function PersonalLoansPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card hover className="p-8 animate-slide-in-left transform hover:scale-105 transition-all duration-300">
               <div className="flex items-start gap-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0 animate-pulse-glow">
-                  <Sparkles className="w-8 h-8 text-white" />
+                <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <Sparkles className="w-8 h-8 text-white" strokeWidth={2.5} />
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">Preferential Rates Through Relationships</h3>
@@ -611,8 +496,8 @@ export default function PersonalLoansPage() {
             
             <Card hover className="p-8 animate-slide-in-right transform hover:scale-105 transition-all duration-300">
               <div className="flex items-start gap-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0 animate-pulse-glow">
-                  <Shield className="w-8 h-8 text-white" />
+                <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <Shield className="w-8 h-8 text-white" strokeWidth={2.5} />
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">Ongoing Support & Relationship Building</h3>
@@ -669,32 +554,6 @@ export default function PersonalLoansPage() {
                 ))}
               </AccordionDark>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-primary via-teal to-primary-dark text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-modern-dots opacity-10"></div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 animate-gradient-text-white">
-            Ready to Explore Your Personal Loan Options?
-          </h2>
-          <p className="text-xl mb-8 text-white/90 max-w-2xl mx-auto">
-            Experience the difference of personalized financial advisory. Schedule a consultation with one of our expert consultants and discover loan solutions tailored specifically to your needs and goals.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/apply">
-              <Button variant="outline" size="lg" className="bg-white text-primary border-white hover:bg-white/90 text-lg px-8 py-6 inline-flex items-center justify-center gap-2">
-                Schedule Your Consultation
-                <ArrowRight className="w-5 h-5" />
-              </Button>
-            </Link>
-            <Link href="/contact">
-              <Button variant="outline" size="lg" className="border-2 border-white text-white hover:bg-white/10 text-lg px-8 py-6 inline-flex items-center justify-center">
-                Contact an Advisor
-              </Button>
-            </Link>
           </div>
         </div>
       </section>

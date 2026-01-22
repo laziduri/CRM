@@ -2,6 +2,9 @@
 
 import { Star } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
+import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
+import { AmbientBackground } from '@/components/background/AmbientBackground'
+import { GlowBackground } from '@/components/background/GlowBackground'
 
 interface Review {
   id: number
@@ -147,8 +150,8 @@ const reviews: Review[] = [
   },
 ]
 
-// Duplicate reviews for seamless infinite scroll
-const duplicatedReviews = [...reviews, ...reviews]
+// Duplicate reviews 4x for seamless infinite scroll
+const duplicatedReviews = [...reviews, ...reviews, ...reviews, ...reviews]
 
 // Split reviews into two columns - alternate between columns
 const leftColumnReviews = duplicatedReviews.filter((_, index) => index % 2 === 0)
@@ -165,7 +168,7 @@ function ReviewCard({ review, index }: { review: Review; index: number }) {
   const hasHalfStar = rating % 1 >= 0.5
 
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+    <div className="bg-white rounded-2xl p-5 shadow-lg border border-gray-200 hover:border-navy/40 hover:shadow-xl transition-all duration-300">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-1">
           {[...Array(5)].map((_, i) => {
@@ -173,13 +176,13 @@ function ReviewCard({ review, index }: { review: Review; index: number }) {
               return (
                 <Star
                   key={i}
-                  className="w-4 h-4 text-yellow-400 fill-yellow-400"
+                  className="w-4 h-4 text-yellow-400 fill-yellow-400 flex-shrink-0"
                 />
               )
             } else if (i === fullStars && hasHalfStar) {
               return (
-                <div key={i} className="relative w-4 h-4">
-                  <Star className="w-4 h-4 text-gray-300 fill-gray-300 absolute" />
+                <div key={i} className="relative w-4 h-4 flex-shrink-0">
+                  <Star className="w-4 h-4 text-gray-600 fill-gray-600 absolute" />
                   <div className="absolute overflow-hidden w-2 h-4">
                     <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
                   </div>
@@ -189,21 +192,21 @@ function ReviewCard({ review, index }: { review: Review; index: number }) {
               return (
                 <Star
                   key={i}
-                  className="w-4 h-4 text-gray-300 fill-gray-300"
+                  className="w-4 h-4 text-gray-600 fill-gray-600 flex-shrink-0"
                 />
               )
             }
           })}
         </div>
-        <span className="text-sm font-semibold text-primary">
+        <span className="text-sm font-semibold text-navy leading-tight">
           {review.rating}
         </span>
       </div>
       <p className="text-gray-700 mb-4 text-sm leading-relaxed">
         {review.comment}
       </p>
-      <div className="border-t pt-4">
-        <p className="font-semibold text-gray-900 text-sm">
+      <div className="border-t border-gray-200 pt-4">
+        <p className="font-semibold text-navy text-sm">
           {review.author}
         </p>
         {review.role && (
@@ -218,16 +221,10 @@ function ReviewCard({ review, index }: { review: Review; index: number }) {
 
 export default function Testimonials() {
   return (
-    <section className="py-20 bg-gradient-to-br from-white via-gray-50 to-white relative overflow-hidden">
-      {/* Animated stars background - using brand colors from Hero section */}
-      <div className="absolute inset-0 bg-animated-stars opacity-100">
-        <div className="bg-animated-stars-layer-2"></div>
-        <div className="bg-animated-stars-layer-3"></div>
-        </div>
-      
-      {/* Soft gradient overlays */}
-      <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-teal-light/10 rounded-full blur-3xl opacity-50"></div>
-      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-3xl opacity-50"></div>
+    <section className="py-20 bg-white relative overflow-hidden">
+      {/* Ambient background */}
+      <AmbientBackground intensity="moderate" />
+      <GlowBackground intensity="subtle" />
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
@@ -238,10 +235,10 @@ export default function Testimonials() {
                 href="https://www.google.com/search?q=Brilliance+Advisory+reviews"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-gray-600 hover:text-primary transition-colors inline-flex items-center gap-2"
+                className="text-sm text-gray-600 hover:text-teal transition-colors inline-flex items-center gap-2"
               >
                 See our 543 reviews on{' '}
-                <span className="font-semibold text-primary">Google</span>
+                <span className="font-semibold text-teal">Google</span>
                 <svg
                   className="w-4 h-4"
                   viewBox="0 0 24 24"
@@ -267,10 +264,12 @@ export default function Testimonials() {
                 </svg>
               </a>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight animate-gradient-text">
-              Trusted by SMEs Nationwide
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+              <AnimatedGradientText className="text-4xl md:text-5xl">
+                Trusted by SMEs Nationwide
+              </AnimatedGradientText>
             </h2>
-            <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+            <p className="text-lg text-gray-700 mb-8 leading-relaxed">
               Hear what Singaporeans are saying about Brilliance Advisory
             </p>
             <Button variant="primary" size="lg" className="w-full sm:w-auto">

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import AccordionDark, { AccordionItemDark } from '@/components/ui/AccordionDark'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
+import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
 import { ArrowRight, MessageCircle, Send, X, BookOpen, TrendingUp, Building2, HelpCircle } from 'lucide-react'
 
 // Most Popular FAQs
@@ -293,7 +294,7 @@ function AIChatbot() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-r from-primary to-teal rounded-full shadow-lg flex items-center justify-center text-white hover:scale-110 transition-transform z-50"
+          className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-r from-gold to-gold-light rounded-full shadow-lg shadow-gold-glow/40 flex items-center justify-center text-black hover:scale-110 transition-transform z-50"
           aria-label="Open AI Chatbot"
         >
           <MessageCircle className="w-7 h-7" />
@@ -319,7 +320,7 @@ function AIChatbot() {
                 setIsOpen(false)
                 setMessages([])
               }}
-              className="text-white hover:bg-white/20 rounded-full p-1 transition-colors"
+              className="text-navy hover:bg-navy/10 rounded-full p-1 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -342,8 +343,8 @@ function AIChatbot() {
                 <div
                   className={`max-w-[80%] rounded-lg px-4 py-2 ${
                     msg.role === 'user'
-                      ? 'bg-primary text-white'
-                      : 'bg-gray-100 text-gray-900'
+                      ? 'bg-navy text-white'
+                      : 'bg-gray-100 text-navy'
                   }`}
                 >
                   <p className="text-sm">{msg.content}</p>
@@ -376,13 +377,13 @@ function AIChatbot() {
               />
               <button
                 onClick={handleSend}
-                className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
+                className="bg-navy text-white px-4 py-2 rounded-lg hover:bg-navy-dark transition-colors"
               >
                 <Send className="w-5 h-5" />
               </button>
             </div>
             <p className="text-xs text-gray-500 mt-2 text-center">
-              For detailed advice, <Link href="/contact" className="text-primary hover:underline">contact our advisors</Link>
+              For detailed advice, <Link href="/contact" className="text-teal hover:underline">contact our advisors</Link>
             </p>
           </div>
         </div>
@@ -391,18 +392,22 @@ function AIChatbot() {
   )
 }
 
+import { CalmBackground } from '@/components/background/CalmBackground'
+
 export default function FAQPage() {
   let questionNumber = 1
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
-      <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
+      <CalmBackground />
       
       {/* Hero Section - Longer */}
       <section className="relative pt-32 pb-24 md:pb-32 px-4 sm:px-6 lg:px-8">
         <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 animate-gradient-text">
-            Frequently Asked Questions
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8">
+            <AnimatedGradientText className="text-5xl md:text-6xl lg:text-7xl">
+              Frequently Asked Questions
+            </AnimatedGradientText>
           </h1>
         </div>
       </section>
@@ -418,7 +423,7 @@ export default function FAQPage() {
               Quick answers to the questions we get asked most often
             </p>
           </div>
-          <Card className="bg-white">
+          <Card className="bg-white border-gray-200">
             <AccordionDark>
               {mostPopularFAQs.map((faq, index) => (
                 <AccordionItemDark
@@ -438,10 +443,12 @@ export default function FAQPage() {
       {/* Section 1: About Brilliance Advisory */}
       <section className="relative py-16 px-4 sm:px-6 lg:px-8">
         <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="bg-white rounded-2xl p-8 md:p-12 lg:p-16 border border-secondary-gray3 shadow-md">
+            <div className="bg-white rounded-2xl p-8 md:p-12 lg:p-16 border border-gray-200 shadow-lg">
             <div className="mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-shimmer">About Brilliance Advisory</h2>
-              <p className="text-lg text-accent-gray2 leading-relaxed">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <AnimatedGradientText className="text-3xl md:text-4xl">About Brilliance Advisory</AnimatedGradientText>
+              </h2>
+              <p className="text-lg text-gray-700 leading-relaxed">
                 At Brilliance Advisory, we believe that securing the right financing requires more than just comparing rates. Our human-led approach combines market knowledge with personalised guidance to help you navigate Singapore&apos;s lending landscape with confidence.
               </p>
             </div>
@@ -467,10 +474,10 @@ export default function FAQPage() {
       {/* Section 2: Personal Loans */}
       <section className="relative py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="bg-white rounded-2xl p-8 md:p-12 lg:p-16 border border-secondary-gray3 shadow-md">
+            <div className="bg-white rounded-2xl p-8 md:p-12 lg:p-16 border border-gray-200 shadow-lg">
             <div className="mb-8">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-shimmer">Personal Loans</h2>
-              <p className="text-lg text-accent-gray2 leading-relaxed">
+              <p className="text-lg text-gray-700 leading-relaxed">
                 Personal loans in Singapore can serve various purposes, from debt consolidation to major purchases or unexpected expenses. This section addresses common questions about eligibility, application processes, and loan terms.
               </p>
             </div>
@@ -496,10 +503,12 @@ export default function FAQPage() {
       {/* Section 3: Business & Corporate Loans */}
       <section className="relative py-16 px-4 sm:px-6 lg:px-8">
         <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="bg-white rounded-2xl p-8 md:p-12 lg:p-16 border border-secondary-gray3 shadow-md">
+            <div className="bg-white rounded-2xl p-8 md:p-12 lg:p-16 border border-gray-200 shadow-lg">
             <div className="mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-shimmer">Business & Corporate Loans</h2>
-              <p className="text-lg text-accent-gray2 leading-relaxed">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <AnimatedGradientText className="text-3xl md:text-4xl">Business & Corporate Loans</AnimatedGradientText>
+              </h2>
+              <p className="text-lg text-gray-700 leading-relaxed">
                 Business financing in Singapore encompasses various loan types designed to support different corporate needs, from working capital and expansion to equipment purchases and cash flow management.
               </p>
             </div>
@@ -526,8 +535,8 @@ export default function FAQPage() {
       <section className="relative py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-shimmer">
-              Explore Topics
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <AnimatedGradientText className="text-3xl md:text-4xl">Explore Topics</AnimatedGradientText>
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Discover more resources and information to help you make informed financing decisions
@@ -539,12 +548,12 @@ export default function FAQPage() {
               return (
                 <Link key={index} href={topic.href}>
                   <Card hover className="h-full text-center">
-                    <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Icon className="w-8 h-8 text-primary" />
+                    <div className="w-16 h-16 bg-navy/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Icon className="w-8 h-8 text-navy" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">{topic.title}</h3>
-                    <p className="text-gray-600 text-sm mb-4">{topic.description}</p>
-                    <div className="flex items-center justify-center text-primary font-medium text-sm">
+                    <h3 className="text-xl font-bold text-navy mb-2">{topic.title}</h3>
+                    <p className="text-gray-700 text-sm mb-4">{topic.description}</p>
+                    <div className="flex items-center justify-center text-teal font-medium text-sm">
                       Learn more
                       <ArrowRight className="w-4 h-4 ml-1" />
                     </div>
@@ -559,15 +568,17 @@ export default function FAQPage() {
       {/* Don't See Your Question Section with AI Chatbot */}
       <section className="relative py-16 px-4 sm:px-6 lg:px-8">
         <div className="relative z-10 max-w-4xl mx-auto">
-          <Card className="bg-gradient-to-br from-primary/5 via-white to-teal/5 border-2 border-primary/20 text-center p-8 md:p-12">
+          <Card className="bg-gradient-to-br from-navy/5 via-white to-teal/5 border-2 border-gray-200 text-center p-8 md:p-12">
             <div className="mb-6">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <MessageCircle className="w-8 h-8 text-primary" />
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-shimmer">
-                Don&apos;t see your question here?
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <AnimatedGradientText className="text-3xl md:text-4xl">
+                  Don&apos;t see your question here?
+                </AnimatedGradientText>
               </h2>
-              <p className="text-lg text-gray-700 mb-6 leading-relaxed">
+              <p className="text-lg text-gray-300 mb-6 leading-relaxed">
                 Our AI assistant can help answer your questions about loans, eligibility, and our services. For personalized advice tailored to your specific situation, our experienced advisors are ready to help.
               </p>
             </div>
@@ -597,9 +608,9 @@ export default function FAQPage() {
       <AIChatbot />
 
       {/* Disclaimer */}
-      <div className="relative py-8 px-4 sm:px-6 lg:px-8 border-t border-secondary-gray3">
+      <div className="relative py-8 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
         <div className="max-w-7xl mx-auto text-center">
-          <p className="text-sm text-accent-gray2 italic">
+          <p className="text-sm text-gray-600 italic">
             All information provided is general in nature. Final approvals and loan terms are subject to the respective bank&apos;s assessment and policies. AI responses are for informational purposes only and should not replace professional financial advice.
           </p>
         </div>

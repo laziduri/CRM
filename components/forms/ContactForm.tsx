@@ -76,12 +76,16 @@ export default function ContactForm() {
           />
         </div>
 
-        <Input
-          label="Email Address"
-          type="email"
-          {...register('email')}
-          error={errors.email?.message}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="md:col-span-2">
+            <Input
+              label="Email Address"
+              type="email"
+              {...register('email')}
+              error={errors.email?.message}
+            />
+          </div>
+        </div>
 
         <div>
           <label className="block text-sm font-medium text-accent-gray2 mb-2">

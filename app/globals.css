@@ -5,56 +5,60 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    --foreground: 220 50% 25%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 220 50% 25%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem
-  }
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
+    --popover-foreground: 220 50% 25%;
+    --primary: 220 50% 25%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 220 50% 25%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 220 20% 45%;
+    --accent: 180 45% 40%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 20% 85%;
+    --input: 220 20% 85%;
+    --ring: 220 50% 25%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%
+    --chart-5: 340 75% 55%;
+    --radius: 0.5rem;
+    --navy-primary: 220 50% 25%;
+    --teal-primary: 180 45% 40%;
+  }
+  .dark {
+    --background: 0 0% 100%;
+    --foreground: 220 50% 25%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 50% 25%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 50% 25%;
+    --primary: 220 50% 25%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 220 50% 25%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 220 20% 45%;
+    --accent: 180 45% 40%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 20% 85%;
+    --input: 220 20% 85%;
+    --ring: 220 50% 25%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --navy-primary: 220 50% 25%;
+    --teal-primary: 180 45% 40%;
   }
 }
 
@@ -64,6 +68,60 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "kern" 1, "liga" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Typography enhancements - inspired by brillianceadvisory.sg and n8n.io */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    font-weight: 700;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl xl:text-7xl;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    font-weight: 800;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl lg:text-5xl xl:text-6xl;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl lg:text-4xl;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    font-weight: 700;
+  }
+
+  p {
+    line-height: 1.75;
+    letter-spacing: 0.01em;
+    font-weight: 400;
+  }
+
+  /* Generous spacing for body text - inspired by n8n.io readability */
+  .text-body {
+    line-height: 1.8;
+    letter-spacing: 0.01em;
+    font-weight: 400;
+  }
+  
+  /* Large display text for hero sections */
+  .display-text {
+    @apply text-5xl md:text-6xl lg:text-7xl xl:text-8xl;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    font-weight: 800;
   }
 }
 
@@ -73,18 +131,87 @@
     background-image: radial-gradient(circle, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
     background-size: 20px 20px;
   }
-  
+
   .bg-modern-dots {
     background-image: radial-gradient(circle, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
     background-size: 24px 24px;
   }
 
-  /* Radial glow effects */
+  /* Radial glow effects - logo theme */
+  .radial-glow-navy {
+    background: radial-gradient(ellipse at center, hsl(220 50% 25% / 0.1) 0%, transparent 70%);
+  }
+
   .radial-glow-teal {
-    background: radial-gradient(ellipse at center, rgba(20, 184, 166, 0.15) 0%, transparent 70%);
+    background: radial-gradient(ellipse at center, hsl(180 45% 40% / 0.1) 0%, transparent 70%);
   }
-  
-  .radial-glow-teal-intense {
-    background: radial-gradient(ellipse at center, rgba(20, 184, 166, 0.25) 0%, transparent 60%);
+
+  /* Gradient placeholder for images */
+  .gradient-placeholder {
+    @apply relative overflow-hidden rounded-lg;
+    background: linear-gradient(135deg, hsl(220 50% 25%) 0%, hsl(180 45% 40%) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    padding: 2rem;
   }
+
+  /* Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Gradient animation keyframes - smooth left to right */
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+/* Review scrolling animations - continuous, never stops */
+@keyframes scroll-reviews-up {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes scroll-reviews-down {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.scroll-reviews-animation-up {
+  animation: scroll-reviews-up 100s linear infinite;
+  animation-play-state: running !important;
+}
+
+.scroll-reviews-animation-down {
+  animation: scroll-reviews-down 100s linear infinite;
+  animation-play-state: running !important;
+}
+
+.scroll-reviews-animation-up:hover,
+.scroll-reviews-animation-down:hover {
+  animation-play-state: running !important;
 }

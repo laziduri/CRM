@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import { Menu, X, ChevronDown, User, LogOut, Settings, FileText, FolderKanban, CheckSquare, Calendar, BarChart3, GitBranch, Mic, MessageSquare, LayoutDashboard } from 'lucide-react'
+import { motion } from 'motion/react'
 import { Button } from '@/components/ui/Button'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -102,7 +103,18 @@ export default function Header() {
   ]
 
   return (
-    <header className="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-40 border-b border-secondary-gray3/30 w-full">
+    <motion.header
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ 
+        duration: 1.2, 
+        ease: 'easeOut',
+        type: 'spring',
+        stiffness: 50,
+        damping: 20
+      }}
+      className="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-40 border-b border-gray-200 w-full"
+    >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex justify-between items-center h-16 flex-nowrap">
           {/* Logo */}
@@ -120,7 +132,7 @@ export default function Header() {
                 }}
               />
             </div>
-            <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-teal bg-clip-text text-transparent whitespace-nowrap">Brilliance Advisory</span>
+            <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-navy to-teal bg-clip-text text-transparent whitespace-nowrap">Brilliance Advisory</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -128,7 +140,7 @@ export default function Header() {
             {/* Home Link */}
             <Link
               href="/"
-              className="text-gray-700 hover:text-primary transition-colors font-medium"
+              className="text-navy hover:text-teal transition-colors font-medium"
             >
               Home
             </Link>
@@ -140,7 +152,7 @@ export default function Header() {
               onMouseLeave={() => setIsLoansDropdownOpen(false)}
             >
               <button
-                className="text-gray-700 hover:text-primary transition-colors font-medium flex items-center gap-1"
+                className="text-navy hover:text-teal transition-colors font-medium flex items-center gap-1"
               >
                 Loans
                 <ChevronDown size={16} className={`transition-transform ${isLoansDropdownOpen ? 'rotate-180' : ''}`} />
@@ -155,13 +167,13 @@ export default function Header() {
                     onMouseEnter={() => setIsLoansDropdownOpen(true)}
                     onMouseLeave={() => setIsLoansDropdownOpen(false)}
                   >
-                    <div className="bg-white rounded-lg shadow-xl border border-secondary-gray3/50 py-2">
+                    <div className="bg-white rounded-lg shadow-xl border border-gray-200 py-2">
                       {loanLinks.map((link) => (
                         <Link
                           key={link.href}
                           href={link.href}
                           onClick={() => setIsLoansDropdownOpen(false)}
-                          className="block px-4 py-2 text-gray-700 hover:bg-primary-light/10 hover:text-primary transition-colors font-medium"
+                          className="block px-4 py-2 text-navy hover:bg-gray-50 hover:text-teal transition-colors font-medium"
                         >
                           {link.label}
                         </Link>
@@ -179,7 +191,7 @@ export default function Header() {
               onMouseLeave={() => setIsCalculatorDropdownOpen(false)}
             >
               <button
-                className="text-gray-700 hover:text-primary transition-colors font-medium flex items-center gap-1"
+                className="text-navy hover:text-teal transition-colors font-medium flex items-center gap-1"
               >
                 Calculator
                 <ChevronDown size={16} className={`transition-transform ${isCalculatorDropdownOpen ? 'rotate-180' : ''}`} />
@@ -194,13 +206,13 @@ export default function Header() {
                     onMouseEnter={() => setIsCalculatorDropdownOpen(true)}
                     onMouseLeave={() => setIsCalculatorDropdownOpen(false)}
                   >
-                    <div className="bg-white rounded-lg shadow-xl border border-secondary-gray3/50 py-2">
+                    <div className="bg-white rounded-lg shadow-xl border border-gray-200 py-2">
                       {calculatorLinks.map((link) => (
                         <Link
                           key={link.href}
                           href={link.href}
                           onClick={() => setIsCalculatorDropdownOpen(false)}
-                          className="block px-4 py-2 text-gray-700 hover:bg-primary-light/10 hover:text-primary transition-colors font-medium"
+                          className="block px-4 py-2 text-navy hover:bg-gray-50 hover:text-teal transition-colors font-medium"
                         >
                           {link.label}
                         </Link>
@@ -233,7 +245,7 @@ export default function Header() {
               onMouseLeave={() => setIsContactDropdownOpen(false)}
             >
               <button
-                className="text-gray-700 hover:text-primary transition-colors font-medium flex items-center gap-1"
+                className="text-navy hover:text-teal transition-colors font-medium flex items-center gap-1"
               >
                 Contact
                 <ChevronDown size={16} className={`transition-transform ${isContactDropdownOpen ? 'rotate-180' : ''}`} />
@@ -248,13 +260,13 @@ export default function Header() {
                     onMouseEnter={() => setIsContactDropdownOpen(true)}
                     onMouseLeave={() => setIsContactDropdownOpen(false)}
                   >
-                    <div className="bg-white rounded-lg shadow-xl border border-secondary-gray3/50 py-2">
+                    <div className="bg-white rounded-lg shadow-xl border border-gray-200 py-2">
                       {contactLinks.map((link) => (
                         <Link
                           key={link.href}
                           href={link.href}
                           onClick={() => setIsContactDropdownOpen(false)}
-                          className="block px-4 py-2 text-gray-700 hover:bg-primary-light/10 hover:text-primary transition-colors font-medium"
+                          className="block px-4 py-2 text-navy hover:bg-gray-50 hover:text-teal transition-colors font-medium"
                         >
                           {link.label}
                         </Link>
@@ -294,11 +306,11 @@ export default function Header() {
                     <img
                       src={client?.profilePicture || consultant?.profilePicture}
                       alt={client?.name || consultant?.name}
-                      className="w-10 h-10 rounded-full object-cover border-2 border-gray-200 hover:border-primary transition-colors cursor-pointer"
+                      className="w-10 h-10 rounded-full object-cover border-2 border-navy/30 hover:border-navy transition-colors cursor-pointer"
                     />
                   ) : (
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border-2 border-gray-200 hover:border-primary transition-colors cursor-pointer">
-                      <User className="w-5 h-5 text-primary" />
+                    <div className="w-10 h-10 rounded-full bg-navy/10 flex items-center justify-center border-2 border-navy/30 hover:border-navy transition-colors cursor-pointer">
+                      <User className="w-5 h-5 text-navy" />
                     </div>
                   )}
                 </button>
@@ -312,12 +324,12 @@ export default function Header() {
                       onMouseEnter={() => setIsProfileDropdownOpen(true)}
                       onMouseLeave={() => setIsProfileDropdownOpen(false)}
                     >
-                      <div className="bg-white rounded-lg shadow-xl border border-secondary-gray3/50 py-2">
+                      <div className="bg-white rounded-lg shadow-xl border border-gray-200 py-2">
                         <div className="px-4 py-3 border-b border-gray-200">
-                          <p className="text-sm font-semibold text-gray-900">{client?.name || consultant?.name}</p>
-                          <p className="text-xs text-gray-500 truncate">{client?.email || consultant?.email}</p>
+                          <p className="text-sm font-semibold text-navy">{client?.name || consultant?.name}</p>
+                          <p className="text-xs text-gray-600 truncate">{client?.email || consultant?.email}</p>
                           {isConsultant && consultant && (
-                            <p className="text-xs text-gray-400 mt-1">Consultant ID: {consultant.consultantId}</p>
+                            <p className="text-xs text-gray-500 mt-1">Consultant ID: {consultant.consultantId}</p>
                           )}
                         </div>
                         {isConsultant ? (
@@ -325,7 +337,7 @@ export default function Header() {
                             <Link
                               href="/consultant/dashboard"
                               onClick={() => setIsProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-primary-light/10 hover:text-primary transition-colors"
+                              className="flex items-center gap-2 px-4 py-2 text-navy hover:bg-gray-50 hover:text-teal transition-colors"
                             >
                               <User className="w-4 h-4" />
                               Consultant Dashboard
@@ -337,7 +349,7 @@ export default function Header() {
                             <Link
                               href="/consultant/ai/projects"
                               onClick={() => setIsProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-primary-light/10 hover:text-primary transition-colors"
+                              className="flex items-center gap-2 px-4 py-2 text-navy hover:bg-gray-50 hover:text-teal transition-colors"
                             >
                               <FolderKanban className="w-4 h-4" />
                               AI Project Manager
@@ -345,7 +357,7 @@ export default function Header() {
                             <Link
                               href="/consultant/ai/tasks"
                               onClick={() => setIsProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-primary-light/10 hover:text-primary transition-colors"
+                              className="flex items-center gap-2 px-4 py-2 text-navy hover:bg-gray-50 hover:text-teal transition-colors"
                             >
                               <CheckSquare className="w-4 h-4" />
                               AI Task Manager
@@ -353,7 +365,7 @@ export default function Header() {
                             <Link
                               href="/consultant/ai/calendar"
                               onClick={() => setIsProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-primary-light/10 hover:text-primary transition-colors"
+                              className="flex items-center gap-2 px-4 py-2 text-navy hover:bg-gray-50 hover:text-teal transition-colors"
                             >
                               <Calendar className="w-4 h-4" />
                               AI Calendar
@@ -361,7 +373,7 @@ export default function Header() {
                             <Link
                               href="/consultant/ai/gantt"
                               onClick={() => setIsProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-primary-light/10 hover:text-primary transition-colors"
+                              className="flex items-center gap-2 px-4 py-2 text-navy hover:bg-gray-50 hover:text-teal transition-colors"
                             >
                               <BarChart3 className="w-4 h-4" />
                               AI Gantt Chart
@@ -369,7 +381,7 @@ export default function Header() {
                             <Link
                               href="/consultant/ai/workflows"
                               onClick={() => setIsProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-primary-light/10 hover:text-primary transition-colors"
+                              className="flex items-center gap-2 px-4 py-2 text-navy hover:bg-gray-50 hover:text-teal transition-colors"
                             >
                               <GitBranch className="w-4 h-4" />
                               AI Workflows
@@ -377,7 +389,7 @@ export default function Header() {
                             <Link
                               href="/consultant/ai/meeting-assistant"
                               onClick={() => setIsProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-primary-light/10 hover:text-primary transition-colors"
+                              className="flex items-center gap-2 px-4 py-2 text-navy hover:bg-gray-50 hover:text-teal transition-colors"
                             >
                               <Calendar className="w-4 h-4" />
                               AI Meeting Assistant
@@ -385,7 +397,7 @@ export default function Header() {
                             <Link
                               href="/consultant/ai/meetings"
                               onClick={() => setIsProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-primary-light/10 hover:text-primary transition-colors"
+                              className="flex items-center gap-2 px-4 py-2 text-navy hover:bg-gray-50 hover:text-teal transition-colors"
                             >
                               <Mic className="w-4 h-4" />
                               AI Meeting Notetaker
@@ -393,7 +405,7 @@ export default function Header() {
                             <Link
                               href="/consultant/ai/chat"
                               onClick={() => setIsProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-primary-light/10 hover:text-primary transition-colors"
+                              className="flex items-center gap-2 px-4 py-2 text-navy hover:bg-gray-50 hover:text-teal transition-colors"
                             >
                               <MessageSquare className="w-4 h-4" />
                               AI Chat
@@ -401,7 +413,7 @@ export default function Header() {
                             <Link
                               href="/consultant/ai/dashboards"
                               onClick={() => setIsProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-primary-light/10 hover:text-primary transition-colors"
+                              className="flex items-center gap-2 px-4 py-2 text-navy hover:bg-gray-50 hover:text-teal transition-colors"
                             >
                               <LayoutDashboard className="w-4 h-4" />
                               AI Dashboards
@@ -409,7 +421,7 @@ export default function Header() {
                             <Link
                               href="/consultant/ai/docs"
                               onClick={() => setIsProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-primary-light/10 hover:text-primary transition-colors"
+                              className="flex items-center gap-2 px-4 py-2 text-navy hover:bg-gray-50 hover:text-teal transition-colors"
                             >
                               <FileText className="w-4 h-4" />
                               AI Docs Assistant
@@ -418,7 +430,7 @@ export default function Header() {
                             <Link
                               href="/consultant/dashboard/resources"
                               onClick={() => setIsProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-primary-light/10 hover:text-primary transition-colors"
+                              className="flex items-center gap-2 px-4 py-2 text-navy hover:bg-gray-50 hover:text-teal transition-colors"
                             >
                               <FileText className="w-4 h-4" />
                               Document Resources
@@ -426,7 +438,7 @@ export default function Header() {
                             <Link
                               href="/consultant/dashboard/settings"
                               onClick={() => setIsProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-primary-light/10 hover:text-primary transition-colors"
+                              className="flex items-center gap-2 px-4 py-2 text-navy hover:bg-gray-50 hover:text-teal transition-colors"
                             >
                               <Settings className="w-4 h-4" />
                               Settings
@@ -453,7 +465,7 @@ export default function Header() {
                             <Link
                               href="/client/dashboard"
                               onClick={() => setIsProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-primary-light/10 hover:text-primary transition-colors"
+                              className="flex items-center gap-2 px-4 py-2 text-navy hover:bg-gray-50 hover:text-teal transition-colors"
                             >
                               <User className="w-4 h-4" />
                               Dashboard
@@ -461,7 +473,7 @@ export default function Header() {
                             <Link
                               href="/client/dashboard/settings"
                               onClick={() => setIsProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-primary-light/10 hover:text-primary transition-colors"
+                              className="flex items-center gap-2 px-4 py-2 text-navy hover:bg-gray-50 hover:text-teal transition-colors"
                             >
                               <Settings className="w-4 h-4" />
                               Settings
@@ -521,7 +533,7 @@ export default function Header() {
               {/* Home */}
               <Link
                 href="/"
-                className="text-gray-700 hover:text-primary transition-colors font-medium"
+                className="text-navy hover:text-teal transition-colors font-medium"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Home
@@ -566,7 +578,7 @@ export default function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-gray-700 hover:text-primary transition-colors font-medium"
+                  className="text-navy hover:text-teal transition-colors font-medium"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.label}
@@ -683,6 +695,6 @@ export default function Header() {
           </div>
         )}
       </nav>
-    </header>
+    </motion.header>
   )
 }

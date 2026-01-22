@@ -1,44 +1,62 @@
+'use client'
+
 import { Shield, Zap, DollarSign } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
+import { AmbientBackground } from '@/components/background/AmbientBackground'
+import { GlowBackground } from '@/components/background/GlowBackground'
+import { motion } from 'motion/react'
+import { MagicCard } from '@/components/ui/magic-card'
+import { BorderBeam } from '@/components/ui/border-beam'
+import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
 
 const features = [
   {
     icon: Shield,
     title: 'Compare Multiple Loans',
     description: 'View and compare loans from top banks and lenders all in one place.',
+    revealDirection: 'left' as const,
   },
   {
     icon: Zap,
     title: 'Fast Approval',
     description: 'Get pre-approved in minutes and receive funds quickly after approval.',
+    revealDirection: 'up' as const,
   },
   {
     icon: DollarSign,
     title: 'No Hidden Fees',
     description: 'Transparent pricing with no hidden charges. See exactly what you\'ll pay.',
+    revealDirection: 'right' as const,
   },
 ]
 
 export default function Features() {
   return (
     <section className="py-20 bg-white relative overflow-visible w-full">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-      
-      {/* BrightHub-style animated glows */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-teal-light/15 rounded-full blur-[110px] opacity-50 animate-glow-breathe"></div>
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary/15 rounded-full blur-[110px] opacity-45 animate-glow-drift-slow" style={{ animationDelay: '1.5s' }}></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-r from-teal/10 to-primary/10 rounded-full blur-[100px] opacity-30 animate-glow-breathe" style={{ animationDelay: '3s' }}></div>
+      {/* Ambient background with moderate motion */}
+      <AmbientBackground intensity="moderate" />
+      <GlowBackground intensity="subtle" />
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-shimmer">
-            Why Choose Brilliance Advisory?
+        {/* Section header with fade animation */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            <AnimatedGradientText className="text-3xl md:text-4xl lg:text-5xl">
+              Why Choose Brilliance Advisory?
+            </AnimatedGradientText>
           </h2>
-          <p className="text-lg text-accent-gray2 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-700 max-w-2xl mx-auto text-body">
             We make finding the right loan simple, fast, and transparent.
           </p>
-        </div>
+        </motion.div>
+        
+        {/* Features grid with fade animations */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {features.map((feature, index) => {
             const Icon = feature.icon
@@ -46,20 +64,50 @@ export default function Features() {
               console.warn(`Icon missing for feature at index ${index}`)
               return null
             }
+            // Determine rotation and horizontal offset based on card position
+            const rotation = index === 0 ? -20 : index === 2 ? 20 : 0
+            const horizontalOffset = index === 0 ? -30 : index === 2 ? 30 : 0
+            
             return (
-              <Card key={index} hover className="text-center card-hover-lift animate-fade-in-up-stagger" style={{ animationDelay: `${index * 0.2}s` }}>
-                <div className="flex justify-center mb-4">
-                  <div className="bg-gradient-to-br from-primary to-teal p-3 rounded-full border-2 border-teal-light shadow-lg">
-                    {Icon && <Icon className="w-8 h-8 text-white" />}
-                  </div>
-                </div>
-                <h3 className="text-xl font-semibold mb-2 text-gray-900">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600">
-                  {feature.description}
-                </p>
-              </Card>
+              <motion.div
+                key={index}
+                initial={{ 
+                  opacity: 0, 
+                  rotate: rotation,
+                  y: 80,
+                  x: horizontalOffset
+                }}
+                whileInView={{ 
+                  opacity: 1, 
+                  rotate: 0, 
+                  y: 0,
+                  x: 0
+                }}
+                viewport={{ once: false, margin: "-100px" }}
+                transition={{ 
+                  type: "spring", 
+                  stiffness: 100, 
+                  damping: 15,
+                  delay: index * 0.15 
+                }}
+              >
+                <MagicCard className="relative h-full">
+                  <Card hover className="text-center card-hover-lift h-full p-6 flex flex-col">
+                    <div className="flex justify-center mb-4 flex-shrink-0">
+                      <div className="bg-gradient-to-br from-navy to-teal p-3 rounded-full border-2 border-navy/30 shadow-lg flex items-center justify-center">
+                        {Icon && <Icon className="w-8 h-8 text-white flex-shrink-0" />}
+                      </div>
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2 text-navy flex-shrink-0">
+                      {feature.title}
+                    </h3>
+                    <p className="text-gray-700 text-body flex-grow">
+                      {feature.description}
+                    </p>
+                    <BorderBeam className="opacity-30" />
+                  </Card>
+                </MagicCard>
+              </motion.div>
             )
           })}
         </div>

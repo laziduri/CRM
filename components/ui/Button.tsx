@@ -5,29 +5,29 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-base font-semibold transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:pointer-events-none disabled:opacity-50 active:scale-95 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+          "bg-gradient-to-r from-navy to-teal text-white shadow-lg shadow-teal/20 hover:shadow-xl hover:shadow-teal/30 px-12 py-6",
         primary:
-          "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+          "bg-gradient-to-r from-navy to-teal text-white font-semibold shadow-lg shadow-teal/20 hover:shadow-xl hover:shadow-teal/30 px-12 py-6",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 px-10 py-5",
         outline:
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+          "border-2 border-navy bg-white text-navy shadow-sm hover:bg-gradient-to-r hover:from-navy hover:to-teal hover:text-white hover:shadow-lg px-12 py-6",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+          "bg-gradient-to-r from-teal to-teal-light text-white shadow-lg shadow-teal/20 hover:shadow-xl hover:shadow-teal/30 px-12 py-6",
+        ghost: "text-navy hover:bg-navy/10 hover:text-navy-dark px-10 py-5",
+        link: "text-navy underline-offset-4 hover:underline hover:text-teal",
       },
       size: {
-        default: "h-9 px-4 py-2",
-        sm: "h-8 rounded-md px-3 text-xs",
-        md: "h-9 px-4 py-2",
-        lg: "h-10 rounded-md px-8",
-        icon: "h-9 w-9",
+        default: "h-12 px-10 py-6",
+        sm: "h-10 rounded-lg px-6 py-4 text-sm",
+        md: "h-12 px-10 py-6",
+        lg: "h-14 rounded-lg px-14 py-7 text-lg",
+        icon: "h-12 w-12",
       },
     },
     defaultVariants: {

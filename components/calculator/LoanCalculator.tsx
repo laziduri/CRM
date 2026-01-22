@@ -190,12 +190,14 @@ export default function LoanCalculator() {
           <div className="absolute top-0 right-0 w-20 h-20 bg-primary/5 rounded-full -mr-10 -mt-10"></div>
           <div className="relative">
             <div className="flex items-center gap-2 mb-3">
-              <DollarSign className="w-5 h-5 text-primary" />
-              <p className="text-sm font-medium text-accent-gray2 uppercase tracking-wide">Monthly Payment</p>
+              <DollarSign className="w-5 h-5 text-primary flex-shrink-0" />
+              <p className="text-sm font-medium text-accent-gray2 uppercase tracking-wide leading-tight">Monthly Payment</p>
             </div>
-            <p className="text-3xl font-bold text-primary">
-              {formatCurrency(calculation.monthlyPayment)}
-            </p>
+            <div className="min-h-[3rem] flex items-end">
+              <p className="text-3xl font-bold text-primary leading-none">
+                {formatCurrency(calculation.monthlyPayment)}
+              </p>
+            </div>
             <p className="text-xs text-accent-gray mt-2">Per month for {tenure} months</p>
           </div>
         </Card>
@@ -203,12 +205,14 @@ export default function LoanCalculator() {
           <div className="absolute top-0 right-0 w-20 h-20 bg-teal/5 rounded-full -mr-10 -mt-10"></div>
           <div className="relative">
             <div className="flex items-center gap-2 mb-3">
-              <TrendingUp className="w-5 h-5 text-teal" />
-              <p className="text-sm font-medium text-accent-gray2 uppercase tracking-wide">Total Interest</p>
+              <TrendingUp className="w-5 h-5 text-teal flex-shrink-0" />
+              <p className="text-sm font-medium text-accent-gray2 uppercase tracking-wide leading-tight">Total Interest</p>
             </div>
-            <p className="text-3xl font-bold text-teal">
-              {formatCurrency(calculation.totalInterest)}
-            </p>
+            <div className="min-h-[3rem] flex items-end">
+              <p className="text-3xl font-bold text-teal leading-none">
+                {formatCurrency(calculation.totalInterest)}
+              </p>
+            </div>
             <p className="text-xs text-accent-gray mt-2">{((calculation.totalInterest / loanAmount) * 100).toFixed(2)}% of principal</p>
           </div>
         </Card>
@@ -216,12 +220,14 @@ export default function LoanCalculator() {
           <div className="absolute top-0 right-0 w-20 h-20 bg-primary/5 rounded-full -mr-10 -mt-10"></div>
           <div className="relative">
             <div className="flex items-center gap-2 mb-3">
-              <Calculator className="w-5 h-5 text-primary" />
-              <p className="text-sm font-medium text-accent-gray2 uppercase tracking-wide">Total Amount</p>
+              <Calculator className="w-5 h-5 text-primary flex-shrink-0" />
+              <p className="text-sm font-medium text-accent-gray2 uppercase tracking-wide leading-tight">Total Amount</p>
             </div>
-            <p className="text-3xl font-bold text-primary-dark">
-              {formatCurrency(calculation.totalAmount)}
-            </p>
+            <div className="min-h-[3rem] flex items-end">
+              <p className="text-3xl font-bold text-primary-dark leading-none">
+                {formatCurrency(calculation.totalAmount)}
+              </p>
+            </div>
             <p className="text-xs text-accent-gray mt-2">Principal + Interest</p>
           </div>
         </Card>

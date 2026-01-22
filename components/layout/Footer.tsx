@@ -35,7 +35,7 @@ export default function Footer() {
   ]
 
   return (
-    <footer className="bg-neutral-900 text-neutral-300 w-full">
+    <footer className="bg-neutral-900 border-t border-gray-800 text-neutral-300 w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand Section */}
@@ -54,9 +54,9 @@ export default function Footer() {
                   }}
                 />
               </div>
-              <h3 className="text-2xl font-bold text-white hover:text-teal-light transition-colors cursor-pointer">Brilliance Advisory</h3>
+              <h3 className="text-2xl font-bold bg-gradient-to-r from-navy to-teal bg-clip-text text-transparent hover:from-teal hover:to-navy transition-all cursor-pointer">Brilliance Advisory</h3>
             </Link>
-            <p className="text-sm mb-4 leading-relaxed">
+            <p className="text-sm text-gray-400 mb-4 leading-relaxed">
               Singapore-based financial consultancy specialising in human-led personal and business loan advisory. We provide personalised guidance to help you secure the right financing solution.
             </p>
             <div className="flex space-x-4">
@@ -67,7 +67,7 @@ export default function Footer() {
                     key={social.label}
                     href={social.href}
                     aria-label={social.label}
-                    className="text-gray-400 hover:text-white transition-colors"
+                    className="text-gray-400 hover:text-teal transition-colors"
                   >
                     <Icon size={20} />
                   </a>
@@ -84,7 +84,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm hover:text-white transition-colors"
+                    className="text-sm text-gray-400 hover:text-teal transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -101,7 +101,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm hover:text-white transition-colors"
+                    className="text-sm text-gray-400 hover:text-teal transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -118,7 +118,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm hover:text-white transition-colors"
+                    className="text-sm text-gray-400 hover:text-teal transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -135,7 +135,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm hover:text-white transition-colors"
+                    className="text-sm text-gray-400 hover:text-teal transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -147,9 +147,9 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center text-sm space-y-2 md:space-y-0">
-            <p>&copy; {new Date().getFullYear()} Brilliance Advisory Pte. Ltd. All rights reserved.</p>
+            <p className="text-gray-400">&copy; {new Date().getFullYear()} Brilliance Advisory Pte. Ltd. All rights reserved.</p>
             <p className="text-gray-500">
-              <Link href="/disclaimer" className="hover:text-white transition-colors">Disclaimer</Link>
+              <Link href="/disclaimer" className="hover:text-teal transition-colors">Disclaimer</Link>
             </p>
           </div>
         </div>
