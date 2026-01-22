@@ -49,19 +49,19 @@ export default function DebtConsolidationCalculatorPage() {
 
         {/* How to Use This Calculator Section */}
         <section className="mb-12">
-          <Card className="bg-gradient-to-br from-primary/5 to-teal/5 border-primary/20">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+          <Card className="bg-gradient-to-br from-primary/5 to-teal/5 border-primary/20 p-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
               How to Use This Calculator
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
+              <div className="space-y-8">
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">
                     1
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">Enter Your Current Debts</h3>
-                    <p className="text-gray-600">
+                    <h3 className="font-semibold text-gray-900 mb-4">Enter Your Current Debts</h3>
+                    <p className="text-gray-600 leading-relaxed">
                       Add details for each of your existing debts, including outstanding balances, current interest rates, and monthly payment amounts. You can add multiple debts to get a complete picture of your financial obligations.
                     </p>
                   </div>
@@ -71,21 +71,21 @@ export default function DebtConsolidationCalculatorPage() {
                     2
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">Review Your Current Situation</h3>
-                    <p className="text-gray-600">
+                    <h3 className="font-semibold text-gray-900 mb-4">Review Your Current Situation</h3>
+                    <p className="text-gray-600 leading-relaxed">
                       The calculator automatically summarizes your total outstanding balance, combined monthly payments, and provides an estimated timeline for paying off all debts under your current repayment schedule.
                     </p>
                   </div>
                 </div>
               </div>
-              <div className="space-y-4">
+              <div className="space-y-8">
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 bg-teal text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">
                     3
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">Explore Consolidation Options</h3>
-                    <p className="text-gray-600">
+                    <h3 className="font-semibold text-gray-900 mb-4">Explore Consolidation Options</h3>
+                    <p className="text-gray-600 leading-relaxed">
                       Adjust the consolidated loan amount, interest rate, and repayment tenure to see how different loan terms would affect your monthly payments and total interest costs. The calculator updates results in real-time.
                     </p>
                   </div>
@@ -95,8 +95,8 @@ export default function DebtConsolidationCalculatorPage() {
                     4
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">Compare and Analyze</h3>
-                    <p className="text-gray-600">
+                    <h3 className="font-semibold text-gray-900 mb-4">Compare and Analyze</h3>
+                    <p className="text-gray-600 leading-relaxed">
                       Review the side-by-side comparison between your current debt situation and the proposed consolidation loan. Examine potential monthly savings, interest savings, and overall cost reductions to determine if consolidation makes sense for you.
                     </p>
                   </div>
@@ -130,7 +130,7 @@ export default function DebtConsolidationCalculatorPage() {
                       <Icon className="w-6 h-6 text-white" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-xl font-bold text-gray-900 mb-3">{benefit.title}</h3>
+                      <h3 className="text-xl font-bold text-gray-900 mb-4">{benefit.title}</h3>
                       <p className="text-gray-600 leading-relaxed">{benefit.description}</p>
                     </div>
                   </div>
@@ -138,28 +138,6 @@ export default function DebtConsolidationCalculatorPage() {
               )
             })}
           </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="mt-16 text-center">
-          <Card className="bg-gradient-to-br from-primary via-teal to-primary-dark text-white p-8">
-            <h2 className="text-3xl font-bold mb-4">Ready to Consolidate Your Debts?</h2>
-            <p className="text-lg mb-6 text-white/90 max-w-2xl mx-auto">
-              Our experienced advisors can help you explore debt consolidation options from multiple lenders and find the best solution for your financial situation.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/apply">
-                <Button variant="outline" size="lg" className="bg-white text-primary border-white hover:bg-white/90">
-                  Apply for a Consolidation Loan
-                </Button>
-              </Link>
-              <Link href="/contact">
-                <Button variant="outline" size="lg" className="border-2 border-white text-white hover:bg-white/10">
-                  Speak to an Advisor
-                </Button>
-              </Link>
-            </div>
-          </Card>
         </section>
 
         {/* Disclaimer Section */}

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { User, Phone, Mail, Building2, Users, MapPin, Heart, CheckCircle2, Info, Plus, Minus, MessageSquare } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function ReferralPage() {
   const [formData, setFormData] = useState({
@@ -64,14 +65,27 @@ export default function ReferralPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-primary via-teal to-primary-dark text-white py-20 md:py-28 lg:py-32 overflow-hidden">
-        {/* Decorative background elements */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-white rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-teal-300 rounded-full blur-3xl"></div>
+      <div className="relative text-white py-20 md:py-28 lg:py-32 overflow-hidden">
+        {/* Background Image Layer */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/images/pexels-fauxels-3184418.jpg"
+            alt="Team collaboration"
+            fill
+            priority
+            className="object-cover object-center"
+            quality={90}
+            sizes="100vw"
+          />
         </div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        {/* Navy Overlay - More transparent than hero section with fade effect */}
+        <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/75 via-navy/65 to-navy/50" />
+        
+        {/* Bottom fade transition */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-50 via-gray-50/40 to-transparent pointer-events-none z-[2]"></div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-block mb-6">
             <span className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm md:text-base font-medium border border-white/30">
               Referral Program

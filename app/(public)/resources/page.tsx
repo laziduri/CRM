@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { BookOpen, FileText, ArrowRight, Calendar, Search, ChevronDown } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
@@ -85,22 +86,49 @@ export default function ResourcesPage() {
   const currentSortLabel = sortOptions.find(opt => opt.value === sortBy)?.label || 'Sort by'
 
   return (
-    <div className="min-h-screen bg-white py-12 relative overflow-hidden">
+    <div className="min-h-screen bg-white relative overflow-hidden">
       <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Hero Section */}
-        <div className="mb-12 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-2xl mb-6">
-            <BookOpen className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-5xl font-bold mb-4 animate-gradient-text">Resources</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Expert knowledge library covering personal loans, business financing, credit management, and SME growth strategies
-          </p>
+      
+      {/* Hero Section with Background Image - Full Width */}
+      <section className="relative w-full overflow-hidden">
+        {/* Background Image Layer */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/images/39566485-6e5f-4a44-8980-e66a945364ee.png"
+            alt="Resources header"
+            fill
+            priority
+            className="object-cover object-center"
+            quality={90}
+            sizes="100vw"
+          />
         </div>
+        
+        {/* Overlay for Text Readability - Blue fade, white only at very bottom */}
+        <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/80 via-navy/70 via-navy/60 to-transparent"></div>
+        
+        {/* Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-12 md:py-16">
+          <div className="text-center w-full">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary to-teal rounded-2xl mb-4">
+              <BookOpen className="w-6 h-6 text-white" />
+            </div>
+            <h1 className="text-4xl font-bold mb-3 text-white">Resources</h1>
+            <p className="text-lg text-white/90 max-w-3xl mx-auto">
+              Expert knowledge library covering personal loans, business financing, credit management, and SME growth strategies
+            </p>
+          </div>
+        </div>
+        
+        {/* Bottom fade to white - only slightly above buttons */}
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-[2]"></div>
+      </section>
+
+      {/* Rest of Content */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Tabs */}
-        <div className="flex flex-wrap gap-4 mb-12 justify-center border-b border-gray-200 pb-4">
+        <div className="flex flex-wrap gap-4 mb-12 justify-center border-b border-gray-200 pb-4 pt-4">
           <button
             onClick={() => setActiveTab('all')}
             className={`px-6 py-3 rounded-lg font-medium transition-all ${
