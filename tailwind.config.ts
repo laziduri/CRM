@@ -14,13 +14,14 @@ const config: Config = {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
-  		animation: {
-  			'gradient-shimmer': 'gradient-shimmer 3s ease-in-out infinite',
-  			'glow-breathe': 'glow-breathe 4s ease-in-out infinite',
-  			'glow-drift-slow': 'glow-drift-slow 8s ease-in-out infinite',
-  			'pulse-glow': 'pulse-glow 3s ease-in-out infinite',
-  			'fade-in-up-stagger': 'fade-in-up 0.6s ease-out forwards',
-  			'scale-in': 'scale-in 0.5s ease-out forwards',
+		animation: {
+			'gradient-shimmer': 'gradient-shimmer 3s ease-in-out infinite',
+			'glow-breathe': 'glow-breathe 4s ease-in-out infinite',
+			'glow-drift-slow': 'glow-drift-slow 8s ease-in-out infinite',
+			'pulse-glow': 'pulse-glow 3s ease-in-out infinite',
+			'fade-in': 'fade-in 0.8s ease-out forwards',
+			'fade-in-up-stagger': 'fade-in-up 0.6s ease-out forwards',
+			'scale-in': 'scale-in 0.5s ease-out forwards',
   			'ambient-drift': 'ambient-drift 20s ease-in-out infinite',
   			'particle-float': 'particle-float 8s ease-in-out infinite',
   			'reveal-from-left': 'reveal-from-left 0.8s ease-out forwards',
@@ -40,27 +41,31 @@ const config: Config = {
   			'float-up-delay-6': 'float-up 0.8s ease-out 0.6s forwards',
   			'float': 'float 6s ease-in-out infinite',
   		},
-  		keyframes: {
-  			'gradient-shimmer': {
-  				'0%, 100%': { backgroundPosition: '0% 50%' },
-  				'50%': { backgroundPosition: '100% 50%' },
-  			},
-  			'glow-breathe': {
-  				'0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
-  				'50%': { opacity: '0.6', transform: 'scale(1.05)' },
-  			},
-  			'glow-drift-slow': {
-  				'0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-  				'50%': { transform: 'translate(20px, -20px) scale(1.1)' },
-  			},
-  			'pulse-glow': {
-  				'0%, 100%': { opacity: '0.3' },
-  				'50%': { opacity: '0.5' },
-  			},
-  			'fade-in-up': {
-  				'0%': { opacity: '0', transform: 'translateY(20px)' },
-  				'100%': { opacity: '1', transform: 'translateY(0)' },
-  			},
+		keyframes: {
+			'gradient-shimmer': {
+				'0%, 100%': { backgroundPosition: '0% 50%' },
+				'50%': { backgroundPosition: '100% 50%' },
+			},
+			'glow-breathe': {
+				'0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
+				'50%': { opacity: '0.6', transform: 'scale(1.05)' },
+			},
+			'glow-drift-slow': {
+				'0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+				'50%': { transform: 'translate(20px, -20px) scale(1.1)' },
+			},
+			'pulse-glow': {
+				'0%, 100%': { opacity: '0.3' },
+				'50%': { opacity: '0.5' },
+			},
+			'fade-in': {
+				'0%': { opacity: '0' },
+				'100%': { opacity: '1' },
+			},
+			'fade-in-up': {
+				'0%': { opacity: '0', transform: 'translateY(20px)' },
+				'100%': { opacity: '1', transform: 'translateY(0)' },
+			},
   			'scale-in': {
   				'0%': { opacity: '0', transform: 'scale(0.9)' },
   				'100%': { opacity: '1', transform: 'scale(1)' },

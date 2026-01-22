@@ -183,15 +183,45 @@ export default function PersonalLoansPage() {
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
           <div className="text-center max-w-4xl mx-auto">
-            <Badge variant="primary" className="mb-6 animate-scale-in">Personal Financing</Badge>
-            <motion.h1 
-              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-gradient-text"
-              initial={{ opacity: 0, x: 100 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.5, ease: 'easeOut' }}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
             >
-              Personal Financing Made Simple
-            </motion.h1>
+              <Badge variant="primary" className="mb-6">Personal Financing</Badge>
+            </motion.div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-gradient-text">
+              {['Personal', 'Financing'].map((word, index) => (
+                <motion.span
+                  key={index}
+                  className="inline-block mr-3"
+                  initial={{ opacity: 0, y: -50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.8,
+                    delay: 0.4,
+                    ease: [0.25, 0.46, 0.45, 0.94],
+                  }}
+                >
+                  {word}
+                </motion.span>
+              ))}
+              {['Made', 'Simple'].map((word, index) => (
+                <motion.span
+                  key={index}
+                  className="inline-block mr-3"
+                  initial={{ opacity: 0, y: -50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.8,
+                    delay: 0.8 + (index * 0.3),
+                    ease: [0.25, 0.46, 0.45, 0.94],
+                  }}
+                >
+                  {word}
+                </motion.span>
+              ))}
+            </h1>
             <motion.p 
               className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed"
               initial={{ opacity: 0, x: 100 }}

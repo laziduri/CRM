@@ -99,9 +99,9 @@ export default function DebtConsolidationCalculator() {
   }, [debts])
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Current Debts Section */}
-      <Card>
+      <Card className="p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <DollarSign className="w-6 h-6 text-primary" />
@@ -191,22 +191,22 @@ export default function DebtConsolidationCalculator() {
 
       {/* Current Situation Summary */}
       {debts.length > 0 && currentTotalBalance > 0 && (
-        <Card className="bg-gradient-to-br from-primary/5 to-teal/5 border-primary/20">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+        <Card className="bg-gradient-to-br from-primary/5 to-teal/5 border-primary/20 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
             <Info className="w-5 h-5 text-primary" />
             Current Debt Situation
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Total Outstanding</p>
+              <p className="text-sm text-gray-600 mb-2">Total Outstanding</p>
               <p className="text-2xl font-bold text-gray-900">{formatCurrency(currentTotalBalance)}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600 mb-1">Total Monthly Payment</p>
+              <p className="text-sm text-gray-600 mb-2">Total Monthly Payment</p>
               <p className="text-2xl font-bold text-gray-900">{formatCurrency(currentTotalMonthly)}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600 mb-1">Estimated Payoff Time</p>
+              <p className="text-sm text-gray-600 mb-2">Estimated Payoff Time</p>
               <p className="text-2xl font-bold text-gray-900">
                 {currentPayoffMonths === 999 ? 'Never' : `${currentPayoffMonths} months`}
               </p>
@@ -216,7 +216,7 @@ export default function DebtConsolidationCalculator() {
       )}
 
       {/* Consolidated Loan Options */}
-      <Card>
+      <Card className="p-6">
         <div className="flex items-center gap-3 mb-6">
           <TrendingDown className="w-6 h-6 text-teal" />
           <h2 className="text-2xl font-bold text-gray-900">Consolidated Loan Options</h2>
@@ -257,17 +257,17 @@ export default function DebtConsolidationCalculator() {
 
       {/* Comparison Results */}
       {debts.length > 0 && currentTotalBalance > 0 && (
-        <Card className="bg-gradient-to-br from-teal/5 to-primary/5 border-teal/20">
+        <Card className="bg-gradient-to-br from-teal/5 to-primary/5 border-teal/20 p-6">
           <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
             <ArrowRight className="w-6 h-6 text-teal" />
             Comparison Results
           </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
             {/* Current Situation */}
             <div className="bg-white rounded-lg p-6 border border-gray-200">
-              <h4 className="text-lg font-semibold text-gray-900 mb-4">Current Situation</h4>
-              <div className="space-y-3">
+              <h4 className="text-lg font-semibold text-gray-900 mb-5">Current Situation</h4>
+              <div className="space-y-4">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Monthly Payment:</span>
                   <span className="font-semibold text-gray-900">{formatCurrency(currentTotalMonthly)}</span>
@@ -293,11 +293,11 @@ export default function DebtConsolidationCalculator() {
 
             {/* Consolidated Loan */}
             <div className="bg-white rounded-lg p-6 border-2 border-teal">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-5">
                 <h4 className="text-lg font-semibold text-gray-900">Consolidated Loan</h4>
                 <Badge variant="success">Recommended</Badge>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Monthly Payment:</span>
                   <span className="font-semibold text-teal">{formatCurrency(consolidatedLoan.monthlyPayment)}</span>
@@ -320,29 +320,29 @@ export default function DebtConsolidationCalculator() {
 
           {/* Savings Summary */}
           <div className="bg-gradient-to-r from-teal to-primary text-white rounded-lg p-6">
-            <h4 className="text-lg font-semibold mb-4">Potential Savings</h4>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <h4 className="text-lg font-semibold mb-6">Potential Savings</h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <p className="text-sm opacity-90 mb-1">Monthly Savings</p>
+                <p className="text-sm opacity-90 mb-2">Monthly Savings</p>
                 <p className="text-2xl font-bold">
                   {monthlySavings > 0 ? formatCurrency(monthlySavings) : formatCurrency(0)}
                 </p>
               </div>
               <div>
-                <p className="text-sm opacity-90 mb-1">Total Interest Savings</p>
+                <p className="text-sm opacity-90 mb-2">Total Interest Savings</p>
                 <p className="text-2xl font-bold">
                   {interestSavings > 0 ? formatCurrency(interestSavings) : formatCurrency(0)}
                 </p>
               </div>
               <div>
-                <p className="text-sm opacity-90 mb-1">Overall Savings</p>
+                <p className="text-sm opacity-90 mb-2">Overall Savings</p>
                 <p className="text-2xl font-bold">
                   {totalSavings > 0 ? formatCurrency(totalSavings) : formatCurrency(0)}
                 </p>
               </div>
             </div>
             {monthlySavings <= 0 && (
-              <p className="text-sm mt-4 opacity-90">
+              <p className="text-sm mt-6 opacity-90">
                 Note: The consolidated loan may not provide savings with the current terms. Consider adjusting the interest rate or tenure.
               </p>
             )}

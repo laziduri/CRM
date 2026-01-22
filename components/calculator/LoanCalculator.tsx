@@ -74,8 +74,8 @@ export default function LoanCalculator() {
   ]
 
   return (
-    <div className="space-y-6">
-      <Card>
+    <div className="space-y-8">
+      <Card className="p-6">
         <div className="flex items-center gap-3 mb-6">
           <Calculator className="w-7 h-7 text-primary" />
           <h2 className="text-2xl font-bold text-primary">Loan Calculator</h2>
@@ -104,7 +104,7 @@ export default function LoanCalculator() {
               setInterestRate(parseFloat(e.target.value))
             }}
           />
-          <p className="text-xs text-gray-500 -mt-2 mb-2">
+          <p className="text-xs text-gray-500 mt-3 mb-4">
             EIR (Effective Interest Rate) reflects the true cost including how interest compounds over time
           </p>
 
@@ -185,11 +185,11 @@ export default function LoanCalculator() {
         </div>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card hover className="relative overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <Card hover className="relative overflow-hidden p-6">
           <div className="absolute top-0 right-0 w-20 h-20 bg-primary/5 rounded-full -mr-10 -mt-10"></div>
           <div className="relative">
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-5">
               <DollarSign className="w-5 h-5 text-primary flex-shrink-0" />
               <p className="text-sm font-medium text-accent-gray2 uppercase tracking-wide leading-tight">Monthly Payment</p>
             </div>
@@ -198,13 +198,13 @@ export default function LoanCalculator() {
                 {formatCurrency(calculation.monthlyPayment)}
               </p>
             </div>
-            <p className="text-xs text-accent-gray mt-2">Per month for {tenure} months</p>
+            <p className="text-xs text-accent-gray mt-4">Per month for {tenure} months</p>
           </div>
         </Card>
-        <Card hover className="relative overflow-hidden">
+        <Card hover className="relative overflow-hidden p-6">
           <div className="absolute top-0 right-0 w-20 h-20 bg-teal/5 rounded-full -mr-10 -mt-10"></div>
           <div className="relative">
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-5">
               <TrendingUp className="w-5 h-5 text-teal flex-shrink-0" />
               <p className="text-sm font-medium text-accent-gray2 uppercase tracking-wide leading-tight">Total Interest</p>
             </div>
@@ -213,13 +213,13 @@ export default function LoanCalculator() {
                 {formatCurrency(calculation.totalInterest)}
               </p>
             </div>
-            <p className="text-xs text-accent-gray mt-2">{((calculation.totalInterest / loanAmount) * 100).toFixed(2)}% of principal</p>
+            <p className="text-xs text-accent-gray mt-4">{((calculation.totalInterest / loanAmount) * 100).toFixed(2)}% of principal</p>
           </div>
         </Card>
-        <Card hover className="relative overflow-hidden">
+        <Card hover className="relative overflow-hidden p-6">
           <div className="absolute top-0 right-0 w-20 h-20 bg-primary/5 rounded-full -mr-10 -mt-10"></div>
           <div className="relative">
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-5">
               <Calculator className="w-5 h-5 text-primary flex-shrink-0" />
               <p className="text-sm font-medium text-accent-gray2 uppercase tracking-wide leading-tight">Total Amount</p>
             </div>
@@ -228,14 +228,14 @@ export default function LoanCalculator() {
                 {formatCurrency(calculation.totalAmount)}
               </p>
             </div>
-            <p className="text-xs text-accent-gray mt-2">Principal + Interest</p>
+            <p className="text-xs text-accent-gray mt-4">Principal + Interest</p>
           </div>
         </Card>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
-          <h3 className="text-xl font-bold text-primary mb-4">Payment Breakdown (First Year)</h3>
+        <Card className="p-6">
+          <h3 className="text-xl font-bold text-primary mb-6">Payment Breakdown (First Year)</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#E5E5E5" />
@@ -258,7 +258,7 @@ export default function LoanCalculator() {
                 }}
               />
               <Legend 
-                wrapperStyle={{ paddingTop: '20px' }}
+                wrapperStyle={{ paddingTop: '28px' }}
                 iconType="square"
               />
               <Bar 
@@ -279,8 +279,8 @@ export default function LoanCalculator() {
           </ResponsiveContainer>
         </Card>
 
-        <Card>
-          <h3 className="text-xl font-bold text-primary mb-4">Total Payment Breakdown</h3>
+        <Card className="p-6">
+          <h3 className="text-xl font-bold text-primary mb-6">Total Payment Breakdown</h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -322,7 +322,7 @@ export default function LoanCalculator() {
         </Card>
       </div>
 
-      <Card>
+      <Card className="p-6">
         <div className="flex items-center gap-3 mb-4">
           <Calendar className="w-5 h-5 text-primary" />
           <h3 className="text-xl font-bold text-primary">Payment Schedule (First 12 Months)</h3>

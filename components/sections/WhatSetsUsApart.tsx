@@ -1,6 +1,7 @@
 'use client'
 
 import { TrendingUp, Shield, Users, CheckCircle2, ArrowUp } from 'lucide-react'
+import Image from 'next/image'
 import { Card } from '@/components/ui/Card'
 import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
 import { AmbientBackground } from '@/components/background/AmbientBackground'
@@ -12,60 +13,14 @@ const features = [
     title: 'Access Bigger Funding Amounts',
     description: 'We work with over 40 financial partners and lenders to help you secure the highest possible approval',
     visual: (
-      <div className="w-full px-2 relative z-10">
-        <div className="p-5 bg-gray-900 rounded-lg border border-gray-800 shadow-lg relative z-10">
-          <div className="text-xs text-gray-400 mb-2 uppercase tracking-wide">TOTAL LOAN APPROVED</div>
-          <div className="text-3xl font-bold text-white mb-5">$500,000.00</div>
-          <div className="space-y-2.5 relative z-10">
-            {[
-              { bank: 'UOB', amount: '$120,000.00', rate: '2.16%' },
-              { bank: 'Standard Chartered', amount: '$150,000.00', rate: '2.16%', highlighted: true },
-              { bank: 'OCBC', amount: '$80,000.00', rate: '3.33%' },
-              { bank: 'DBS', amount: '$150,000.00', rate: '2.22%' },
-            ].map((loan, idx) => (
-              <div
-                key={idx}
-                className={`flex items-center justify-between p-2.5 rounded-lg transition-all duration-200 ${
-                  loan.highlighted
-                    ? 'bg-navy text-white border-2 border-teal-400 shadow-lg shadow-teal-500/50'
-                    : 'bg-gray-800 hover:bg-gray-750 text-gray-200'
-                }`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center ${
-                    loan.highlighted ? 'bg-white' : 'bg-navy'
-                  }`}>
-                    <span className={`text-xs font-bold ${
-                      loan.highlighted ? 'text-navy' : 'text-white'
-                    }`}>
-                      {loan.bank.charAt(0)}
-                    </span>
-                  </div>
-                  <span className={`text-sm font-medium ${
-                    loan.highlighted ? 'text-white' : 'text-gray-300'
-                  }`}>
-                    {loan.bank}
-                  </span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className={`text-sm font-semibold ${
-                    loan.highlighted ? 'text-white' : 'text-gray-300'
-                  }`}>
-                    {loan.amount}
-                  </span>
-                  <div className="flex items-center gap-1">
-                    <span className={`text-xs ${
-                      loan.highlighted ? 'text-white' : 'text-gray-400'
-                    }`}>
-                      {loan.rate}
-                    </span>
-                    <ArrowUp className="w-3 h-3 text-teal" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+      <div className="w-full relative flex items-center justify-center h-56">
+        <Image
+          src="/images/access bigger funding.png"
+          alt="Access Bigger Funding Amounts"
+          fill
+          className="object-contain"
+          quality={90}
+        />
       </div>
     ),
   },

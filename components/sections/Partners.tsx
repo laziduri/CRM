@@ -38,7 +38,7 @@ export default function Partners() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 opacity-0 animate-fade-in">
             <AnimatedGradientText 
               className="text-2xl md:text-3xl lg:text-4xl"
               colorFrom="hsl(220, 50%, 25%)"

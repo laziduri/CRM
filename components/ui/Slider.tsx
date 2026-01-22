@@ -27,7 +27,7 @@ export default function Slider({
   return (
     <div className={cn('w-full', className)}>
       {label && (
-        <div className="flex justify-between items-baseline mb-2">
+        <div className="flex justify-between items-baseline mb-3">
           <label className="text-sm font-medium text-accent-gray2">{label}</label>
           <span className="text-sm font-semibold text-primary">{displayValue}</span>
         </div>
@@ -49,7 +49,7 @@ export default function Slider({
         }}
         {...props}
       />
-      <div className="flex justify-between items-baseline text-xs text-accent-gray mt-1">
+      <div className="flex justify-between items-baseline text-xs text-accent-gray mt-3">
         <span>{formatValue ? formatValue(min) : min}</span>
         <span>{formatValue ? formatValue(max) : max}</span>
       </div>
