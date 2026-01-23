@@ -15,7 +15,7 @@ interface GlowBackgroundProps {
  * - Very subtle radial gradients (5-10% opacity)
  * - Navy and teal glows positioned strategically
  * - Blur effects for smooth, non-distracting enhancement
- * - Performance optimized with CSS only
+ * - Performance optimised with CSS only
  */
 export function GlowBackground({ 
   className,

@@ -457,7 +457,7 @@ export default function CareersPage() {
               Benefits and Wellness
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              We&apos;re committed to providing comprehensive benefits and support that prioritize the wellbeing of our employees and their families.
+              We&apos;re committed to providing comprehensive benefits and support that prioritise the wellbeing of our employees and their families.
             </p>
           </div>
 

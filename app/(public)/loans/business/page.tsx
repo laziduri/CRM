@@ -48,7 +48,7 @@ const businessLoanTypes = [
   {
     icon: CreditCard,
     title: 'Line of Credit',
-    description: 'Get a standby credit facility for urgent use, pay interest only when you utilize.',
+    description: 'Get a standby credit facility for urgent use, pay interest only when you utilise.',
     highlight: 'On-demand',
   },
   {
@@ -151,7 +151,7 @@ const faqs = [
   {
     number: 7,
     question: 'How many guarantors are needed and how do I know if they qualify?',
-    answer: 'Typically at least one personal guarantor is required. The guarantor needs to be qualified such that they: Have at least an annual income of more than S$24,000, Is a Singaporean or PR, and Has no default or bankruptcy records outstanding. The guarantor&apos;s credit score also plays a crucial role in loan approval and interest rate determination.',
+    answer: 'Typically, at least one personal guarantor is required. To qualify, the guarantor must: (1) have an annual income of more than S$24,000, (2) be a Singaporean or PR, and (3) have no default or bankruptcy records outstanding. The guarantor&apos;s credit score also plays a crucial role in loan approval and interest rate determination.',
   },
   {
     number: 8,

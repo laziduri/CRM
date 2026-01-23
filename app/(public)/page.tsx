@@ -3,6 +3,7 @@ import Features from '@/components/sections/Features'
 import Testimonials from '@/components/sections/Testimonials'
 import Partners from '@/components/sections/Partners'
 import CalculatorPreview from '@/components/sections/CalculatorPreview'
+import ResourcesPreview from '@/components/sections/ResourcesPreview'
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <Features />
       <CalculatorPreview />
       <Testimonials />
+      <ResourcesPreview />
     </>
   )
 }

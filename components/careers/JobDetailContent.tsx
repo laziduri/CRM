@@ -57,7 +57,7 @@ export default function JobDetailContent({ job }: JobDetailContentProps) {
       ],
     }
 
-    // Customize based on department
+    // Customise based on department
     if (job.department === 'Business Development') {
       // Special handling for Business Development Consultant
       if (job.slug === 'business-development-consultant') {
@@ -163,7 +163,7 @@ export default function JobDetailContent({ job }: JobDetailContentProps) {
         learn: [
           'Financial product knowledge and solutions design',
           'Client assessment and strategic planning',
-          'Case structuring and optimization',
+          'Case structuring and optimisation',
           'Client relationship management',
         ],
       }
@@ -172,17 +172,17 @@ export default function JobDetailContent({ job }: JobDetailContentProps) {
     if (job.department === 'Operations') {
       return {
         ...baseDetails,
-        about: `As a ${job.title} at Brilliance Advisory, you will ensure smooth operations across all departments. You'll optimize processes, support team efficiency, and maintain quality standards.`,
+        about: `As a ${job.title} at Brilliance Advisory, you will ensure smooth operations across all departments. You'll optimise processes, support team efficiency, and maintain quality standards.`,
         responsibilities: [
           'Oversee day-to-day operational activities',
           'Coordinate workflows across departments',
-          'Optimize processes for efficiency',
+          'Optimise processes for efficiency',
           'Ensure quality standards are maintained',
           'Support team members with operational needs',
           'Handle administrative and coordination tasks',
         ],
         learn: [
-          'Operations management and process optimization',
+          'Operations management and process optimisation',
           'Quality assurance and standards',
           'Cross-functional collaboration',
           'Administrative excellence',
@@ -198,7 +198,7 @@ export default function JobDetailContent({ job }: JobDetailContentProps) {
           'Develop and execute marketing strategies',
           'Manage digital marketing channels',
           'Create engaging content for various platforms',
-          'Analyze campaign performance and optimize',
+          'Analyze campaign performance and optimise',
           'Build brand awareness and generate leads',
           'Support content creation and brand messaging',
         ],
@@ -221,12 +221,12 @@ export default function JobDetailContent({ job }: JobDetailContentProps) {
           'Support team development initiatives',
           'Manage office operations and coordination',
           'Ensure compliance with policies and procedures',
-          'Support organizational growth and culture',
+          'Support organisational growth and culture',
         ],
         learn: [
           'Human resources and people management',
           'Administrative operations',
-          'Organizational development',
+          'Organisational development',
           'Team culture and engagement',
         ],
       }

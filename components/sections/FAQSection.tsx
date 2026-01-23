@@ -9,7 +9,7 @@ const faqs = [
   {
     number: 1,
     question: 'What does Brilliance Advisory actually do?',
-    answer: 'Brilliance Advisory is Singapore\'s trusted financial advisory and consulting firm specializing in loan and grant solutions. Unlike automated matching platforms, we provide personalized one-on-one consultations with our experienced team. Our consultants take the time to understand your unique financial situation, business needs, and goals. We then provide expert guidance, compare options from our extensive network of banks and financial institutions, and personally guide you through the entire application process. We believe in building genuine relationships with our clients, offering tailored advice and ongoing support throughout your financing journey.',
+    answer: 'Brilliance Advisory is Singapore\'s trusted financial advisory and consulting firm specialising in loan and grant solutions. Unlike automated matching platforms, we provide personalised one-on-one consultations with our experienced team. Our consultants take the time to understand your unique financial situation, business needs, and goals. We then provide expert guidance, compare options from our extensive network of banks and financial institutions, and personally guide you through the entire application process. We believe in building genuine relationships with our clients, offering tailored advice and ongoing support throughout your financing journey.',
   },
   {
     number: 2,
@@ -19,12 +19,12 @@ const faqs = [
   {
     number: 3,
     question: 'What makes Brilliance Advisory different from other platforms?',
-    answer: 'What sets us apart is our focus on human connection and personalized service. While other platforms rely on automated algorithms, our team of experienced financial consultants takes the time to understand your unique situation through one-on-one consultations. We believe that every business and individual has different needs, and we provide tailored advice based on your specific circumstances. Our consultants are accessible, responsive, and genuinely care about your success. From the initial consultation to post-disbursement support, you\'ll have a dedicated consultant to guide you every step of the way. We prioritize building long-term relationships with our clients, not just processing transactions.',
+    answer: 'What sets us apart is our focus on human connection and personalised service. While other platforms rely on automated algorithms, our team of experienced financial consultants takes the time to understand your unique situation through one-on-one consultations. We believe that every business and individual has different needs, and we provide tailored advice based on your specific circumstances. Our consultants are accessible, responsive, and genuinely care about your success. From the initial consultation to post-disbursement support, you\'ll have a dedicated consultant to guide you every step of the way. We prioritise building long-term relationships with our clients, not just processing transactions.',
   },
   {
     number: 4,
     question: 'Do I need to meet with a consultant in person?',
-    answer: 'We offer flexible consultation options to suit your preference and convenience. You can meet with our consultants in person at our office, schedule a phone consultation, or have a virtual meeting via video call. While we value face-to-face interactions for building stronger relationships, we understand that your time is valuable. Our team is committed to providing the same level of personalized service and attention whether we meet in person, over the phone, or virtually. The most important thing is that you feel comfortable and can communicate your needs effectively with your dedicated consultant.',
+    answer: 'We offer flexible consultation options to suit your preference and convenience. You can meet with our consultants in person at our office, schedule a phone consultation, or have a virtual meeting via video call. While we value face-to-face interactions for building stronger relationships, we understand that your time is valuable. Our team is committed to providing the same level of personalised service and attention whether we meet in person, over the phone, or virtually. The most important thing is that you feel comfortable and can communicate your needs effectively with your dedicated consultant.',
   },
   {
     number: 5,

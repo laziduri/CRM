@@ -131,7 +131,7 @@ const faqs = [
   {
     number: 3,
     question: 'What is the maximum loan amount I can access through your advisory service?',
-    answer: 'Loan limits vary significantly based on your creditworthiness, income level, and the specific lender. Major banks typically offer personal loans ranging from S$1,000 to S$200,000, with amounts often calculated as multiples of your monthly income (commonly 4 to 10 times). Higher-income individuals with excellent credit profiles may qualify for amounts up to S$300,000 or more. Our consultants will evaluate your profile during the initial consultation and provide realistic guidance on the loan amounts you&apos;re likely to qualify for, along with strategies to optimize your borrowing capacity.',
+    answer: 'Loan limits vary significantly based on your creditworthiness, income level, and the specific lender. Major banks typically offer personal loans ranging from S$1,000 to S$200,000, with amounts often calculated as multiples of your monthly income (commonly 4 to 10 times). Higher-income individuals with excellent credit profiles may qualify for amounts up to S$300,000 or more. Our consultants will evaluate your profile during the initial consultation and provide realistic guidance on the loan amounts you&apos;re likely to qualify for, along with strategies to optimise your borrowing capacity.',
   },
   {
     number: 4,
@@ -151,12 +151,12 @@ const faqs = [
   {
     number: 7,
     question: 'Can I apply for a personal loan if I have existing debts or credit cards?',
-    answer: 'Yes, you can apply, but approval depends on your total debt service ratio (DSR) and creditworthiness. Lenders typically assess your ability to manage all existing obligations plus the new loan. Generally, banks prefer a total DSR below 40-60% of your gross monthly income, though this varies by lender and income level. If you&apos;re consolidating existing debts, this may actually improve your application profile. Our consultants can help you evaluate your current debt situation, optimize your DSR, and structure an application strategy that enhances your approval prospects.',
+    answer: 'Yes, you can apply, but approval depends on your total debt service ratio (DSR) and creditworthiness. Lenders typically assess your ability to manage all existing obligations plus the new loan. Generally, banks prefer a total DSR below 40-60% of your gross monthly income, though this varies by lender and income level. If you&apos;re consolidating existing debts, this may actually improve your application profile. Our consultants can help you evaluate your current debt situation, optimise your DSR, and structure an application strategy that enhances your approval prospects.',
   },
   {
     number: 8,
     question: 'How does Brilliance Advisory ensure I get the best interest rates available?',
-    answer: 'Our competitive advantage lies in our established relationships with multiple banking partners and our deep understanding of their credit assessment criteria. Our consultants leverage their expertise to present your application in the most favorable light, ensuring all positive factors are highlighted. We also negotiate on your behalf, utilizing our relationship managers and knowledge of current promotions or preferential rates. Additionally, by comparing options across our extensive network, we ensure you receive the most competitive terms available for your specific profile. Our commission structure aligns our interests with yours—we succeed when you secure favorable terms.',
+    answer: 'Our competitive advantage lies in our established relationships with multiple banking partners and our deep understanding of their credit assessment criteria. Our consultants leverage their expertise to present your application in the most favorable light, ensuring all positive factors are highlighted. We also negotiate on your behalf, utilising our relationship managers and knowledge of current promotions or preferential rates. Additionally, by comparing options across our extensive network, we ensure you receive the most competitive terms available for your specific profile. Our commission structure aligns our interests with yours—we succeed when you secure favorable terms.',
   },
 ]
 
@@ -488,7 +488,7 @@ export default function PersonalLoansPage() {
                 <div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">Personalized Consultative Approach</h3>
                   <p className="text-gray-600 leading-relaxed">
-                    We prioritize understanding your unique financial situation through comprehensive one-on-one consultations. Unlike automated platforms that simply match profiles to products, our experienced consultants take time to understand your goals, assess your repayment capacity, and recommend solutions that genuinely serve your best interests. Every recommendation is backed by careful analysis and explained in terms you can understand.
+                    We prioritise understanding your unique financial situation through comprehensive one-on-one consultations. Unlike automated platforms that simply match profiles to products, our experienced consultants take time to understand your goals, assess your repayment capacity, and recommend solutions that genuinely serve your best interests. Every recommendation is backed by careful analysis and explained in terms you can understand.
                   </p>
                 </div>
               </div>

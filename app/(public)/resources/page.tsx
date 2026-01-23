@@ -324,22 +324,6 @@ export default function ResourcesPage() {
           </Card>
         )}
 
-        {/* CTA Section */}
-        <div className="mt-16 text-center">
-          <Card className="bg-gradient-to-r from-primary to-teal text-white">
-            <div className="p-8">
-              <h3 className="text-2xl font-bold mb-4">Ready to Apply?</h3>
-              <p className="text-lg mb-6 opacity-90">
-                Get personalized application support for your funding needs
-              </p>
-              <Link href="/apply">
-                <button className="bg-white text-primary px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                  Start Your Application
-                </button>
-              </Link>
-            </div>
-          </Card>
-        </div>
       </div>
     </div>
   )

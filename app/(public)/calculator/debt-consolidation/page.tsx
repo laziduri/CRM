@@ -24,7 +24,7 @@ export default function DebtConsolidationCalculatorPage() {
     {
       icon: Calendar,
       title: 'Plan Your Repayment Strategy',
-      description: 'Visualize how long it will take to pay off your debts under different consolidation options. Compare payoff timelines between your current situation and potential consolidated loan arrangements to find the most suitable approach.',
+      description: 'Visualise how long it will take to pay off your debts under different consolidation options. Compare payoff timelines between your current situation and potential consolidated loan arrangements to find the most suitable approach.',
     },
     {
       icon: Shield,
@@ -73,7 +73,7 @@ export default function DebtConsolidationCalculatorPage() {
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-4">Review Your Current Situation</h3>
                     <p className="text-gray-600 leading-relaxed">
-                      The calculator automatically summarizes your total outstanding balance, combined monthly payments, and provides an estimated timeline for paying off all debts under your current repayment schedule.
+                      The calculator automatically summarises your total outstanding balance, combined monthly payments, and provides an estimated timeline for paying off all debts under your current repayment schedule.
                     </p>
                   </div>
                 </div>
