@@ -6,8 +6,23 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { Mail, Lock, AlertCircle, ArrowRight, User, Phone, CheckCircle2, Briefcase, ArrowLeft, Calendar as CalendarIcon, Eye, EyeOff, Loader2 } from 'lucide-react'
 
+// Toggle to show/hide login page - set to false to hide the page
+const LOGIN_PAGE_ENABLED = true
+
 function ConsultantLoginContent() {
   const router = useRouter()
+  
+  // Redirect if login page is disabled
+  useEffect(() => {
+    if (!LOGIN_PAGE_ENABLED) {
+      router.push('/')
+    }
+  }, [router])
+  
+  // Return null while redirecting or if disabled
+  if (!LOGIN_PAGE_ENABLED) {
+    return null
+  }
   const searchParams = useSearchParams()
   const [isRegistering, setIsRegistering] = useState(false)
   

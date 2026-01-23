@@ -211,7 +211,56 @@
   animation-play-state: running !important;
 }
 
+/* Calculating background animations - numbers scrolling vertically */
+@keyframes scroll-numbers-up {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes scroll-numbers-down {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.scroll-numbers-up {
+  animation: scroll-numbers-up 30s linear infinite;
+  animation-play-state: running !important;
+}
+
+.scroll-numbers-down {
+  animation: scroll-numbers-down 30s linear infinite;
+  animation-play-state: running !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-numbers-up,
+  .scroll-numbers-down {
+    animation: none;
+  }
+}
+
 .scroll-reviews-animation-up:hover,
 .scroll-reviews-animation-down:hover {
   animation-play-state: running !important;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 3s ease-in-out infinite;
 }

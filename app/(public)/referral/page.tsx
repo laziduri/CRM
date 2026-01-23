@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { User, Phone, Mail, Building2, Users, MapPin, Heart, CheckCircle2, Info, Plus, Minus, MessageSquare } from 'lucide-react'
+import { User, Phone, Mail, Building2, Users, MapPin, Heart, CheckCircle2, Info, MessageSquare } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
+import AccordionDark, { AccordionItemDark } from '@/components/ui/AccordionDark'
 
 export default function ReferralPage() {
   const [formData, setFormData] = useState({
@@ -20,7 +21,6 @@ export default function ReferralPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [openFAQ, setOpenFAQ] = useState<number | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -376,79 +376,45 @@ export default function ReferralPage() {
         </div>
 
         {/* FAQ Section */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 lg:p-12 mb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-            {/* Left Column - Heading */}
-            <div className="flex flex-col justify-center">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-                <span className="text-primary">Quick Answers to</span>{' '}
-                <span className="text-teal">your burning</span>{' '}
-                <span className="text-primary">questions</span>
-              </h2>
-              <p className="text-lg text-gray-600">
-                Don&apos;t see your question listed?
-              </p>
-            </div>
-
-            {/* Right Column - FAQ Items */}
-            <div className="space-y-6">
-              {[
-                {
-                  question: "Who can make a referral?",
-                  answer: "Anyone may submit a referral — friends, clients, or business contacts."
-                },
-                {
-                  question: "When will I receive my referral reward?",
-                  answer: "Referral rewards are issued after the loan is successfully disbursed. The timeline will be shared clearly by our team."
-                },
-                {
-                  question: "Is there a limit to the number of referrals?",
-                  answer: "No. You may submit multiple referrals."
-                },
-                {
-                  question: "Will my referral be obligated to proceed?",
-                  answer: "No. Our advisory is provided without obligation."
-                }
-              ].map((faq, index) => (
-                <div
-                  key={index}
-                  className="border-b border-gray-200 pb-6 last:border-b-0 last:pb-0"
-                >
-                  <button
-                    onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
-                    className="w-full flex items-center justify-between gap-4 text-left group"
-                  >
-                    <div className="flex items-start gap-4 flex-1">
-                      <span className="text-2xl font-bold text-primary flex-shrink-0">
-                        {index + 1}.
-                      </span>
-                      <span className="text-lg font-semibold text-gray-900 flex-1 group-hover:text-primary transition-colors">
-                        {faq.question}
-                      </span>
-                    </div>
-                    <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                      openFAQ === index
-                        ? 'bg-primary text-white'
-                        : 'bg-teal-100 text-primary group-hover:bg-teal-200'
-                    }`}>
-                      {openFAQ === index ? (
-                        <Minus className="w-5 h-5" />
-                      ) : (
-                        <Plus className="w-5 h-5" />
-                      )}
-                    </div>
-                  </button>
-                  {openFAQ === index && (
-                    <div className="mt-4 ml-12 pr-12">
-                      <p className="text-gray-600 leading-relaxed">
-                        {faq.answer}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+        <div className="mb-12">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Quick Answers to your burning questions
+            </h2>
+            <p className="text-lg text-gray-600">
+              Don&apos;t see your question listed?
+            </p>
           </div>
+          
+          <AccordionDark>
+            {[
+              {
+                question: "Who can make a referral?",
+                answer: "Anyone may submit a referral — friends, clients, or business contacts."
+              },
+              {
+                question: "When will I receive my referral reward?",
+                answer: "Referral rewards are issued after the loan is successfully disbursed. The timeline will be shared clearly by our team."
+              },
+              {
+                question: "Is there a limit to the number of referrals?",
+                answer: "No. You may submit multiple referrals."
+              },
+              {
+                question: "Will my referral be obligated to proceed?",
+                answer: "No. Our advisory is provided without obligation."
+              }
+            ].map((faq, index) => (
+              <AccordionItemDark
+                key={index}
+                number={index + 1}
+                title={faq.question}
+                defaultOpen={index === 0}
+              >
+                <p>{faq.answer}</p>
+              </AccordionItemDark>
+            ))}
+          </AccordionDark>
         </div>
 
         {/* Terms Section */}

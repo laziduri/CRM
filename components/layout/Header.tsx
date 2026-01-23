@@ -87,7 +87,6 @@ export default function Header() {
 
   const contactLinks = [
     { href: '/contact', label: 'Contact Us' },
-    { href: '/appointments', label: 'Schedule Appointment' },
     { href: '/referral', label: 'Refer a Friend' },
   ]
 
@@ -500,11 +499,6 @@ export default function Header() {
               <>
                 {!isConsultant && (
                   <>
-                    <Link href="/client/login">
-                      <Button variant="secondary" size="md">
-                        Login
-                      </Button>
-                    </Link>
                     <Link href="/apply">
                       <Button variant="primary" size="md">
                         Get Started
@@ -679,11 +673,6 @@ export default function Header() {
                 </div>
               ) : (
                 <div className="flex gap-3 pt-2">
-                  <Link href="/client/login" onClick={() => setIsMobileMenuOpen(false)} className="flex-1">
-                    <Button variant="secondary" size="md" className="w-full">
-                      Login
-                    </Button>
-                  </Link>
                   <Link href="/apply" onClick={() => setIsMobileMenuOpen(false)} className="flex-1">
                     <Button variant="primary" size="md" className="w-full">
                       Get Started

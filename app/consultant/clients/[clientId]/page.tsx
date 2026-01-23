@@ -2445,7 +2445,7 @@ export default function ClientDetailPage() {
                       </div>
                     ) : (
                       <div className="text-center py-4 text-gray-500 text-sm border border-gray-200 rounded-lg">
-                        No products in this deal. Click "Add Product" to add products.
+                        No products in this deal. Click &quot;Add Product&quot; to add products.
                       </div>
                     )}
                   </div>

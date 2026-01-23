@@ -1,13 +1,28 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { Mail, Lock, AlertCircle, ArrowRight, User, Phone, CheckCircle2, Shield } from 'lucide-react'
 
+// Toggle to show/hide login page - set to false to hide the page
+const LOGIN_PAGE_ENABLED = false
+
 export default function ConsultantLoginPage() {
   const router = useRouter()
+  
+  // Redirect if login page is disabled
+  useEffect(() => {
+    if (!LOGIN_PAGE_ENABLED) {
+      router.push('/')
+    }
+  }, [router])
+  
+  // Return null while redirecting or if disabled
+  if (!LOGIN_PAGE_ENABLED) {
+    return null
+  }
   const [isRegistering, setIsRegistering] = useState(false)
   
   // Login form state

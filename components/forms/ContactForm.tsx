@@ -60,7 +60,7 @@ export default function ContactForm() {
 
   return (
     <Card>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Input
             label="Your Name"
@@ -88,20 +88,20 @@ export default function ContactForm() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-accent-gray2 mb-2">
+          <label className="block text-sm font-medium text-accent-gray2 mb-5">
             Your Message
           </label>
           <textarea
             {...register('message')}
             rows={6}
-            className="w-full px-4 py-3 border border-secondary-gray3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all resize-none"
+            className="w-full px-4 py-4 border border-secondary-gray3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all resize-none"
           />
           {errors.message && (
-            <p className="mt-1 text-sm text-accent-error">{errors.message.message}</p>
+            <p className="mt-2 text-sm text-accent-error">{errors.message.message}</p>
           )}
         </div>
 
-        <div className="pt-4">
+        <div className="pt-6">
           <Button
             type="submit"
             variant="primary"

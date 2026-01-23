@@ -7,8 +7,23 @@ import { Button } from '@/components/ui/Button'
 import { Mail, Lock, AlertCircle, ArrowRight, User, Phone, CheckCircle2, Briefcase, Loader2 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 
+// Toggle to show/hide login page - set to false to hide the page
+const LOGIN_PAGE_ENABLED = false
+
 function ClientLoginContent() {
   const router = useRouter()
+  
+  // Redirect if login page is disabled
+  useEffect(() => {
+    if (!LOGIN_PAGE_ENABLED) {
+      router.push('/')
+    }
+  }, [router])
+  
+  // Return null while redirecting or if disabled
+  if (!LOGIN_PAGE_ENABLED) {
+    return null
+  }
   const searchParams = useSearchParams()
   const { login } = useAuth()
   const [isRegistering, setIsRegistering] = useState(false)

@@ -6,12 +6,17 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   hover?: boolean
 }
 
+/**
+ * Card component with default padding for consistent spacing.
+ * Default padding: p-4 (16px) on mobile, p-6 (24px) on desktop and up.
+ * Can be overridden via className prop (e.g., className="p-0" or className="p-8").
+ */
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, hover, ...props }, ref) => (
     <div
       ref={ref}
       className={cn(
-        "rounded-xl border border-gray-200 bg-white text-card-foreground shadow-lg",
+        "rounded-xl border border-gray-200 bg-white text-card-foreground shadow-lg p-4 sm:p-6",
         hover && "transition-all duration-300 hover:border-navy/40 hover:shadow-xl cursor-pointer",
         className
       )}

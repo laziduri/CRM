@@ -416,10 +416,10 @@ export default function AboutPage() {
                 {/* Title and Description */}
                 <div className="col-span-1 md:col-span-10">
                   <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-navy mb-3 md:mb-4">
-                    Proper Assessment, Not Mass Applications
+                    Proper Assessment Over Mass Submissions
                   </h3>
                   <p className="text-gray-700 leading-relaxed text-sm md:text-base max-w-3xl">
-                    Unlike online platforms that submit your application to multiple banks simultaneously, we conduct a thorough assessment of your financial profile, goals, and circumstances. We then strategically select the most suitable lenders—not all lenders—based on what&apos;s truly best for you.
+                    We do not send your application blindly to multiple banks. Instead, we take time to understand your financial position, objectives, and constraints. Based on this assessment, we identify and approach only the lenders that are genuinely suitable for your situation, ensuring quality over quantity.
                   </p>
                 </div>
               </div>
@@ -444,10 +444,10 @@ export default function AboutPage() {
                 {/* Title and Description */}
                 <div className="col-span-1 md:col-span-10">
                   <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-navy mb-3 md:mb-4">
-                    Real Advice & Strategic Planning
+                    Real Advice With Strategic Direction
                   </h3>
                   <p className="text-gray-700 leading-relaxed text-sm md:text-base max-w-3xl">
-                    Online applications can&apos;t give you real advice. They can&apos;t assess your complete financial picture or help you plan strategically. Our advisors provide genuine guidance, helping you understand your options, structure your application optimally, and plan for long-term financial success.
+                    Online platforms process forms, not people. They cannot evaluate your full financial picture or guide you on long-term planning. Our advisors offer informed guidance, explain your options clearly, structure your application correctly, and help you make decisions that support sustainable financial outcomes.
                   </p>
                 </div>
               </div>
@@ -472,10 +472,10 @@ export default function AboutPage() {
                 {/* Title and Description */}
                 <div className="col-span-1 md:col-span-10">
                   <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-navy mb-3 md:mb-4">
-                    Client-First Philosophy
+                    Client-First Approach
                   </h3>
                   <p className="text-gray-700 leading-relaxed text-sm md:text-base max-w-3xl">
-                    Every decision we make prioritises your best interests. We&apos;re not incentivised to push you toward any particular bank or loan product. Instead, we focus on finding the solution that genuinely fits your needs, even if it means recommending fewer options that are better suited to you.
+                    Your interests always come first. We are not driven by commissions or pressured to promote specific banks or products. Our focus is on recommending solutions that truly align with your needs, even if that means fewer choices with better outcomes.
                   </p>
                 </div>
               </div>
@@ -500,10 +500,10 @@ export default function AboutPage() {
                 {/* Title and Description */}
                 <div className="col-span-1 md:col-span-10">
                   <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-navy mb-3 md:mb-4">
-                    Human-Led Expertise
+                    Personalised Expert Guidance
                   </h3>
                   <p className="text-gray-700 leading-relaxed text-sm md:text-base max-w-3xl">
-                    Our experienced advisors work directly with you, understanding your unique situation through personalised consultations. We handle bank communications, negotiate terms, and guide you through every step—providing the human touch that automated systems simply cannot replicate.
+                    You work directly with experienced consultants who take time to understand your circumstances through personalised consultations. We manage bank discussions, negotiate terms, and support you throughout the entire process, delivering clarity and confidence that automated systems cannot provide.
                   </p>
                 </div>
               </div>

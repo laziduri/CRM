@@ -24,15 +24,15 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     if (label || error) {
       return (
-        <div className="w-full flex flex-col">
+        <div className="w-full flex flex-col mb-2">
           {label && (
-            <label className="block text-sm font-medium text-gray-700 mb-1 leading-tight">
+            <label className="block text-sm font-medium text-gray-700 mb-5 leading-tight">
               {label}
             </label>
           )}
           {input}
           {error && (
-            <p className="mt-1 text-sm text-destructive leading-tight">{error}</p>
+            <p className="mt-2 text-sm text-destructive leading-tight">{error}</p>
           )}
         </div>
       )
