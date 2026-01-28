@@ -11,22 +11,8 @@ const LOGIN_PAGE_ENABLED = true
 
 function ConsultantLoginContent() {
   const router = useRouter()
-  
-  // Redirect if login page is disabled
-  useEffect(() => {
-    if (!LOGIN_PAGE_ENABLED) {
-      router.push('/')
-    }
-  }, [router])
-  
-  // Return null while redirecting or if disabled
-  if (!LOGIN_PAGE_ENABLED) {
-    return null
-  }
   const searchParams = useSearchParams()
   const [isRegistering, setIsRegistering] = useState(false)
-  
-  // Consultant login form state
   const [consultantId, setConsultantId] = useState('')
   const [consultantUsername, setConsultantUsername] = useState('')
   const [consultantEmail, setConsultantEmail] = useState('')
@@ -34,8 +20,6 @@ function ConsultantLoginContent() {
   const [consultantError, setConsultantError] = useState('')
   const [consultantIsLoading, setConsultantIsLoading] = useState(false)
   const [isConsultantRegistering, setIsConsultantRegistering] = useState(false)
-
-  // Consultant registration form state
   const [consultantRegisterName, setConsultantRegisterName] = useState('')
   const [consultantRegisterUsername, setConsultantRegisterUsername] = useState('')
   const [consultantRegisterEmail, setConsultantRegisterEmail] = useState('')
@@ -49,8 +33,13 @@ function ConsultantLoginContent() {
   const [consultantRegisterError, setConsultantRegisterError] = useState('')
   const [consultantRegisterSuccess, setConsultantRegisterSuccess] = useState('')
   const [isConsultantRegisterLoading, setIsConsultantRegisterLoading] = useState(false)
-  
-  // Check if already logged in and redirect to dashboard immediately
+
+  useEffect(() => {
+    if (!LOGIN_PAGE_ENABLED) {
+      router.push('/')
+    }
+  }, [router])
+
   useEffect(() => {
     const token = localStorage.getItem('consultant_token')
     if (token) {
@@ -58,14 +47,16 @@ function ConsultantLoginContent() {
     }
   }, [router])
 
-  // Check for success messages
   useEffect(() => {
     const verified = searchParams.get('verified')
-    
     if (verified === 'true') {
       setConsultantRegisterSuccess('Your email has been verified successfully! You can now log in.')
     }
   }, [searchParams])
+
+  if (!LOGIN_PAGE_ENABLED) {
+    return null
+  }
 
   const handleConsultantLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

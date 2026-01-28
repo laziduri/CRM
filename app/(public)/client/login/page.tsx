@@ -6,45 +6,25 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { Mail, Lock, AlertCircle, ArrowRight, User, Phone, CheckCircle2, Briefcase, Loader2 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
+import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
+import { AmbientBackground } from '@/components/background/AmbientBackground'
+import { GlowBackground } from '@/components/background/GlowBackground'
+import { ScrollReveal } from '@/components/ui/ScrollReveal'
+import { PageTransition } from '@/components/layout/PageTransition'
 
 // Toggle to show/hide login page - set to false to hide the page
 const LOGIN_PAGE_ENABLED = false
 
 function ClientLoginContent() {
   const router = useRouter()
-  
-  // Redirect if login page is disabled
-  useEffect(() => {
-    if (!LOGIN_PAGE_ENABLED) {
-      router.push('/')
-    }
-  }, [router])
-  
-  // Return null while redirecting or if disabled
-  if (!LOGIN_PAGE_ENABLED) {
-    return null
-  }
   const searchParams = useSearchParams()
   const { login } = useAuth()
   const [isRegistering, setIsRegistering] = useState(false)
-  
-  // Client login form state
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  
-  // Check for success messages
-  useEffect(() => {
-    const verified = searchParams.get('verified')
-    
-    if (verified === 'true') {
-      setSuccess('Your email has been verified successfully! You can now log in.')
-    }
-  }, [searchParams])
-  
-  // Register form state
   const [registerName, setRegisterName] = useState('')
   const [registerUsername, setRegisterUsername] = useState('')
   const [registerEmail, setRegisterEmail] = useState('')
@@ -53,6 +33,25 @@ function ClientLoginContent() {
   const [registerConfirmPassword, setRegisterConfirmPassword] = useState('')
   const [registerError, setRegisterError] = useState('')
   const [isRegisterLoading, setIsRegisterLoading] = useState(false)
+
+  // Redirect if login page is disabled
+  useEffect(() => {
+    if (!LOGIN_PAGE_ENABLED) {
+      router.push('/')
+    }
+  }, [router])
+
+  // Check for success messages
+  useEffect(() => {
+    const verified = searchParams.get('verified')
+    if (verified === 'true') {
+      setSuccess('Your email has been verified successfully! You can now log in.')
+    }
+  }, [searchParams])
+
+  if (!LOGIN_PAGE_ENABLED) {
+    return null
+  }
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -88,7 +87,10 @@ function ClientLoginContent() {
         setIsLoading(false)
       }
     } catch (err) {
-      console.error('Login error:', err)
+      // Error is logged but not exposed to user for security
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Login error:', err)
+      }
       setError('An error occurred. Please try again.')
       setIsLoading(false)
     }
@@ -150,45 +152,49 @@ function ClientLoginContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center pt-20 pb-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 bg-modern-dots opacity-5 z-0"></div>
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl z-0"></div>
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-teal/5 rounded-full blur-3xl z-0"></div>
+    <PageTransition>
+      <div className="min-h-screen bg-white flex items-center justify-center pt-20 pb-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
 
-      <div className="relative w-full max-w-md z-10">
-        {/* Logo and Header */}
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 mb-4">
-            <div className="relative h-12 w-12 flex-shrink-0">
-              <img
-                src="/images/brilliance-logo.svg"
-                alt="Brilliance Advisory Logo"
-                className="h-12 w-12 object-contain"
-                onError={(e) => {
-                  if (e.currentTarget.src.includes('.svg')) {
-                    e.currentTarget.src = '/images/brilliance-logo.png'
-                  }
-                }}
-              />
+        <div className="relative w-full max-w-md z-10">
+          {/* Logo and Header */}
+          <ScrollReveal>
+            <div className="text-center mb-8">
+              <Link href="/" className="inline-flex items-center gap-2 mb-4">
+                <div className="relative h-12 w-12 flex-shrink-0">
+                  <img
+                    src="/images/brilliance-logo.svg"
+                    alt="Brilliance Advisory Logo"
+                    className="h-12 w-12 object-contain"
+                    onError={(e) => {
+                      if (e.currentTarget.src.includes('.svg')) {
+                        e.currentTarget.src = '/images/brilliance-logo.png'
+                      }
+                    }}
+                  />
+                </div>
+                <span className="text-2xl font-bold bg-gradient-to-r from-primary to-teal bg-clip-text text-transparent">
+                  Brilliance Advisory
+                </span>
+              </Link>
+              <h1 className="text-3xl font-bold mb-2">
+                <AnimatedGradientText className="text-3xl">
+                  {isRegistering ? 'Create Account' : 'Client Login'}
+                </AnimatedGradientText>
+              </h1>
+              <p className="text-gray-600">
+                {isRegistering
+                  ? 'Register to access your personalized dashboard and start your advisory journey'
+                  : 'Sign in to access your personalized dashboard and continue your advisory journey'}
+              </p>
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-primary to-teal bg-clip-text text-transparent">
-              Brilliance Advisory
-            </span>
-          </Link>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            {isRegistering ? 'Create Account' : 'Client Login'}
-          </h1>
-          <p className="text-gray-600">
-            {isRegistering
-              ? 'Register to access your personalized dashboard and start your advisory journey'
-              : 'Sign in to access your personalized dashboard and continue your advisory journey'}
-          </p>
-        </div>
+          </ScrollReveal>
 
-        {/* Consultant Login Button - Prominent Link to CRM */}
-        {!isRegistering && (
-          <div className="mb-6">
+          {/* Consultant Login Button - Prominent Link to CRM */}
+          {!isRegistering && (
+            <ScrollReveal delay={0.1}>
+              <div className="mb-6">
             <a 
               href={
                 typeof window !== 'undefined' 
@@ -210,11 +216,13 @@ function ClientLoginContent() {
                 <ArrowRight className="w-5 h-5" />
               </Button>
             </a>
-          </div>
-        )}
+              </div>
+            </ScrollReveal>
+          )}
 
-        {/* Login Card */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
+          {/* Login Card */}
+          <ScrollReveal delay={0.2}>
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
           {/* Client Login Form */}
           {!isRegistering && (
             <>
@@ -507,19 +515,23 @@ function ClientLoginContent() {
               <strong className="font-semibold text-gray-900">Secure Access:</strong> Your information is protected with industry-standard encryption. All data is handled with care, and any applicable advisory fees are clearly explained and agreed upon before engagement.
             </p>
           </div>
-        </div>
+            </div>
+          </ScrollReveal>
 
-        {/* Back to Home Link */}
-        <div className="mt-6 text-center">
-          <Link
-            href="/"
-            className="text-sm text-gray-600 hover:text-primary transition-colors inline-flex items-center gap-1"
-          >
-            ← Back to homepage
-          </Link>
+          {/* Back to Home Link */}
+          <ScrollReveal delay={0.3}>
+            <div className="mt-6 text-center">
+              <Link
+                href="/"
+                className="text-sm text-gray-600 hover:text-primary transition-colors inline-flex items-center gap-1"
+              >
+                ← Back to homepage
+              </Link>
+            </div>
+          </ScrollReveal>
         </div>
       </div>
-    </div>
+    </PageTransition>
   )
 }
 

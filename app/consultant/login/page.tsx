@@ -11,28 +11,12 @@ const LOGIN_PAGE_ENABLED = false
 
 export default function ConsultantLoginPage() {
   const router = useRouter()
-  
-  // Redirect if login page is disabled
-  useEffect(() => {
-    if (!LOGIN_PAGE_ENABLED) {
-      router.push('/')
-    }
-  }, [router])
-  
-  // Return null while redirecting or if disabled
-  if (!LOGIN_PAGE_ENABLED) {
-    return null
-  }
   const [isRegistering, setIsRegistering] = useState(false)
-  
-  // Login form state
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  
-  // Register form state
   const [registrationCode, setRegistrationCode] = useState('')
   const [isCodeVerified, setIsCodeVerified] = useState(false)
   const [registerName, setRegisterName] = useState('')
@@ -46,6 +30,16 @@ export default function ConsultantLoginPage() {
   const [registerError, setRegisterError] = useState('')
   const [codeError, setCodeError] = useState('')
   const [isRegisterLoading, setIsRegisterLoading] = useState(false)
+
+  useEffect(() => {
+    if (!LOGIN_PAGE_ENABLED) {
+      router.push('/')
+    }
+  }, [router])
+
+  if (!LOGIN_PAGE_ENABLED) {
+    return null
+  }
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

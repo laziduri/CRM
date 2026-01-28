@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -26,8 +27,10 @@ const businessLoanSchema = z.object({
 type BusinessLoanFormData = z.infer<typeof businessLoanSchema>
 
 export default function BusinessLoanForm() {
+  const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const {
     register,
@@ -55,9 +58,14 @@ export default function BusinessLoanForm() {
       }
 
       setIsSubmitted(true)
+      setSubmitError(null)
     } catch (error) {
-      console.error('Error submitting form:', error)
-      alert('Failed to submit application. Please try again or contact us directly.')
+      const errorMessage = error instanceof Error ? error.message : 'Failed to submit application. Please try again or contact us directly.'
+      setSubmitError(errorMessage)
+      // Only log in development
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error submitting form:', error)
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -77,7 +85,7 @@ export default function BusinessLoanForm() {
             Thank you for your business loan application. Our advisor will review it and contact you within 24-48 hours.
           </p>
         </div>
-        <Button variant="primary" onClick={() => window.location.href = '/'}>
+        <Button variant="primary" onClick={() => router.push('/')}>
           Return to Home
         </Button>
       </Card>
@@ -127,11 +135,13 @@ export default function BusinessLoanForm() {
             error={errors.phone?.message}
           />
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="businessType" className="block text-sm font-medium text-gray-700 mb-2">
               Business Type
             </label>
             <select
+              id="businessType"
               {...register('businessType')}
+              aria-describedby={errors.businessType ? 'businessType-error' : undefined}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="">Select...</option>
@@ -142,18 +152,22 @@ export default function BusinessLoanForm() {
               <option value="public-limited">Public Limited Company</option>
             </select>
             {errors.businessType && (
-              <p className="mt-1 text-sm text-red-600">{errors.businessType.message}</p>
+              <p id="businessType-error" className="mt-1 text-sm text-red-600" role="alert">
+                {errors.businessType.message}
+              </p>
             )}
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="industry" className="block text-sm font-medium text-gray-700 mb-2">
               Industry
             </label>
             <select
+              id="industry"
               {...register('industry')}
+              aria-describedby={errors.industry ? 'industry-error' : undefined}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="">Select...</option>
@@ -170,7 +184,9 @@ export default function BusinessLoanForm() {
               <option value="other">Other</option>
             </select>
             {errors.industry && (
-              <p className="mt-1 text-sm text-red-600">{errors.industry.message}</p>
+              <p id="industry-error" className="mt-1 text-sm text-red-600" role="alert">
+                {errors.industry.message}
+              </p>
             )}
           </div>
           <Input
@@ -189,11 +205,13 @@ export default function BusinessLoanForm() {
             error={errors.annualRevenue?.message}
           />
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="loanPurpose" className="block text-sm font-medium text-gray-700 mb-2">
               Loan Purpose
             </label>
             <select
+              id="loanPurpose"
               {...register('loanPurpose')}
+              aria-describedby={errors.loanPurpose ? 'loanPurpose-error' : undefined}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="">Select...</option>
@@ -206,7 +224,9 @@ export default function BusinessLoanForm() {
               <option value="other">Other</option>
             </select>
             {errors.loanPurpose && (
-              <p className="mt-1 text-sm text-red-600">{errors.loanPurpose.message}</p>
+              <p id="loanPurpose-error" className="mt-1 text-sm text-red-600" role="alert">
+                {errors.loanPurpose.message}
+              </p>
             )}
           </div>
         </div>
@@ -226,6 +246,12 @@ export default function BusinessLoanForm() {
           />
         </div>
 
+        {submitError && (
+          <div className="p-4 bg-red-50 border border-red-200 rounded-lg" role="alert">
+            <p className="text-sm text-red-800">{submitError}</p>
+          </div>
+        )}
+
         <div className="pt-4">
           <Button
             type="submit"
@@ -233,6 +259,7 @@ export default function BusinessLoanForm() {
             size="lg"
             className="w-full"
             disabled={isSubmitting}
+            aria-busy={isSubmitting}
           >
             {isSubmitting ? 'Submitting...' : 'Submit Business Loan Application'}
           </Button>

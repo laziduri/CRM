@@ -3,8 +3,29 @@
 ## Current Status
 - ✅ Next.js 14 application ready to deploy
 - ✅ Git repository initialized and connected
-- ⚠️ Forms currently simulate submissions (no data storage)
+- ✅ Contact, Referral, Careers, Personal Loan, Business Loan forms send to sales@brillianceadvisory.sg via Resend (set RESEND_API_KEY and optionally SALES_EMAIL)
+- ✅ Build, lint, typecheck, and tests pass
 - ⚠️ No database configured
+
+## Deploy today (checklist)
+
+1. **From your machine**
+   - `npm run build` — must pass
+   - `git add . && git commit -m "Ready for deploy" && git push origin main` (or your branch)
+
+2. **Vercel**
+   - [vercel.com](https://vercel.com) → New Project → Import your repo → Deploy (defaults are fine).
+
+3. **After first deploy**
+   - Project → Settings → Environment Variables. Add:
+     - `RESEND_API_KEY` (from [resend.com](https://resend.com)) — required for form emails
+     - `SALES_EMAIL` (optional, default: sales@brillianceadvisory.sg)
+     - `NEXT_PUBLIC_WHATSAPP_NUMBER` (optional, e.g. 6591234567)
+   - Redeploy so the new build uses these env vars.
+
+4. **Smoke test**
+   - Open the live URL; click Home, About, Contact, Apply, one loan page, Calculator.
+   - Submit the contact form once; confirm success message and (if Resend is set) email at SALES_EMAIL.
 
 ## Quick Deploy to Vercel (Recommended - No Database Needed)
 
@@ -107,15 +128,29 @@ If you specifically need AWS:
 
 ## Current Form Status
 
-Your forms (`ContactForm.tsx`, `LoanApplicationForm.tsx`) currently:
-- ✅ Validate input correctly
-- ✅ Show success messages
-- ❌ Don't actually save data (just simulate with setTimeout)
+- **Contact** ([/contact](app/(public)/contact)) → `POST /api/submit-contact` → email to sales@
+- **Referral** ([/referral](app/(public)/referral)) → `POST /api/submit-referral` → email to sales@
+- **Careers apply** ([/careers/apply](app/(public)/careers/apply)) → `POST /api/submit-careers` → email to sales@
+- **Personal / Business loan** ([/apply](app/(public)/apply)) → `POST /api/submit-personal-loan` or `submit-business-loan` → email to sales@
 
-When you're ready to store data, we can:
-1. Create API routes (`app/api/contact/route.ts`)
-2. Connect to database
-3. Update forms to call real API endpoints
+Set `RESEND_API_KEY` (and optionally `SALES_EMAIL`, default `sales@brillianceadvisory.sg`) for emails to be sent.
+
+## Testing forms and WhatsApp
+
+1. **Email forms**  
+   With dev server running and `RESEND_API_KEY` set in `.env.local`, run:
+   ```bash
+   node scripts/test-form-submissions.mjs
+   ```
+   Then check **sales@brillianceadvisory.sg** (or your `SALES_EMAIL`) for 5 test emails (contact, referral, careers, personal loan, business loan).
+
+2. **WhatsApp**  
+   Set `NEXT_PUBLIC_WHATSAPP_NUMBER` (e.g. `6591234567`) in `.env.local` so the chatbot, referral page “Prefer WhatsApp?” link, and any WhatsApp buttons use your number. Then:
+   - Open the site, click “Chat with us”, request an appointment and submit → WhatsApp should open with your number.
+   - On [/referral](app/(public)/referral), click “Message us on WhatsApp” → same number.
+
+3. **Manual UI test**  
+   Visit each page, fill the form with real or test data, submit, and confirm you see the success screen and (if Resend is configured) receive the email.
 
 ## Questions?
 

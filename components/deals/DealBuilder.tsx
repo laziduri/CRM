@@ -32,7 +32,7 @@ export default function DealBuilder({ products, selectedProducts, onProductsChan
   }, [products, searchQuery, categoryFilter, selectedProducts])
 
   const handleAddProduct = (product: Product) => {
-    const dealProduct: Omit<DealProduct, 'totalCost' | 'totalPsgAmount' | 'totalSfecAmount' | 'totalBalanceWithSfec' | 'totalBalanceWithoutSfec' | 'totalCommissionWithSfec' | 'totalCommissionWithoutSfec'> = {
+    const dealProduct: Omit<DealProduct, 'totalCost' | 'totalPsgAmount' | 'totalSfecAmount' | 'totalBalanceWithSfec' | 'totalBalanceWithoutSfec' | 'totalCommissionWithSfec' | 'totalCommissionWithoutSfec' | 'totalTakeHomeCommissionWithSfec' | 'totalTakeHomeCommissionWithoutSfec'> = {
       productId: product.id,
       productName: product.name,
       category: product.category,
@@ -43,6 +43,7 @@ export default function DealBuilder({ products, selectedProducts, onProductsChan
       unitSfecAmount: product.sfecAmount,
       unitCommissionWithSfec: product.commissionWithSfec,
       unitCommissionWithoutSfec: product.commissionWithoutSfec,
+      costing: 0,
     }
     
     const productWithTotals = calculateDealProductTotals(dealProduct)

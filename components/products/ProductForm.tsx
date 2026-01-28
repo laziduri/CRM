@@ -19,7 +19,7 @@ export default function ProductForm({ isOpen, onClose, onSubmit, product, isAdmi
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState<CreateProductInput>({
     name: '',
-    category: 'Grants',
+    category: 'PSG Grant',
     vendor: '',
     cost: 0,
     psgAmount: 0,
@@ -55,7 +55,7 @@ export default function ProductForm({ isOpen, onClose, onSubmit, product, isAdmi
       // Reset form for new product
       setFormData({
         name: '',
-        category: 'Grants',
+        category: 'PSG Grant',
         vendor: '',
         cost: 0,
         psgAmount: 0,

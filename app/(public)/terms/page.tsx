@@ -1,46 +1,90 @@
 'use client'
 
 import Link from 'next/link'
+import NextImage from 'next/image'
 import { Card } from '@/components/ui/Card'
 import { FileText, ArrowLeft } from 'lucide-react'
+import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
+import { AmbientBackground } from '@/components/background/AmbientBackground'
+import { GlowBackground } from '@/components/background/GlowBackground'
+import { ScrollReveal } from '@/components/ui/ScrollReveal'
+import { PageTransition } from '@/components/layout/PageTransition'
+import { ParticleBackground } from '@/components/background/ParticleBackground'
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden">
-      <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-      
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <Link
-            href="/"
-            className="inline-flex items-center text-primary hover:text-primary-dark mb-6"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Home
-          </Link>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-gradient-text">
-            Terms & Conditions
-          </h1>
-          <p className="text-lg text-gray-600">
-            Last updated: {new Date().toLocaleDateString('en-SG', { year: 'numeric', month: 'long', day: 'numeric' })}
-          </p>
-        </div>
-      </section>
+    <PageTransition>
+      <div className="min-h-screen bg-white relative overflow-hidden">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
+        
+        {/* Hero Section */}
+        <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden w-full">
+          {/* Background Image Layer */}
+          <div className="absolute inset-0 z-0">
+            <NextImage
+              src="/images/sean-pollock-PhYq704ffdA-unsplash.jpg"
+              alt="Professional business"
+              fill
+              priority
+              className="object-cover object-center animate-zoom-in-slow"
+              quality={90}
+              sizes="100vw"
+            />
+          </div>
+          
+          {/* Navy Overlay for Text Readability */}
+          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/80 via-navy/65 to-navy/45" />
+          
+          {/* Particles */}
+          <ParticleBackground intensity="subtle" />
+          
+          {/* Content */}
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
+            <div className="max-w-4xl mx-auto text-center">
+              <Link
+                href="/"
+                className="inline-flex items-center text-white/90 hover:text-white mb-6 transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Home
+              </Link>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+                <AnimatedGradientText 
+                  className="text-4xl md:text-5xl lg:text-6xl"
+                  colorFrom="hsl(0, 0%, 100%)"
+                  colorTo="hsl(180, 45%, 70%)"
+                >
+                  Terms & Conditions
+                </AnimatedGradientText>
+              </h1>
+              <p className="text-lg text-white/90">
+                Last updated: {new Date().toLocaleDateString('en-SG', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </p>
+            </div>
+          </div>
+          
+          {/* Bottom gradient fade */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-[2]"></div>
+        </section>
 
       {/* Terms Content */}
       <section className="relative py-8 px-4 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-4xl mx-auto">
-          <Card className="prose prose-lg max-w-none">
-            <div className="mb-8">
-              <p className="text-gray-700 leading-relaxed">
-                These Terms and Conditions (&quot;Terms&quot;) govern your use of the services provided by Brilliance Advisory Pte. Ltd. (&quot;Brilliance Advisory&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;). By engaging our services, you (&quot;Client&quot;, &quot;you&quot;, or &quot;your&quot;) acknowledge that you have read, understood, and agree to be bound by these Terms.
-              </p>
-            </div>
+          <ScrollReveal>
+            <Card className="prose prose-lg max-w-none">
+              <ScrollReveal delay={0.1}>
+                <div className="mb-8">
+                  <p className="text-gray-700 leading-relaxed">
+                    These Terms and Conditions (&quot;Terms&quot;) govern your use of the services provided by Brilliance Advisory Pte. Ltd. (&quot;Brilliance Advisory&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;). By engaging our services, you (&quot;Client&quot;, &quot;you&quot;, or &quot;your&quot;) acknowledge that you have read, understood, and agree to be bound by these Terms.
+                  </p>
+                </div>
+              </ScrollReveal>
 
-            {/* Section 1: Definitions and Interpretation */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Definitions and Interpretation</h2>
+              {/* Section 1: Definitions and Interpretation */}
+              <ScrollReveal delay={0.2}>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Definitions and Interpretation</h2>
               <div className="space-y-3 text-gray-700 leading-relaxed">
                 <p>
                   <strong>&quot;Services&quot;</strong> means the application structuring and submission support services provided by Brilliance Advisory for personal and business funding to third-party lenders, including but not limited to guidance, consultation, and assistance with application preparation and documentation.
@@ -58,11 +102,13 @@ export default function TermsPage() {
                   In these Terms, unless the context otherwise requires, words in the singular include the plural and vice versa, and references to &quot;including&quot; are to be construed as &quot;including without limitation&quot;.
                 </p>
               </div>
-            </div>
+                </div>
+              </ScrollReveal>
 
-            {/* Section 2: Scope of Services */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Scope of Services</h2>
+              {/* Section 2: Scope of Services */}
+              <ScrollReveal delay={0.2}>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Scope of Services</h2>
               <div className="space-y-3 text-gray-700 leading-relaxed">
                 <p>
                   Brilliance Advisory provides application structuring and submission support services for personal and business funding to third-party lenders. Our services include, but are not limited to:
@@ -94,11 +140,13 @@ export default function TermsPage() {
                   You acknowledge and agree that you are solely responsible for evaluating the suitability of any funding option, understanding all terms and conditions, and making independent decisions regarding your financial affairs. You remain responsible for all decisions made and actions taken.
                 </p>
               </div>
-            </div>
+                </div>
+              </ScrollReveal>
 
-            {/* Section 4: No Guarantee of Funding Approval */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">4. No Guarantee of Funding Approval</h2>
+              {/* Section 4: No Guarantee of Funding Approval */}
+              <ScrollReveal delay={0.2}>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">4. No Guarantee of Funding Approval</h2>
               <div className="space-y-3 text-gray-700 leading-relaxed">
                 <p>
                   Brilliance Advisory does not guarantee, warrant, or promise that any Application will be approved, that any specific funding amount will be approved, or that any particular interest rate, terms, or conditions will be offered by any Third-Party Lender.
@@ -110,11 +158,13 @@ export default function TermsPage() {
                   All funding approvals, terms, rates, and conditions are subject to third-party lender assessment. We make reasonable efforts to provide accurate information and guidance based on available data and our experience, but we cannot and do not guarantee outcomes, timelines, or results. We do not guarantee any outcome, approval, rate, or timeline.
                 </p>
               </div>
-            </div>
+                </div>
+              </ScrollReveal>
 
-            {/* Section 5: Client Responsibilities */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Client Responsibilities</h2>
+              {/* Section 5: Client Responsibilities */}
+              <ScrollReveal delay={0.2}>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Client Responsibilities</h2>
               <div className="space-y-3 text-gray-700 leading-relaxed">
                 <p>You agree to:</p>
                 <ul className="list-disc pl-6 space-y-2">
@@ -127,11 +177,13 @@ export default function TermsPage() {
                   <li>Take full responsibility for all decisions made and actions taken based on information or guidance provided by Brilliance Advisory</li>
                 </ul>
               </div>
-            </div>
+                </div>
+              </ScrollReveal>
 
-            {/* Section 6: Accuracy of Information Provided by Clients */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Accuracy of Information Provided by Clients</h2>
+              {/* Section 6: Accuracy of Information Provided by Clients */}
+              <ScrollReveal delay={0.2}>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Accuracy of Information Provided by Clients</h2>
               <div className="space-y-3 text-gray-700 leading-relaxed">
                 <p>
                   You are solely responsible for ensuring the accuracy, completeness, and currency of all information provided to Brilliance Advisory and Third-Party Lenders. Inaccurate, incomplete, or misleading information may result in rejection of applications, delays, or other adverse consequences.
@@ -143,14 +195,16 @@ export default function TermsPage() {
                   Brilliance Advisory shall not be liable for any consequences arising from inaccurate, incomplete, or misleading information provided by you, including but not limited to application rejections, delays, or adverse terms offered by Third-Party Lenders.
                 </p>
               </div>
-            </div>
+                </div>
+              </ScrollReveal>
 
-            {/* Section 7: Fees and Payments */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Fees and Payments</h2>
+              {/* Section 7: Fees and Payments */}
+              <ScrollReveal delay={0.2}>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Fees and Payments</h2>
               <div className="space-y-3 text-gray-700 leading-relaxed">
                 <p>
-                  Brilliance Advisory&apos;s application support services are provided to Clients free of charge. We operate on a commission-based model where Third-Party Lenders may pay us a service fee only when you successfully secure funding through our services, subject to your explicit consent and the terms of our agreement with such lenders.
+                  Brilliance Advisory&apos;s consultation fees are assessed on a case-by-case basis, depending on the scope and complexity of work involved. All applicable fees will be clearly explained and agreed upon before any engagement of services. Additionally, we operate on a commission-based model where Third-Party Lenders may pay us a service fee when you successfully secure funding through our services, subject to your explicit consent and the terms of our agreement with such lenders.
                 </p>
                 <p>
                   You acknowledge that this commission arrangement does not influence our service recommendations, and we maintain our commitment to prioritising your best interests in our service delivery.
@@ -159,11 +213,13 @@ export default function TermsPage() {
                   You are responsible for all fees, charges, and costs payable to Third-Party Lenders in connection with any funding product, including but not limited to processing fees, administrative fees, interest, late payment fees, and early repayment fees. These fees are determined solely by Third-Party Lenders and are separate from any fees payable to Brilliance Advisory.
                 </p>
               </div>
-            </div>
+                </div>
+              </ScrollReveal>
 
-            {/* Section 8: Limitation of Liability */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Limitation of Liability</h2>
+              {/* Section 8: Limitation of Liability */}
+              <ScrollReveal delay={0.2}>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Limitation of Liability</h2>
               <div className="space-y-3 text-gray-700 leading-relaxed">
                 <p>
                   To the fullest extent permitted by law, Brilliance Advisory, its directors, officers, employees, agents, and affiliates shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages, or any loss of profits, revenue, data, or business opportunities, arising out of or in connection with:
@@ -184,11 +240,13 @@ export default function TermsPage() {
                   Nothing in these Terms shall exclude or limit our liability for death or personal injury caused by our negligence, fraud, or any other liability that cannot be excluded or limited under applicable law.
                 </p>
               </div>
-            </div>
+                </div>
+              </ScrollReveal>
 
-            {/* Section 9: Third-Party Lenders and External Websites */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">9. Third-Party Lenders and External Websites</h2>
+              {/* Section 9: Third-Party Lenders and External Websites */}
+              <ScrollReveal delay={0.2}>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">9. Third-Party Lenders and External Websites</h2>
               <div className="space-y-3 text-gray-700 leading-relaxed">
                 <p>
                   Our Services may involve interaction with Third-Party Lenders, and we may provide links or references to third-party websites or resources. Brilliance Advisory does not endorse, control, or assume responsibility for the content, products, services, policies, or practices of any Third-Party Lender or website.
@@ -203,11 +261,13 @@ export default function TermsPage() {
                   All funding approvals, terms, rates, and conditions are subject to third-party lender assessment. Brilliance Advisory has no control over or responsibility for the decisions, actions, or policies of Third-Party Lenders.
                 </p>
               </div>
-            </div>
+                </div>
+              </ScrollReveal>
 
-            {/* Section 10: Confidentiality */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">10. Confidentiality</h2>
+              {/* Section 10: Confidentiality */}
+              <ScrollReveal delay={0.2}>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">10. Confidentiality</h2>
               <div className="space-y-3 text-gray-700 leading-relaxed">
                 <p>
                   Brilliance Advisory maintains strict confidentiality standards regarding Client information. We will not disclose your personal or financial information to third parties except:
@@ -225,11 +285,13 @@ export default function TermsPage() {
                   You agree that Brilliance Advisory may use anonymised, aggregated data for analytical, statistical, or business improvement purposes, provided that such data cannot be used to identify you individually.
                 </p>
               </div>
-            </div>
+                </div>
+              </ScrollReveal>
 
-            {/* Section 11: Intellectual Property */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">11. Intellectual Property</h2>
+              {/* Section 11: Intellectual Property */}
+              <ScrollReveal delay={0.2}>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">11. Intellectual Property</h2>
               <div className="space-y-3 text-gray-700 leading-relaxed">
                 <p>
                   All content, materials, information, designs, logos, trademarks, and intellectual property displayed on our website or provided through our Services are the property of Brilliance Advisory or our licensors and are protected by copyright, trademark, and other intellectual property laws.
@@ -241,11 +303,13 @@ export default function TermsPage() {
                   You retain ownership of all information and materials you provide to us. By providing such information and materials, you grant us a non-exclusive, royalty-free license to use, reproduce, and disclose such information and materials for the purpose of providing our Services.
                 </p>
               </div>
-            </div>
+                </div>
+              </ScrollReveal>
 
-            {/* Section 12: Termination of Services */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">12. Termination of Services</h2>
+              {/* Section 12: Termination of Services */}
+              <ScrollReveal delay={0.2}>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">12. Termination of Services</h2>
               <div className="space-y-3 text-gray-700 leading-relaxed">
                 <p>
                   Either party may terminate the service relationship at any time, with or without cause, by providing written notice to the other party.
@@ -262,11 +326,13 @@ export default function TermsPage() {
                   Brilliance Advisory reserves the right to suspend or terminate services immediately if you breach these Terms, provide false or misleading information, or engage in any fraudulent or illegal activity.
                 </p>
               </div>
-            </div>
+                </div>
+              </ScrollReveal>
 
-            {/* Section 13: Amendments to Terms */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">13. Amendments to Terms</h2>
+              {/* Section 13: Amendments to Terms */}
+              <ScrollReveal delay={0.2}>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">13. Amendments to Terms</h2>
               <div className="space-y-3 text-gray-700 leading-relaxed">
                 <p>
                   Brilliance Advisory reserves the right to modify, amend, or update these Terms at any time. Material changes will be notified to Clients through reasonable means, which may include email notification or posting on our website.
@@ -278,11 +344,13 @@ export default function TermsPage() {
                   It is your responsibility to review these Terms periodically to stay informed of any changes.
                 </p>
               </div>
-            </div>
+                </div>
+              </ScrollReveal>
 
-            {/* Section 14: Governing Law and Jurisdiction */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">14. Governing Law and Jurisdiction</h2>
+              {/* Section 14: Governing Law and Jurisdiction */}
+              <ScrollReveal delay={0.2}>
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4">14. Governing Law and Jurisdiction</h2>
               <div className="space-y-3 text-gray-700 leading-relaxed">
                 <p>
                   These Terms shall be governed by and construed in accordance with the laws of the Republic of Singapore, without regard to its conflict of law principles.
@@ -294,11 +362,13 @@ export default function TermsPage() {
                   You agree to submit to the jurisdiction of the Singapore courts and waive any objection to the venue of any proceedings in such courts.
                 </p>
               </div>
-            </div>
+                </div>
+              </ScrollReveal>
 
-            {/* Contact Information */}
-            <div className="mt-12 p-6 bg-gray-50 rounded-lg border border-gray-200">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Contact Information</h3>
+              {/* Contact Information */}
+              <ScrollReveal delay={0.2}>
+                <div className="mt-12 p-6 bg-gray-50 rounded-lg border border-gray-200">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">Contact Information</h3>
               <p className="text-gray-700 leading-relaxed mb-2">
                 If you have any questions about these Terms & Conditions, please contact us:
               </p>
@@ -307,17 +377,22 @@ export default function TermsPage() {
                 Email: <a href="mailto:info@brillianceadvisory.sg" className="text-primary hover:underline">info@brillianceadvisory.sg</a><br />
                 Website: <a href="/contact" className="text-primary hover:underline">Contact Us</a>
               </p>
-            </div>
+                </div>
+              </ScrollReveal>
 
-            {/* Acknowledgment */}
-            <div className="mt-8 p-6 bg-primary/5 rounded-lg border border-primary/20">
-              <p className="text-gray-700 leading-relaxed font-medium">
-                By using our Services, you acknowledge that you have read, understood, and agree to be bound by these Terms & Conditions. You acknowledge that Brilliance Advisory is not a bank, licensed financial advisory institution, or lender; does not provide regulated financial advice; and does not guarantee any outcome, approval, rate, or timeline. All funding approvals, terms, rates, and conditions are subject to third-party lender assessment. If you do not agree to these Terms, you must not use our services.
-              </p>
-            </div>
-          </Card>
+              {/* Acknowledgment */}
+              <ScrollReveal delay={0.2}>
+                <div className="mt-8 p-6 bg-primary/5 rounded-lg border border-primary/20">
+                  <p className="text-gray-700 leading-relaxed font-medium">
+                    By using our Services, you acknowledge that you have read, understood, and agree to be bound by these Terms & Conditions. You acknowledge that Brilliance Advisory is not a bank, licensed financial advisory institution, or lender; does not provide regulated financial advice; and does not guarantee any outcome, approval, rate, or timeline. All funding approvals, terms, rates, and conditions are subject to third-party lender assessment. If you do not agree to these Terms, you must not use our services.
+                  </p>
+                </div>
+              </ScrollReveal>
+            </Card>
+          </ScrollReveal>
         </div>
       </section>
     </div>
+    </PageTransition>
   )
 }

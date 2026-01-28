@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { SALES_EMAIL } from '@/lib/email'
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
@@ -51,7 +52,7 @@ This email was sent from the Brilliance Advisory loan application form.
     
     const emailResult = await resend.emails.send({
       from: 'Brilliance Advisory <noreply@brillianceadvisory.sg>',
-      to: ['admin@brillianceadvisory.sg'],
+      to: [SALES_EMAIL],
       subject: `New Business Loan Application - ${data.businessName}`,
       text: emailContent,
       replyTo: data.email,

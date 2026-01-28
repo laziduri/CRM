@@ -2,13 +2,19 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
+import NextImage from 'next/image'
 import { BookOpen, FileText, ArrowRight, Calendar, Search, ChevronDown } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { resourcesArticles } from '@/lib/resources'
 import { educationArticles } from '@/lib/education'
 import { format } from 'date-fns'
+import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
+import { AmbientBackground } from '@/components/background/AmbientBackground'
+import { GlowBackground } from '@/components/background/GlowBackground'
+import { ScrollReveal } from '@/components/ui/ScrollReveal'
+import { PageTransition } from '@/components/layout/PageTransition'
+import { ParticleBackground } from '@/components/background/ParticleBackground'
 
 type TabType = 'all' | 'blog' | 'education'
 type SortType = 'newest' | 'oldest' | 'title-asc' | 'title-desc' | 'category'
@@ -86,49 +92,69 @@ export default function ResourcesPage() {
   const currentSortLabel = sortOptions.find(opt => opt.value === sortBy)?.label || 'Sort by'
 
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden">
-      <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-      
-      {/* Hero Section with Background Image - Full Width */}
-      <section className="relative w-full overflow-hidden">
-        {/* Background Image Layer */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/images/39566485-6e5f-4a44-8980-e66a945364ee.png"
-            alt="Resources header"
-            fill
-            priority
-            className="object-cover object-center"
-            quality={90}
-            sizes="100vw"
-          />
-        </div>
+    <PageTransition>
+      <div className="min-h-screen bg-white relative overflow-hidden">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         
-        {/* Overlay for Text Readability - Blue fade, white only at very bottom */}
-        <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/80 via-navy/70 via-navy/60 to-transparent"></div>
-        
-        {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-12 md:py-16">
-          <div className="text-center w-full">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary to-teal rounded-2xl mb-4">
-              <BookOpen className="w-6 h-6 text-white" />
-            </div>
-            <h1 className="text-4xl font-bold mb-3 text-white">Resources</h1>
-            <p className="text-lg text-white/90 max-w-3xl mx-auto">
-              Expert knowledge library covering personal loans, business financing, credit management, and SME growth strategies
-            </p>
+        {/* Hero Section with Background Image - Full Width */}
+        <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden w-full">
+          {/* Background Image Layer */}
+          <div className="absolute inset-0 z-0">
+            <NextImage
+              src="/images/39566485-6e5f-4a44-8980-e66a945364ee.png"
+              alt="Resources header"
+              fill
+              priority
+              className="object-cover object-center animate-zoom-in-slow"
+              quality={90}
+              sizes="100vw"
+            />
           </div>
-        </div>
-        
-        {/* Bottom fade to white - only slightly above buttons */}
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-[2]"></div>
-      </section>
+          
+          {/* Overlay for Text Readability */}
+          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/80 via-navy/65 to-navy/45"></div>
+          
+          {/* Particles */}
+          <ParticleBackground intensity="subtle" />
+          
+          {/* Content */}
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-12 md:py-16">
+            <div className="text-center w-full">
+              <ScrollReveal>
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary to-teal rounded-2xl mb-4">
+                  <BookOpen className="w-6 h-6 text-white" />
+                </div>
+              </ScrollReveal>
+              <ScrollReveal delay={0.1}>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-3">
+                  <AnimatedGradientText 
+                    className="text-4xl md:text-5xl lg:text-6xl"
+                    colorFrom="hsl(0, 0%, 100%)"
+                    colorTo="hsl(180, 45%, 70%)"
+                  >
+                    Resources
+                  </AnimatedGradientText>
+                </h1>
+              </ScrollReveal>
+              <ScrollReveal delay={0.2}>
+                <p className="text-lg text-white/90 max-w-3xl mx-auto">
+                  Expert knowledge library covering personal loans, business financing, credit management, and SME growth strategies
+                </p>
+              </ScrollReveal>
+            </div>
+          </div>
+          
+          {/* Bottom fade to white */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-[2]"></div>
+        </section>
 
       {/* Rest of Content */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Tabs */}
-        <div className="flex flex-wrap gap-4 mb-12 justify-center border-b border-gray-200 pb-4 pt-4">
+        <ScrollReveal>
+          <div className="flex flex-wrap gap-4 mb-12 justify-center border-b border-gray-200 pb-4 pt-4">
           <button
             onClick={() => setActiveTab('all')}
             className={`px-6 py-3 rounded-lg font-medium transition-all ${
@@ -161,10 +187,12 @@ export default function ResourcesPage() {
             <BookOpen className="w-4 h-4" />
             Education Hub ({educationPosts.length})
           </button>
-        </div>
+          </div>
+        </ScrollReveal>
 
         {/* Search and Sort Section */}
-        <div className="mb-8">
+        <ScrollReveal delay={0.1}>
+          <div className="mb-8">
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
             {/* Sort Dropdown */}
             <div className="relative">
@@ -238,10 +266,12 @@ export default function ResourcesPage() {
               Found {displayedPosts.length} result{displayedPosts.length !== 1 ? 's' : ''} for &quot;{searchQuery}&quot;
             </div>
           )}
-        </div>
+          </div>
+        </ScrollReveal>
 
         {/* Quick Links */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        <ScrollReveal delay={0.2}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           <Link href="/blog">
             <Card className="h-full hover:shadow-xl transition-shadow cursor-pointer border-2 border-primary/20">
               <div className="p-8">
@@ -281,14 +311,16 @@ export default function ResourcesPage() {
               </div>
             </Card>
           </Link>
-        </div>
+          </div>
+        </ScrollReveal>
 
         {/* Articles Grid */}
         {displayedPosts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <ScrollReveal delay={0.3}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {displayedPosts.map((post) => {
               const href = post.type === 'blog' ? `/blog/${post.slug}` : `/resources/education/${post.slug}`
-              const date = post.date || (post as any).publishDate || ''
+              const date = post.date || (post as { publishDate?: string }).publishDate || ''
               
               return (
                 <Link key={post.slug} href={href}>
@@ -317,14 +349,18 @@ export default function ResourcesPage() {
                 </Link>
               )
             })}
-          </div>
+            </div>
+          </ScrollReveal>
         ) : (
-          <Card className="text-center py-12">
-            <p className="text-gray-600">No articles found in this category.</p>
-          </Card>
+          <ScrollReveal>
+            <Card className="text-center py-12">
+              <p className="text-gray-600">No articles found in this category.</p>
+            </Card>
+          </ScrollReveal>
         )}
 
       </div>
     </div>
+    </PageTransition>
   )
 }

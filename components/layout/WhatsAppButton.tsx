@@ -12,8 +12,7 @@ export default function WhatsAppButton() {
   }, [])
 
   // Replace with your WhatsApp number (format: country code + number without + or spaces)
-  // Example: 6591234567 for Singapore (+65 9123 4567)
-  const whatsappNumber = '6591234567' // Update this with your actual WhatsApp number
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '6591234567'
   const message = 'Hello! I would like to learn more about your loan services.'
   
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`

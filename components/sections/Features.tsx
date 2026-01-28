@@ -61,7 +61,7 @@ export default function Features() {
           {features.map((feature, index) => {
             const Icon = feature.icon
             if (!Icon) {
-              console.warn(`Icon missing for feature at index ${index}`)
+              // Icon missing - skip rendering this feature
               return null
             }
             // Determine rotation and horizontal offset based on card position

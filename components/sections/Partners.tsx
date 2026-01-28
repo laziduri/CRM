@@ -1,5 +1,6 @@
 'use client'
 
+import NextImage from 'next/image'
 import { mockPartners } from '@/lib/data'
 import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
 
@@ -58,24 +59,26 @@ export default function Partners() {
           <div className="relative overflow-hidden z-20">
             <div className="flex items-center gap-8 md:gap-12 lg:gap-16 animate-scroll-logos-ltr">
               {duplicatedPartnersLTR.map((partner, index) => (
-                <div
-                  key={`ltr-${partner.id}-${index}`}
-                  className="flex items-center justify-center h-16 md:h-20 lg:h-24 flex-shrink-0 px-4 relative z-20"
-                >
-                  <img
-                    src={partner.logo}
-                    alt={partner.name}
-                    className="max-h-full max-w-full object-contain brightness-0 invert"
-                    style={{ 
-                      imageRendering: 'auto',
-                      filter: 'none',
-                      opacity: 1,
-                      zIndex: 20
-                    }}
-                    draggable="false"
-                    loading="lazy"
-                  />
-                </div>
+                      <div
+                        key={`ltr-${partner.id}-${index}`}
+                        className="flex items-center justify-center h-16 md:h-20 lg:h-24 flex-shrink-0 px-4 relative z-20"
+                      >
+                        <NextImage
+                          src={partner.logo}
+                          alt={`${partner.name} logo`}
+                          width={180}
+                          height={100}
+                          className="max-h-full max-w-full object-contain brightness-0 invert"
+                          style={{ 
+                            imageRendering: 'auto',
+                            filter: 'none',
+                            opacity: 1,
+                            zIndex: 20
+                          }}
+                          draggable="false"
+                          loading="lazy"
+                        />
+                      </div>
               ))}
             </div>
           </div>
@@ -84,24 +87,26 @@ export default function Partners() {
           <div className="relative overflow-hidden z-20">
             <div className="flex items-center gap-8 md:gap-12 lg:gap-16 animate-scroll-logos-rtl">
               {duplicatedPartnersRTL.map((partner, index) => (
-                <div
-                  key={`rtl-${partner.id}-${index}`}
-                  className="flex items-center justify-center h-16 md:h-20 lg:h-24 flex-shrink-0 px-4 relative z-20"
-                >
-                  <img
-                    src={partner.logo}
-                    alt={partner.name}
-                    className="max-h-full max-w-full object-contain brightness-0 invert"
-                    style={{ 
-                      imageRendering: 'auto',
-                      filter: 'none',
-                      opacity: 1,
-                      zIndex: 20
-                    }}
-                    draggable="false"
-                    loading="lazy"
-                  />
-                </div>
+                      <div
+                        key={`rtl-${partner.id}-${index}`}
+                        className="flex items-center justify-center h-16 md:h-20 lg:h-24 flex-shrink-0 px-4 relative z-20"
+                      >
+                        <NextImage
+                          src={partner.logo}
+                          alt={`${partner.name} logo`}
+                          width={180}
+                          height={100}
+                          className="max-h-full max-w-full object-contain brightness-0 invert"
+                          style={{ 
+                            imageRendering: 'auto',
+                            filter: 'none',
+                            opacity: 1,
+                            zIndex: 20
+                          }}
+                          draggable="false"
+                          loading="lazy"
+                        />
+                      </div>
               ))}
             </div>
           </div>

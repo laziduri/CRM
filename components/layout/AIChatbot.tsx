@@ -1035,7 +1035,7 @@ export default function AIChatbot() {
   const openWhatsApp = (message?: string) => {
     const defaultMsg = message || 'Hello! I\'d like to learn more about your loan services.'
     // WhatsApp number should match the one in your API route
-    const whatsappNumber = '6591234567' // Update this or get from API
+    const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '6591234567'
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(defaultMsg)}`
     window.open(whatsappUrl, '_blank')
   }

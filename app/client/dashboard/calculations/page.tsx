@@ -75,7 +75,10 @@ export default function SavedCalculationsPage() {
       ]
       setCalculations(mockCalculations)
     } catch (error) {
-      console.error('Error fetching calculations:', error)
+      // Error is logged but not exposed to user for security
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error fetching calculations:', error)
+      }
     } finally {
       setIsLoading(false)
     }

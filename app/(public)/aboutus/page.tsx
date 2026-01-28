@@ -2,12 +2,16 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
+import NextImage from 'next/image'
 import { motion, AnimatePresence } from 'motion/react'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
 import { AmbientBackground } from '@/components/background/AmbientBackground'
+import { GlowBackground } from '@/components/background/GlowBackground'
+import { ScrollReveal } from '@/components/ui/ScrollReveal'
+import { PageTransition } from '@/components/layout/PageTransition'
+import { ParticleBackground } from '@/components/background/ParticleBackground'
 import { mockPartners } from '@/lib/data'
 import { 
   CheckCircle2, 
@@ -304,55 +308,57 @@ function ValuesAccordion() {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden">
-      {/* Hero Section - Background Image with Fade to Blue */}
-      <section className="relative pt-32 pb-40 md:pb-48 lg:pb-56 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        {/* Background Image Layer */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/images/aboutusheader.png"
-            alt="Professional business meeting"
-            fill
-            priority
-            className="object-cover object-center"
-            quality={90}
-            sizes="100vw"
-          />
-        </div>
-        
-        {/* Light overlay for Text Readability - very transparent */}
-        <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/20 via-navy/10 to-transparent" />
-        
-        <div className="relative z-10 max-w-5xl mx-auto text-center">
-          {/* Main Heading */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-8">
-            <AnimatedGradientText 
-              className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
-              colorFrom="hsl(0, 0%, 100%)"
-              colorTo="hsl(180, 45%, 70%)"
-            >
-              Who We Are
-            </AnimatedGradientText>
-          </h1>
+    <PageTransition>
+      <div className="min-h-screen bg-white relative overflow-hidden">
+        {/* Hero Section - Background Image with Fade to Blue */}
+        <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden w-full">
+          {/* Background Image Layer */}
+          <div className="absolute inset-0 z-0">
+            <NextImage
+              src="/images/aboutusheader.png"
+              alt="Professional business meeting"
+              fill
+              priority
+              className="object-cover object-center animate-zoom-in-slow"
+              quality={90}
+              sizes="100vw"
+            />
+          </div>
           
-          {/* Description */}
-          <p className="text-lg md:text-xl lg:text-2xl text-white mb-10 max-w-3xl mx-auto leading-relaxed drop-shadow-lg">
-            A team of experienced consultants dedicated to helping individuals and businesses navigate Singapore&apos;s lending landscape with clarity and confidence.
-          </p>
-        </div>
+          {/* Overlay for Text Readability - navy only in bottom 1/4 */}
+          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/25 via-navy/35 via-[75%] to-primary" />
+          
+          {/* Particles */}
+          <ParticleBackground intensity="subtle" />
+          
+          <div className="relative z-10 max-w-5xl mx-auto text-center">
+            {/* Main Heading */}
+            <ScrollReveal>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-8">
+                <AnimatedGradientText 
+                  className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
+                  colorFrom="hsl(0, 0%, 100%)"
+                  colorTo="hsl(180, 45%, 70%)"
+                >
+                  Who We Are
+                </AnimatedGradientText>
+              </h1>
+            </ScrollReveal>
+            
+            {/* Description */}
+            <ScrollReveal delay={0.1}>
+              <p className="text-lg md:text-xl lg:text-2xl text-white mb-10 max-w-3xl mx-auto leading-relaxed drop-shadow-lg">
+                A team of experienced consultants dedicated to helping individuals and businesses navigate Singapore&apos;s lending landscape with clarity and confidence.
+              </p>
+            </ScrollReveal>
+          </div>
 
-        {/* Gradient fade from top down - transitions from image to blue */}
-        <div 
-          className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none z-[2]"
-          style={{
-            background: 'linear-gradient(to bottom, transparent 0%, transparent 30%, hsla(220, 50%, 25%, 0.3) 50%, hsla(220, 50%, 25%, 0.6) 70%, hsla(220, 50%, 25%, 0.85) 85%, hsl(220, 50%, 25%) 100%)'
-          }}
-        ></div>
-      </section>
+          {/* Bottom gradient fade to navy */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-primary via-primary/80 to-transparent pointer-events-none z-[2]" />
+        </section>
 
       {/* Unified Vision, Mission, Purpose & Values Section - Interactive Tabs */}
       <section className="relative py-24 md:py-32 px-4 sm:px-6 lg:px-8 bg-primary">
-        
         <div className="relative z-10 max-w-7xl mx-auto">
           {/* Section Header - FinPath Style */}
           <div className="text-center mb-16">
@@ -381,11 +387,13 @@ export default function AboutPage() {
 
       {/* Why Brilliance Advisory Section - ItGet Style Numbered List */}
       <section className="relative py-24 md:py-32 px-4 sm:px-6 lg:px-8 bg-white">
-        <AmbientBackground intensity="subtle" />
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         
         <div className="relative z-10 max-w-7xl mx-auto">
           {/* Section Header - Animated Grid Style */}
-          <div className="text-center mb-12">
+          <ScrollReveal>
+            <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
               <AnimatedGradientText className="text-4xl md:text-5xl lg:text-6xl">
                 Why Brilliance Advisory?
@@ -394,17 +402,13 @@ export default function AboutPage() {
             <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
               We don&apos;t just recommend all banks and apply to every loan. We do proper assessments, provide real advice, and create strategic plans tailored to your unique situation.
             </p>
-          </div>
+            </div>
+          </ScrollReveal>
 
           {/* Numbered List - ItGet Style */}
           <div className="space-y-0">
             {/* Item 01 */}
-            <motion.div
-              initial={{ opacity: 0, x: -100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            >
+            <ScrollReveal delay={0.1}>
               <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-start py-8 md:py-10">
                 {/* Large Number */}
                 <div className="col-span-1 md:col-span-2">
@@ -424,15 +428,10 @@ export default function AboutPage() {
                 </div>
               </div>
               <div className="border-t border-gray-200"></div>
-            </motion.div>
+            </ScrollReveal>
 
             {/* Item 02 */}
-            <motion.div
-              initial={{ opacity: 0, x: -100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            >
+            <ScrollReveal delay={0.2}>
               <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-start py-8 md:py-10">
                 {/* Large Number */}
                 <div className="col-span-1 md:col-span-2">
@@ -452,15 +451,10 @@ export default function AboutPage() {
                 </div>
               </div>
               <div className="border-t border-gray-200"></div>
-            </motion.div>
+            </ScrollReveal>
 
             {/* Item 03 */}
-            <motion.div
-              initial={{ opacity: 0, x: -100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-150px" }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            >
+            <ScrollReveal delay={0.3}>
               <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-start py-8 md:py-10">
                 {/* Large Number */}
                 <div className="col-span-1 md:col-span-2">
@@ -480,15 +474,10 @@ export default function AboutPage() {
                 </div>
               </div>
               <div className="border-t border-gray-200"></div>
-            </motion.div>
+            </ScrollReveal>
 
             {/* Item 04 */}
-            <motion.div
-              initial={{ opacity: 0, x: -100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-200px" }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            >
+            <ScrollReveal delay={0.4}>
               <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-start py-8 md:py-10">
                 {/* Large Number */}
                 <div className="col-span-1 md:col-span-2">
@@ -507,17 +496,19 @@ export default function AboutPage() {
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
 
       {/* Why Human Touch - Comparison Chart Section */}
       <section className="relative py-24 md:py-32 px-4 sm:px-6 lg:px-8 bg-white">
-        <AmbientBackground intensity="subtle" />
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         
         <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="text-center mb-20">
+          <ScrollReveal>
+            <div className="text-center mb-20">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8">
               <AnimatedGradientText className="text-3xl md:text-4xl lg:text-5xl">
                 Why the Human Touch Matters
@@ -526,9 +517,10 @@ export default function AboutPage() {
             <p className="text-xl md:text-2xl text-gray-700 max-w-4xl mx-auto leading-relaxed">
               See the difference between automated online applications and human-led advisory services.
             </p>
-          </div>
-
-          <Card className="overflow-hidden shadow-2xl">
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={0.1}>
+            <Card className="overflow-hidden shadow-2xl">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -582,13 +574,15 @@ export default function AboutPage() {
                 </tbody>
               </table>
             </div>
-          </Card>
-
+            </Card>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* Partners Section */}
       <section className="relative py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-white via-gray-50 to-white relative overflow-hidden">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         {/* Star-themed background */}
         <div className="absolute inset-0 bg-dots-pattern-white opacity-25 z-0"></div>
         
@@ -704,5 +698,6 @@ export default function AboutPage() {
       </section>
 
     </div>
+    </PageTransition>
   )
 }

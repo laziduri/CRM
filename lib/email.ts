@@ -2,6 +2,9 @@ import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY || 're_demo_key')
 
+/** Recipient for contact, referral, careers and loan form submissions. Override with SALES_EMAIL env. */
+export const SALES_EMAIL = process.env.SALES_EMAIL || 'sales@brillianceadvisory.sg'
+
 interface EmailVerificationParams {
   email: string
   name: string

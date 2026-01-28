@@ -1,113 +1,141 @@
+'use client'
+
 import Link from 'next/link'
-import Image from 'next/image'
+import NextImage from 'next/image'
 import ContactForm from '@/components/forms/ContactForm'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { CalmBackground } from '@/components/background/CalmBackground'
+import { AmbientBackground } from '@/components/background/AmbientBackground'
+import { GlowBackground } from '@/components/background/GlowBackground'
 import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
+import { ScrollReveal } from '@/components/ui/ScrollReveal'
+import { PageTransition } from '@/components/layout/PageTransition'
+import { ParticleBackground } from '@/components/background/ParticleBackground'
 import { Mail, Phone, MapPin, Clock, ArrowRight, Users, TrendingUp, Zap, UserCheck } from 'lucide-react'
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden">
-      {/* Hero Section with Background Image */}
-      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden w-full">
-        {/* Background Image Layer */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/images/contactpagehader.png"
-            alt="Contact us - Professional consultation"
-            fill
-            priority
-            className="object-cover object-center"
-            quality={90}
-            sizes="100vw"
-          />
-        </div>
-        
-        {/* Overlay for Text Readability */}
-        <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/75 via-navy/60 to-navy/45" />
-        
-        {/* Hero Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-            <AnimatedGradientText 
-              className="text-4xl md:text-5xl lg:text-6xl"
-              colorFrom="hsl(0, 0%, 100%)"
-              colorTo="hsl(180, 45%, 70%)"
-            >
-              Get in Touch
-            </AnimatedGradientText>
-          </h1>
-          <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto">
-            Have a question? We&apos;re here to help. Get in touch with our team or visit our office.
-          </p>
-        </div>
-      </section>
+    <PageTransition>
+      <div className="min-h-screen bg-white relative overflow-hidden">
+        <main id="main-content">
+        {/* Hero Section with Background Image */}
+        <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden w-full">
+          {/* Background Image Layer */}
+          <div className="absolute inset-0 z-0">
+            <NextImage
+              src="/images/contactpagehader.png"
+              alt="Contact us - Professional consultation"
+              fill
+              priority
+              className="object-cover object-center animate-zoom-in-slow"
+              quality={90}
+              sizes="100vw"
+            />
+          </div>
+          
+          {/* Overlay for Text Readability */}
+          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/80 via-navy/65 to-navy/45" />
+          
+          {/* Particles */}
+          <ParticleBackground intensity="subtle" />
+          
+          {/* Hero Content */}
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
+            <ScrollReveal>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+                <AnimatedGradientText 
+                  className="text-4xl md:text-5xl lg:text-6xl"
+                  colorFrom="hsl(0, 0%, 100%)"
+                  colorTo="hsl(180, 45%, 70%)"
+                >
+                  Get in Touch
+                </AnimatedGradientText>
+              </h1>
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto">
+                Have a question? We&apos;re here to help. Get in touch with our team or visit our office.
+              </p>
+            </ScrollReveal>
+          </div>
+          
+          {/* Bottom gradient fade */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-[2]"></div>
+        </section>
 
-      <div className="relative bg-white py-12">
-        <CalmBackground />
+        <div className="relative bg-white py-12">
+          <AmbientBackground intensity="moderate" />
+          <GlowBackground intensity="subtle" />
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Contact Information & Map */}
           <div className="space-y-8 mb-12">
             {/* Contact Information Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card hover className="p-6">
-                <div className="flex items-start">
-                  <div className="bg-gradient-to-br from-navy to-teal p-3 rounded-full mr-4 flex-shrink-0">
-                    <Mail className="w-6 h-6 text-white" />
+              <ScrollReveal delay={0.1}>
+                <Card hover className="p-6">
+                  <div className="flex items-start">
+                    <div className="bg-gradient-to-br from-navy to-teal p-3 rounded-full mr-4 flex-shrink-0">
+                      <Mail className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-navy mb-2">Email Us</h3>
+                      <p className="text-gray-700 mb-2">admin@brillianceadvisory.sg</p>
+                      <p className="text-sm text-gray-600">We&apos;ll respond within 24 hours</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-navy mb-2">Email Us</h3>
-                    <p className="text-gray-700 mb-2">admin@brillianceadvisory.sg</p>
-                    <p className="text-sm text-gray-600">We&apos;ll respond within 24 hours</p>
-                  </div>
-                </div>
-              </Card>
+                </Card>
+              </ScrollReveal>
 
-              <Card hover className="p-6">
-                <div className="flex items-start">
-                  <div className="bg-gradient-to-br from-navy to-teal p-3 rounded-full mr-4 flex-shrink-0">
-                    <Phone className="w-6 h-6 text-white" />
+              <ScrollReveal delay={0.15}>
+                <Card hover className="p-6">
+                  <div className="flex items-start">
+                    <div className="bg-gradient-to-br from-navy to-teal p-3 rounded-full mr-4 flex-shrink-0">
+                      <Phone className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-navy mb-2">Call Us</h3>
+                      <p className="text-gray-700 mb-2">+6580385584</p>
+                      <p className="text-sm text-gray-600">Mon - Fri, 9:00 AM - 6:00 PM</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-navy mb-2">Call Us</h3>
-                    <p className="text-gray-700 mb-2">+6580385584</p>
-                    <p className="text-sm text-gray-600">Mon - Fri, 9:00 AM - 6:00 PM</p>
-                  </div>
-                </div>
-              </Card>
+                </Card>
+              </ScrollReveal>
 
-              <Card hover className="p-6">
-                <div className="flex items-start">
-                  <div className="bg-gradient-to-br from-navy to-teal p-3 rounded-full mr-4 flex-shrink-0">
-                    <MapPin className="w-6 h-6 text-white" />
+              <ScrollReveal delay={0.2}>
+                <Card hover className="p-6">
+                  <div className="flex items-start">
+                    <div className="bg-gradient-to-br from-navy to-teal p-3 rounded-full mr-4 flex-shrink-0">
+                      <MapPin className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-navy mb-2">Visit Us</h3>
+                      <p className="text-gray-700 mb-2">400 Orchard Rd, Singapore 238875</p>
+                      <p className="text-sm text-gray-600">By appointment only</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-navy mb-2">Visit Us</h3>
-                    <p className="text-gray-700 mb-2">400 Orchard Rd, Singapore 238875</p>
-                    <p className="text-sm text-gray-600">By appointment only</p>
-                  </div>
-                </div>
-              </Card>
+                </Card>
+              </ScrollReveal>
 
-              <Card hover className="p-6">
-                <div className="flex items-start">
-                  <div className="bg-gradient-to-br from-navy to-teal p-3 rounded-full mr-4 flex-shrink-0">
-                    <Clock className="w-6 h-6 text-white" />
+              <ScrollReveal delay={0.25}>
+                <Card hover className="p-6">
+                  <div className="flex items-start">
+                    <div className="bg-gradient-to-br from-navy to-teal p-3 rounded-full mr-4 flex-shrink-0">
+                      <Clock className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-navy mb-2">Business Hours</h3>
+                      <p className="text-gray-700 mb-2">Monday - Friday: 9:00 AM - 6:00 PM</p>
+                      <p className="text-gray-700">Saturday - Sunday: Closed</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-navy mb-2">Business Hours</h3>
-                    <p className="text-gray-700 mb-2">Monday - Friday: 9:00 AM - 6:00 PM</p>
-                    <p className="text-gray-700">Saturday - Sunday: Closed</p>
-                  </div>
-                </div>
-              </Card>
+                </Card>
+              </ScrollReveal>
             </div>
 
             {/* Map */}
-            <Card className="p-0 overflow-hidden shadow-lg border-gray-200">
+            <ScrollReveal delay={0.3}>
+              <Card className="p-0 overflow-hidden shadow-lg border-gray-200">
               <div className="w-full h-[400px] relative bg-gray-100 rounded-t-xl overflow-hidden">
                 <iframe
                   src="https://maps.google.com/maps?q=400+Orchard+Rd,+Singapore+238875&t=&z=15&ie=UTF8&iwloc=&output=embed"
@@ -133,17 +161,22 @@ export default function ContactPage() {
                   View on Google Maps →
                 </a>
               </div>
-            </Card>
+              </Card>
+            </ScrollReveal>
           </div>
         </div>
       </div>
 
       {/* Contact Form - Full Width Section */}
-      <section className="w-full bg-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div id="contact-form">
-            <ContactForm />
-          </div>
+      <section className="relative w-full bg-white py-12">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal>
+            <div id="contact-form">
+              <ContactForm />
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -151,7 +184,7 @@ export default function ContactPage() {
       <section className="relative mt-20 mb-0 overflow-hidden bg-gradient-to-br from-primary/5 via-white to-teal/5 min-h-[600px]">
           {/* Background Image Layer - Only render if image exists */}
           <div className="absolute inset-0 z-0">
-            <Image
+            <NextImage
               src="/images/business-handshake-close-up.jpg"
               alt="Business handshake partnership"
               fill
@@ -233,6 +266,8 @@ export default function ContactPage() {
             </div>
           </div>
         </section>
+      </main>
     </div>
+    </PageTransition>
   )
 }

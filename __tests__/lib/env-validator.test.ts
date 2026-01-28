@@ -86,15 +86,11 @@ describe('env-validator', () => {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-key'
       process.env.JWT_SECRET = 'test-secret'
       process.env.JWT_REFRESH_SECRET = 'test-refresh-secret'
-      // Set NODE_ENV for this test
-      Object.defineProperty(process.env, 'NODE_ENV', {
-        value: 'development',
-        writable: true,
-        configurable: true,
-      })
 
       expect(env.supabaseUrl).toBe('https://test.supabase.co')
-      expect(env.isDevelopment).toBe(true)
+      // In Jest, NODE_ENV is 'test', so isDevelopment is false
+      expect(env.nodeEnv).toBe('test')
+      expect(env.isDevelopment).toBe(false)
     })
   })
 })

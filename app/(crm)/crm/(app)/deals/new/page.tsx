@@ -86,6 +86,7 @@ export default function NewDealPage() {
           unitSfecAmount: p.unitSfecAmount,
           unitCommissionWithSfec: p.unitCommissionWithSfec,
           unitCommissionWithoutSfec: p.unitCommissionWithoutSfec,
+          costing: p.costing,
         })),
         status,
       }

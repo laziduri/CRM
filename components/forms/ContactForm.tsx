@@ -29,12 +29,28 @@ export default function ContactForm() {
     resolver: zodResolver(contactSchema),
   })
 
+  const [submitError, setSubmitError] = useState<string | null>(null)
+
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    setIsSubmitting(false)
-    setIsSubmitted(true)
+    setSubmitError(null)
+    try {
+      const response = await fetch('/api/submit-contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      const result = await response.json()
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to send message')
+      }
+      setIsSubmitted(true)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to send. Please try again or email sales@brillianceadvisory.sg'
+      setSubmitError(message)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (isSubmitted) {
@@ -101,6 +117,11 @@ export default function ContactForm() {
           )}
         </div>
 
+        {submitError && (
+          <div className="rounded-lg bg-red-50 border border-red-200 p-3">
+            <p className="text-sm text-red-800">{submitError}</p>
+          </div>
+        )}
         <div className="pt-6">
           <Button
             type="submit"

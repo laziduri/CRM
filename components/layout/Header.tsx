@@ -80,9 +80,9 @@ export default function Header() {
   }, [isProfileDropdownOpen])
 
   const navLinks = [
+    { href: '/resources', label: 'Resources' },
     { href: '/aboutus', label: 'About' },
     { href: '/faq', label: 'FAQ' },
-    { href: '/resources', label: 'Resources' },
   ]
 
   const contactLinks = [
@@ -115,7 +115,7 @@ export default function Header() {
       className="bg-white/95 backdrop-blur-sm shadow-sm sticky top-0 z-40 border-b border-gray-200 w-full"
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="flex justify-between items-center h-16 flex-nowrap">
+        <div className="flex justify-between items-center h-16 md:h-20 flex-nowrap">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 flex-shrink-0 min-w-0">
             <div className="relative h-8 w-8 flex-shrink-0">
@@ -135,15 +135,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4 lg:space-x-6 flex-nowrap relative z-10">
-            {/* Home Link */}
-            <Link
-              href="/"
-              className="text-navy hover:text-teal transition-colors font-medium"
-            >
-              Home
-            </Link>
-            
+          <div className="hidden md:flex items-center space-x-5 lg:space-x-6 xl:space-x-8 flex-nowrap relative z-10">
             {/* Loans Dropdown */}
             <div 
               className="relative"
@@ -278,7 +270,7 @@ export default function Header() {
           </div>
 
           {/* CTA Buttons / Profile */}
-          <div className="hidden md:flex items-center gap-3 flex-shrink-0">
+          <div className="hidden md:flex items-center gap-4 lg:gap-5 flex-shrink-0 md:ml-4 lg:ml-6">
             {(isAuthenticated && client) || isConsultant ? (
               <div 
                 className="relative" 
@@ -512,7 +504,7 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-gray-700"
+            className="md:hidden flex items-center justify-center min-w-[44px] min-h-[44px] -m-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -522,27 +514,18 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t">
-            <div className="flex flex-col space-y-4">
-              {/* Home */}
-              <Link
-                href="/"
-                className="text-navy hover:text-teal transition-colors font-medium"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Home
-              </Link>
-              
+          <div className="md:hidden py-4 border-t border-gray-200">
+            <div className="flex flex-col space-y-3">
               {/* Mobile Loans Menu */}
-              <div className="space-y-2">
-                <div className="text-gray-700 font-medium px-4 py-2">
+              <div className="space-y-1">
+                <div className="text-gray-700 font-medium px-4 py-3">
                   Loans
                 </div>
                 {loanLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="block pl-4 text-gray-600 hover:text-primary transition-colors"
+                    className="block pl-4 py-3 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors rounded-lg mx-2"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {link.label}
@@ -551,15 +534,15 @@ export default function Header() {
               </div>
 
               {/* Mobile Calculator Menu */}
-              <div className="space-y-2">
-                <div className="text-gray-700 font-medium px-4 py-2">
+              <div className="space-y-1">
+                <div className="text-gray-700 font-medium px-4 py-3">
                   Calculator
                 </div>
                 {calculatorLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="block pl-4 text-gray-600 hover:text-primary transition-colors"
+                    className="block pl-4 py-3 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors rounded-lg mx-2"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {link.label}
@@ -572,7 +555,7 @@ export default function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-navy hover:text-teal transition-colors font-medium"
+                  className="block px-4 py-3 text-navy hover:text-teal hover:bg-gray-50 transition-colors font-medium rounded-lg mx-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.label}
@@ -580,15 +563,15 @@ export default function Header() {
               ))}
               
               {/* Mobile Contact Menu */}
-              <div className="space-y-2">
-                <div className="text-gray-700 font-medium px-4 py-2">
+              <div className="space-y-1">
+                <div className="text-gray-700 font-medium px-4 py-3">
                   Contact
                 </div>
                 {contactLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="block pl-4 text-gray-600 hover:text-primary transition-colors"
+                    className="block pl-4 py-3 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors rounded-lg mx-2"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {link.label}
@@ -597,8 +580,8 @@ export default function Header() {
               </div>
               
               {(isAuthenticated && client) || isConsultant ? (
-                <div className="pt-2 space-y-2 border-t">
-                  <div className="px-4 py-2">
+                <div className="pt-3 space-y-3 border-t border-gray-200 mt-3">
+                  <div className="px-4 py-3">
                     <p className="text-sm font-semibold text-gray-900">{client?.name || consultant?.name}</p>
                     <p className="text-xs text-gray-500">{client?.email || consultant?.email}</p>
                     {isConsultant && consultant && (
@@ -610,21 +593,21 @@ export default function Header() {
                       <Link
                         href="/consultant/dashboard"
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                        className="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors mx-2"
                       >
                         Consultant Dashboard
                       </Link>
                       <Link
                         href="/consultant/dashboard/resources"
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                        className="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors mx-2"
                       >
                         Document Resources
                       </Link>
                       <Link
                         href="/consultant/dashboard/settings"
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                        className="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors mx-2"
                       >
                         Settings
                       </Link>
@@ -638,7 +621,7 @@ export default function Header() {
                           router.push('/client/login')
                           router.refresh()
                         }}
-                        className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        className="w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors mx-2"
                       >
                         Logout
                       </button>
@@ -648,14 +631,14 @@ export default function Header() {
                       <Link
                         href="/client/dashboard"
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                        className="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors mx-2"
                       >
                         Dashboard
                       </Link>
                       <Link
                         href="/client/dashboard/settings"
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                        className="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors mx-2"
                       >
                         Settings
                       </Link>
@@ -664,7 +647,7 @@ export default function Header() {
                           setIsMobileMenuOpen(false)
                           logout()
                         }}
-                        className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        className="w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors mx-2"
                       >
                         Logout
                       </button>
@@ -672,9 +655,9 @@ export default function Header() {
                   )}
                 </div>
               ) : (
-                <div className="flex gap-3 pt-2">
+                <div className="flex gap-3 pt-3 mt-3">
                   <Link href="/apply" onClick={() => setIsMobileMenuOpen(false)} className="flex-1">
-                    <Button variant="primary" size="md" className="w-full">
+                    <Button variant="primary" size="md" className="w-full min-h-[44px]">
                       Get Started
                     </Button>
                   </Link>

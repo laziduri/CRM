@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
+import NextImage from 'next/image'
 import { motion } from 'motion/react'
 import { 
   Briefcase, 
@@ -19,6 +19,12 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import AccordionDark, { AccordionItemDark } from '@/components/ui/AccordionDark'
+import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
+import { AmbientBackground } from '@/components/background/AmbientBackground'
+import { GlowBackground } from '@/components/background/GlowBackground'
+import { ScrollReveal } from '@/components/ui/ScrollReveal'
+import { PageTransition } from '@/components/layout/PageTransition'
+import { ParticleBackground } from '@/components/background/ParticleBackground'
 
 const businessLoanTypes = [
   {
@@ -163,61 +169,78 @@ const faqs = [
 export default function BusinessLoansPage() {
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden w-full">
-        {/* Background Image Layer with Zoom Animation */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/images/Capitaspring_BIG_Finbarr_Fallon_29-scaled-1-1280x1600.jpg"
-            alt="Business financing solutions"
-            fill
-            priority
-            className="object-cover object-center animate-zoom-in-slow"
-            quality={90}
-            sizes="100vw"
-          />
-        </div>
+    <PageTransition>
+      <div className="min-h-screen bg-white relative overflow-hidden">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         
-        {/* Solid White Overlay for Text Readability - No fade */}
-        <div className="absolute inset-0 z-[1] bg-white/65" />
-        
-        {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
-          <div className="text-center w-full">
-            <Badge variant="primary" className="mb-6 animate-scale-in">Business Financing</Badge>
-            <motion.h1 
-              className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight animate-gradient-text"
-              initial={{ opacity: 0, x: -100 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.5, ease: 'easeOut' }}
-            >
-              Working Capital Loans to Fuel Your Business Growth
-            </motion.h1>
-            <p className="text-xl md:text-2xl lg:text-3xl text-gray-700 mb-12 leading-relaxed animate-float-up-delay-2 max-w-4xl mx-auto">
-              Get up to S$500,000 in working capital financing to manage operations and fuel growth. Connect with Singapore&apos;s leading banks through our platform.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center animate-float-up-delay-3">
-              <Link href="/apply" className="w-full sm:w-auto">
-                <Button variant="primary" size="lg" className="text-lg px-8 py-6 w-full sm:w-auto min-w-[240px] inline-flex items-center justify-center gap-2 shadow-2xl">
-                  Get Started Today
-                  <ArrowRight className="w-5 h-5" />
-                </Button>
-              </Link>
+        {/* Hero Section */}
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden w-full">
+          {/* Background Image Layer with Zoom Animation */}
+          <div className="absolute inset-0 z-0">
+            <NextImage
+              src="/images/Capitaspring_BIG_Finbarr_Fallon_29-scaled-1-1280x1600.jpg"
+              alt="Business financing solutions"
+              fill
+              priority
+              className="object-cover object-center animate-zoom-in-slow"
+              quality={90}
+              sizes="100vw"
+            />
+          </div>
+          
+          {/* Navy Overlay for Text Readability */}
+          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/80 via-navy/65 to-navy/45" />
+          
+          {/* Particles */}
+          <ParticleBackground intensity="subtle" />
+          
+          {/* Content */}
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
+            <div className="text-center w-full">
+              <ScrollReveal>
+                <Badge variant="primary" className="mb-6">Business Financing</Badge>
+              </ScrollReveal>
+              <ScrollReveal delay={0.1}>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight">
+                  <AnimatedGradientText 
+                    className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
+                    colorFrom="hsl(0, 0%, 100%)"
+                    colorTo="hsl(180, 45%, 70%)"
+                  >
+                    Working Capital Loans to Fuel Your Business Growth
+                  </AnimatedGradientText>
+                </h1>
+              </ScrollReveal>
+              <ScrollReveal delay={0.2}>
+                <p className="text-xl md:text-2xl lg:text-3xl text-white/90 mb-12 leading-relaxed max-w-4xl mx-auto">
+                  Get up to S$500,000 in working capital financing to manage operations and fuel growth. Connect with Singapore&apos;s leading banks through our platform.
+                </p>
+              </ScrollReveal>
+              <ScrollReveal delay={0.3}>
+                <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                  <Link href="/apply" className="w-full sm:w-auto">
+                    <Button variant="primary" size="lg" className="text-lg px-8 py-6 w-full sm:w-auto min-w-[240px] inline-flex items-center justify-center gap-2 shadow-2xl">
+                      Get Started Today
+                      <ArrowRight className="w-5 h-5" />
+                    </Button>
+                  </Link>
+                </div>
+              </ScrollReveal>
             </div>
           </div>
-        </div>
-        
-        {/* Bottom gradient fade - seamless transition to next section */}
-        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-[2]"></div>
-      </section>
+          
+          {/* Bottom gradient fade - seamless transition to next section */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-[2]"></div>
+        </section>
 
       {/* Types of Business Loans Section */}
-      <section className="py-20 bg-white relative overflow-hidden bg-business-stars">
-        <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-        <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl opacity-30 animate-pulse-glow"></div>
+      <section className="py-20 bg-white relative overflow-hidden">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 relative">
+          <ScrollReveal>
+            <div className="text-center mb-16 relative">
             {/* Faded background word "LOANS" */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
               <span className="text-[120px] md:text-[180px] lg:text-[240px] xl:text-[300px] font-bold text-gray-200/30 select-none" style={{ 
@@ -230,32 +253,27 @@ export default function BusinessLoansPage() {
             </div>
             {/* Foreground content */}
             <div className="relative z-10">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-text animate-rotate-in" style={{ color: '#333366' }}>
-                Types of Business Loans We Offer
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <AnimatedGradientText className="text-3xl md:text-4xl">
+                  Types of Business Loans We Offer
+                </AnimatedGradientText>
               </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-float-up-delay-2">
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                 Unlock cashflow, leverage on your properties, or simply get a loan to finance your business.
               </p>
             </div>
-          </div>
+            </div>
+          </ScrollReveal>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {businessLoanTypes.map((loan, index) => {
               const Icon = loan.icon
-              const delayClasses = [
-                'animate-float-up-delay-1',
-                'animate-float-up-delay-2',
-                'animate-float-up-delay-3',
-                'animate-float-up-delay-4',
-                'animate-float-up-delay-5',
-                'animate-float-up-delay-6',
-              ]
               return (
-                <Card 
-                  key={index} 
-                  hover 
-                  className={`p-6 h-full flex flex-col group ${delayClasses[index] || 'animate-float-up'} transform hover:scale-105 transition-all duration-300 hover:bg-gradient-to-br hover:from-primary hover:via-teal hover:to-primary-dark hover:border-teal-light`}
-                >
+                <ScrollReveal key={index} delay={index * 0.1}>
+                  <Card 
+                    hover 
+                    className="p-6 h-full flex flex-col group transform hover:scale-105 transition-all duration-300 hover:bg-gradient-to-br hover:from-primary hover:via-teal hover:to-primary-dark hover:border-teal-light"
+                  >
                   <div className="mb-4">
                     <div className="w-14 h-14 bg-gradient-to-br from-primary to-teal rounded-lg flex items-center justify-center mb-4 group-hover:bg-white group-hover:from-white group-hover:to-white transition-all duration-300">
                       <Icon className="w-7 h-7 text-white group-hover:text-primary transition-colors duration-300" />
@@ -269,8 +287,9 @@ export default function BusinessLoansPage() {
                   >
                     Learn more
                     <ArrowRight className="w-4 h-4 ml-1 group-hover/link:translate-x-1 transition-transform" />
-                  </Link>
-                </Card>
+                    </Link>
+                  </Card>
+                </ScrollReveal>
               )
             })}
           </div>
@@ -278,66 +297,79 @@ export default function BusinessLoansPage() {
       </section>
 
       {/* Why Choose Us Section */}
-      <section className="py-20 bg-white relative overflow-hidden bg-business-stars">
-        <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] h-[80%] pointer-events-none radial-glow-teal opacity-40 animate-pulse-glow"></div>
+      <section className="py-20 bg-white relative overflow-hidden">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-text animate-slide-in-left">
-              Why Get Your Business Financing Through Brilliance Advisory?
-            </h2>
-          </div>
+          <ScrollReveal>
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <AnimatedGradientText className="text-3xl md:text-4xl">
+                  Why Get Your Business Financing Through Brilliance Advisory?
+                </AnimatedGradientText>
+              </h2>
+            </div>
+          </ScrollReveal>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <Card hover className="p-8">
-              <div className="flex items-start gap-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0">
-                  <Users className="w-8 h-8 text-white" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 md:items-stretch">
+            <ScrollReveal delay={0.1} className="h-full">
+              <Card hover className="p-8 h-full flex flex-col">
+                <div className="flex items-start gap-6 flex-1">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0">
+                    <Users className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3">A Team That Will Support You</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      We have a dedicated team that will walk you through your entire loan process and help you do the market research you need.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">A Team That Will Support You</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    We have a dedicated team that will walk you through your entire loan process and help you do the market research you need.
-                  </p>
-                </div>
-              </div>
-            </Card>
+              </Card>
+            </ScrollReveal>
             
-            <Card hover className="p-8">
-              <div className="flex items-start gap-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0">
-                  <TrendingUp className="w-8 h-8 text-white" />
+            <ScrollReveal delay={0.2} className="h-full">
+              <Card hover className="p-8 h-full flex flex-col">
+                <div className="flex items-start gap-6 flex-1">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0">
+                    <TrendingUp className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3">We Let Lenders Compete for Your Loan</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Be ready to be spoilt for choice when we help you compare the best deals across all banks and non-banks so you only get the lowest interest rate and the highest cash out amount. Our rates are same as what the banks can offer or even better.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">We Let Lenders Compete for Your Loan</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Be ready to be spoilt for choice when we help you compare the best deals across all banks and non-banks so you only get the lowest interest rate and the highest cash out amount. Our rates are same as what the banks can offer or even better.
-                  </p>
-                </div>
-              </div>
-            </Card>
+              </Card>
+            </ScrollReveal>
           </div>
         </div>
       </section>
 
       {/* Interest Rates Comparison Table Section */}
-      <section className="py-20 bg-white relative overflow-hidden bg-business-stars">
-        <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl opacity-30 animate-pulse-glow"></div>
+      <section className="py-20 bg-white relative overflow-hidden">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-text animate-slide-in-left">
-              Interest Rates & Terms
-            </h2>
+          <ScrollReveal>
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <AnimatedGradientText className="text-3xl md:text-4xl">
+                  Interest Rates & Terms
+                </AnimatedGradientText>
+              </h2>
             <p className="text-lg text-gray-600 mb-2 animate-slide-in-right">
               Interest rates vary based on your credit profile, business performance, and the lender. Banks typically offer EIR (Effective Interest Rate) of 5% to 12% p.a. for working capital loans under the Enterprise Financing Scheme.
             </p>
             <p className="text-sm text-gray-500 animate-float-up-delay-2">
               <strong>Note:</strong> EIR is the actual cost of borrowing including all fees. Processing fees typically range from 1% to 3% for banks, and 2% to 5% for non-bank lenders. Government-assisted EFS Working Capital Loans offer competitive rates with risk-sharing support.
             </p>
-          </div>
+            </div>
+          </ScrollReveal>
           
-          <div className="overflow-x-auto animate-scale-in">
+          <ScrollReveal delay={0.1}>
+            <div className="overflow-x-auto">
             <div className="inline-block min-w-full align-middle">
               <div className="overflow-hidden rounded-xl border border-secondary-gray3/50 shadow-lg transform hover:scale-[1.01] transition-transform duration-300">
                 <table className="min-w-full divide-y divide-secondary-gray3/30 bg-white">
@@ -381,48 +413,48 @@ export default function BusinessLoansPage() {
                 </table>
               </div>
             </div>
-          </div>
+            </div>
+          </ScrollReveal>
           
-          <div className="mt-8 text-center">
-            <Link href="/calculator">
-              <Button variant="outline" size="lg" className="border-2 border-primary text-primary hover:bg-primary hover:text-white">
-                Calculate Your Loan Repayment
-              </Button>
-            </Link>
-          </div>
+          <ScrollReveal delay={0.2}>
+            <div className="mt-8 text-center">
+              <Link href="/calculator">
+                <Button variant="outline" size="lg" className="border-2 border-primary text-primary hover:bg-primary hover:text-white">
+                  Calculate Your Loan Repayment
+                </Button>
+              </Link>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* Required Documents Section */}
-      <section className="py-20 bg-white relative overflow-hidden bg-business-stars">
-        <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-        <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-teal-light/5 rounded-full blur-3xl opacity-30 animate-float"></div>
+      <section className="py-20 bg-white relative overflow-hidden">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-text animate-rotate-in">
-              Required Documents
-            </h2>
+          <ScrollReveal>
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <AnimatedGradientText className="text-3xl md:text-4xl">
+                  Required Documents
+                </AnimatedGradientText>
+              </h2>
             <p className="text-lg text-gray-600 animate-slide-in-right">
               Ensure you have these documents ready before applying!
             </p>
-          </div>
+            </div>
+          </ScrollReveal>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {requiredDocuments.map((doc, index) => {
               const Icon = doc.icon
-              const delayClasses = [
-                'animate-scale-in',
-                'animate-scale-in',
-                'animate-scale-in',
-                'animate-scale-in',
-              ]
               return (
-                <Card 
-                  key={index} 
-                  hover 
-                  className={`p-6 text-center ${delayClasses[index] || 'animate-scale-in'} transform hover:scale-105 transition-all duration-300`}
-                  style={{ animationDelay: `${index * 0.15}s` }}
-                >
+                <ScrollReveal key={index} delay={index * 0.1}>
+                  <Card 
+                    hover 
+                    className="p-6 text-center transform hover:scale-105 transition-all duration-300"
+                  >
                   <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:bg-white group-hover:from-white group-hover:to-white transition-all duration-300">
                     <Icon className="w-8 h-8 text-white group-hover:text-primary transition-colors duration-300" />
                   </div>
@@ -434,34 +466,39 @@ export default function BusinessLoansPage() {
                   </Badge>
                   <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-white transition-colors duration-300">{doc.name}</h3>
                   <p className="text-sm text-gray-600 group-hover:text-white/95 transition-colors duration-300">{doc.description}</p>
-                </Card>
+                  </Card>
+                </ScrollReveal>
               )
             })}
           </div>
           
-          <div className="mt-12 text-center">
-            <Link href="/apply">
-              <Button variant="primary" size="lg">
-                Apply Now
-              </Button>
-            </Link>
-          </div>
+          <ScrollReveal delay={0.4}>
+            <div className="mt-12 text-center">
+              <Link href="/apply">
+                <Button variant="primary" size="lg">
+                  Apply Now
+                </Button>
+              </Link>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-white relative overflow-hidden bg-business-stars">
-        <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-light/5 rounded-full blur-3xl opacity-40 animate-pulse-glow"></div>
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl opacity-40 animate-pulse-glow" style={{ animationDelay: '1s' }}></div>
+      <section className="py-20 bg-white relative overflow-hidden">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
             {/* Left Side - Text Content */}
-            <div className="flex flex-col justify-center">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight animate-gradient-text">
-                Frequently Asked Questions
-              </h2>
+            <ScrollReveal>
+              <div className="flex flex-col justify-center">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                  <AnimatedGradientText className="text-3xl md:text-4xl lg:text-5xl">
+                    Frequently Asked Questions
+                  </AnimatedGradientText>
+                </h2>
               <p className="text-lg text-gray-600 mb-8">
                 Still have questions?
               </p>
@@ -475,11 +512,13 @@ export default function BusinessLoansPage() {
                   <ArrowRight className="w-5 h-5" />
                 </Button>
               </Link>
-            </div>
+              </div>
+            </ScrollReveal>
 
             {/* Right Side - FAQ Accordions */}
-            <div>
-              <AccordionDark>
+            <ScrollReveal delay={0.1}>
+              <div>
+                <AccordionDark>
                 {faqs.map((faq) => (
                   <AccordionItemDark 
                     key={faq.number} 
@@ -490,11 +529,13 @@ export default function BusinessLoansPage() {
                     <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
                   </AccordionItemDark>
                 ))}
-              </AccordionDark>
-            </div>
+                </AccordionDark>
+              </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
     </div>
+    </PageTransition>
   )
 }

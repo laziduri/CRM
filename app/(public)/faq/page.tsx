@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import NextImage from 'next/image'
 import AccordionDark, { AccordionItemDark } from '@/components/ui/AccordionDark'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
-import { ArrowRight, MessageCircle, Send, X, BookOpen, TrendingUp, Building2, HelpCircle } from 'lucide-react'
+import { ArrowRight, BookOpen, TrendingUp, Building2, HelpCircle } from 'lucide-react'
 
 // Most Popular FAQs
 const mostPopularFAQs = [
@@ -16,7 +17,7 @@ const mostPopularFAQs = [
   },
   {
     question: 'How much does your advisory service cost?',
-    answer: 'Brilliance Advisory provides professional loan advisory services tailored to each individual or business situation. Any advisory fees are assessed on a case-by-case basis, depending on the scope and complexity of work involved. We are fully transparent about our fees — all applicable fees, if any, will be clearly explained and agreed upon before any engagement of services. There are no hidden charges.',
+    answer: 'Our consultation fees are assessed on a case-by-case basis, depending on the scope and complexity of work involved. We maintain relationships with various financial institutions, and when a loan is successfully arranged through our advisory, we may also receive a referral fee from the lender. All applicable fees will be clearly explained and agreed upon before any engagement of services. There are no hidden charges.',
   },
   {
     question: 'What are the basic eligibility requirements for a personal loan in Singapore?',
@@ -39,12 +40,12 @@ const aboutFAQs = [
     answer: 'Brilliance Advisory is a Singapore-based financial consultancy that provides human-led advisory services for personal and business loans. Unlike automated comparison platforms, our advisors work directly with you to understand your financial situation, goals, and constraints. We provide personalised recommendations, help you prepare your application, and guide you through the entire process with ongoing support.',
   },
   {
-    question: 'Are you a licensed lender or a loan broker?',
-    answer: 'We are neither a lender nor a broker. Brilliance Advisory operates as a financial consultancy that provides advisory services. We do not lend money directly, nor do we charge brokerage fees. Our role is to provide expert guidance and connect you with suitable lenders from our network of banks and licensed financial institutions in Singapore.',
+    question: 'Is Brilliance Advisory a licensed lender?',
+    answer: 'We are not a lender. Brilliance Advisory operates as a financial consultancy that provides advisory services. We do not lend money directly. Our role is to provide expert guidance and connect you with suitable lenders from our network of banks and licensed financial institutions in Singapore.',
   },
   {
     question: 'How much does your advisory service cost?',
-    answer: 'Our advisory service is provided at no direct cost to you. We maintain relationships with various financial institutions, and when a loan is successfully arranged through our advisory, we may receive a referral fee from the lender. This fee does not affect your loan terms, interest rates, or any charges you would otherwise pay directly to the lender.',
+    answer: 'Our consultation fees are assessed on a case-by-case basis, depending on the scope and complexity of work involved. We maintain relationships with various financial institutions, and when a loan is successfully arranged through our advisory, we may also receive a referral fee from the lender. All applicable fees will be clearly explained and agreed upon before any engagement of services. There are no hidden charges.',
   },
   {
     question: 'What qualifications and experience do your advisors have?',
@@ -216,242 +217,147 @@ const exploreTopics = [
   },
 ]
 
-// AI Chatbot Component
-function AIChatbot() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [messages, setMessages] = useState<Array<{ role: 'user' | 'assistant', content: string }>>([])
-  const [input, setInput] = useState('')
-  const [isTyping, setIsTyping] = useState(false)
-
-  const handleSend = async () => {
-    if (!input.trim()) return
-
-    const userMessage = input.trim()
-    setInput('')
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }])
-    setIsTyping(true)
-
-    // Simulate AI response (in production, this would call an actual AI API)
-    setTimeout(() => {
-      const response = generateAIResponse(userMessage)
-      setMessages(prev => [...prev, { role: 'assistant', content: response }])
-      setIsTyping(false)
-    }, 1000)
-  }
-
-  const generateAIResponse = (userMessage: string): string => {
-    const lowerMessage = userMessage.toLowerCase()
-
-    // Check for Brilliance Advisory questions
-    if (lowerMessage.includes('what is brilliance') || lowerMessage.includes('who is brilliance') || lowerMessage.includes('about brilliance')) {
-      return 'Brilliance Advisory is a Singapore-based financial consultancy that provides human-led advisory services for personal and business loans. Unlike automated platforms, we offer personalized one-on-one consultations with experienced advisors who understand your unique financial situation and guide you through the entire loan application process. Would you like to speak with one of our advisors?'
-    }
-
-    if (lowerMessage.includes('cost') || lowerMessage.includes('fee') || lowerMessage.includes('price') || lowerMessage.includes('charge')) {
-      return 'Brilliance Advisory provides professional loan advisory services tailored to each individual or business situation. Any advisory fees are assessed on a case-by-case basis, depending on the scope and complexity of work involved. We are fully transparent about our fees — all applicable fees, if any, will be clearly explained and agreed upon before any engagement of services. There are no hidden charges. Would you like to speak with one of our advisors to discuss your specific situation?'
-    }
-
-    if (lowerMessage.includes('how to') || lowerMessage.includes('how do i') || lowerMessage.includes('process') || lowerMessage.includes('apply')) {
-      return 'Getting started is simple! Contact us through our website or phone to schedule a consultation. Our advisor will discuss your financing needs, assess your situation, and guide you through the application process. We handle everything from initial assessment to loan disbursement. Would you like to book an appointment with one of our advisors?'
-    }
-
-    // Check for loan-related questions
-    if (lowerMessage.includes('personal loan') || lowerMessage.includes('personal financing')) {
-      return 'For personal loans in Singapore, basic eligibility typically includes being 21-65 years old, earning a minimum monthly income (usually $2,000-$3,000), and being a Singapore citizen, PR, or holding a valid Employment Pass. Loan amounts can range from 4-8 times your monthly salary. Our advisors can help assess your eligibility and find the best options. Would you like to speak with an advisor?'
-    }
-
-    if (lowerMessage.includes('business loan') || lowerMessage.includes('business financing') || lowerMessage.includes('corporate loan')) {
-      return 'Business loans in Singapore include term loans, working capital loans, trade financing, equipment financing, and lines of credit. Eligibility typically requires ACRA registration, minimum operational period (6 months to 2 years), and financial statements. Our advisors can help identify the best financing solution for your business needs. Would you like to schedule a consultation?'
-    }
-
-    if (lowerMessage.includes('interest rate') || lowerMessage.includes('rate') || lowerMessage.includes('apr')) {
-      return 'Interest rates in Singapore vary by loan type and lender. Personal loans typically range from 3.5% to 10% per annum for banks, while business loans range from 4% to 12% per annum. Rates depend on your credit profile, loan amount, and tenure. Our advisors can help you understand rates and find competitive options. Would you like to speak with an advisor?'
-    }
-
-    if (lowerMessage.includes('eligibility') || lowerMessage.includes('qualify') || lowerMessage.includes('requirements')) {
-      return 'Eligibility requirements vary by loan type and lender. For personal loans, you typically need to be 21-65 years old with minimum monthly income. For business loans, you need ACRA registration and operational history. Our advisors can assess your specific situation and identify suitable options. Would you like to schedule a consultation?'
-    }
-
-    if (lowerMessage.includes('document') || lowerMessage.includes('paperwork') || lowerMessage.includes('required')) {
-      return 'Required documents vary by loan type. For personal loans: NRIC, payslips, CPF statements, employment letter. For business loans: ACRA profile, financial statements, bank statements, directors\' NOA. Our advisors will guide you through the exact documentation needed for your specific situation. Would you like to speak with an advisor?'
-    }
-
-    if (lowerMessage.includes('bank') || lowerMessage.includes('lender') || lowerMessage.includes('financial institution')) {
-      return 'We work with a network of major banks and licensed financial institutions in Singapore, including DBS, UOB, OCBC, Standard Chartered, HSBC, and other reputable lenders. Our advisors recommend lenders based on your profile and needs, not all banks. Would you like to learn which lenders might be suitable for you?'
-    }
-
-    if (lowerMessage.includes('credit') || lowerMessage.includes('credit score') || lowerMessage.includes('cbs')) {
-      return 'Your Credit Bureau Singapore (CBS) score significantly affects loan approval and interest rates. Higher scores (AA-BB) improve approval chances and rates. Our advisors can help you understand your credit situation and explore options even with lower scores. Would you like to speak with an advisor?'
-    }
-
-    // Default response - always direct to contact
-    return 'I understand you\'re looking for information about loans or our services. For personalized advice tailored to your specific situation, I recommend speaking directly with one of our experienced advisors. They can provide accurate, up-to-date information and guide you through your options. Would you like to schedule a consultation?'
-  }
-
-  return (
-    <>
-      {/* Chatbot Toggle Button */}
-      {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-r from-gold to-gold-light rounded-full shadow-lg shadow-gold-glow/40 flex items-center justify-center text-black hover:scale-110 transition-transform z-50"
-          aria-label="Open AI Chatbot"
-        >
-          <MessageCircle className="w-7 h-7" />
-        </button>
-      )}
-
-      {/* Chatbot Window */}
-      {isOpen && (
-        <div className="fixed bottom-6 right-6 w-96 h-[600px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col z-50">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-primary to-teal text-white p-4 rounded-t-2xl flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                <MessageCircle className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-semibold">AI Assistant</h3>
-                <p className="text-xs text-white/80">Ask me anything</p>
-              </div>
-            </div>
-            <button
-              onClick={() => {
-                setIsOpen(false)
-                setMessages([])
-              }}
-              className="text-navy hover:bg-navy/10 rounded-full p-1 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {messages.length === 0 && (
-              <div className="text-center text-gray-500 py-8">
-                <MessageCircle className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                <p className="text-sm">Hi! I&apos;m here to help answer your questions about loans and Brilliance Advisory.</p>
-                <p className="text-xs mt-2">Ask me anything, and I&apos;ll guide you to the right information or connect you with our advisors.</p>
-              </div>
-            )}
-            {messages.map((msg, idx) => (
-              <div
-                key={idx}
-                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                    msg.role === 'user'
-                      ? 'bg-navy text-white'
-                      : 'bg-gray-100 text-navy'
-                  }`}
-                >
-                  <p className="text-sm">{msg.content}</p>
-                </div>
-              </div>
-            ))}
-            {isTyping && (
-              <div className="flex justify-start">
-                <div className="bg-gray-100 rounded-lg px-4 py-2">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Input */}
-          <div className="border-t border-gray-200 p-4">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Ask a question..."
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <button
-                onClick={handleSend}
-                className="bg-navy text-white px-4 py-2 rounded-lg hover:bg-navy-dark transition-colors"
-              >
-                <Send className="w-5 h-5" />
-              </button>
-            </div>
-            <p className="text-xs text-gray-500 mt-2 text-center">
-              For detailed advice, <Link href="/contact" className="text-teal hover:underline">contact our advisors</Link>
-            </p>
-          </div>
-        </div>
-      )}
-    </>
-  )
-}
-
-import { CalmBackground } from '@/components/background/CalmBackground'
+import { AmbientBackground } from '@/components/background/AmbientBackground'
+import { GlowBackground } from '@/components/background/GlowBackground'
+import { ScrollReveal } from '@/components/ui/ScrollReveal'
+import { PageTransition } from '@/components/layout/PageTransition'
+import { ParticleBackground } from '@/components/background/ParticleBackground'
 
 export default function FAQPage() {
   let questionNumber = 1
+  
+  // State-based image fallback handling
+  const [heroImageSrc, setHeroImageSrc] = useState<string | null>(null)
+  const [heroImageError, setHeroImageError] = useState(false)
+
+  // Preload and validate hero image with fallback
+  useEffect(() => {
+    const imageSources = ['/images/faq.jpeg', '/images/hand%20raising.png']
+
+    const tryLoadImage = (src: string, index: number): void => {
+      if (typeof window === 'undefined') return
+
+      const img = new window.Image()
+      img.onload = () => setHeroImageSrc(src)
+      img.onerror = () => {
+        if (index < imageSources.length - 1) {
+          tryLoadImage(imageSources[index + 1], index + 1)
+        } else {
+          setHeroImageError(true)
+        }
+      }
+      img.src = src
+    }
+
+    tryLoadImage(imageSources[0], 0)
+  }, [])
 
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden">
-      <CalmBackground />
-      
-      {/* Hero Section - Longer */}
-      <section className="relative pt-32 pb-24 md:pb-32 px-4 sm:px-6 lg:px-8">
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8">
-            <AnimatedGradientText className="text-5xl md:text-6xl lg:text-7xl">
-              Frequently Asked Questions
-            </AnimatedGradientText>
-          </h1>
-        </div>
-      </section>
+    <PageTransition>
+      <div className="min-h-screen bg-white relative overflow-hidden">
+        <main id="main-content">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
+        
+        {/* Hero Section - Background Image */}
+        <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden w-full">
+          {/* Background Image Layer */}
+          <div className="absolute inset-0 z-0 overflow-hidden">
+            {!heroImageError && heroImageSrc && (
+              <div className="absolute inset-0 scale-110">
+                <NextImage
+                  key={heroImageSrc}
+                  src={heroImageSrc}
+                  alt="FAQ - question marks background"
+                  fill
+                  priority
+                  className="object-cover object-center animate-zoom-in-slow"
+                  quality={90}
+                  sizes="100vw"
+                />
+              </div>
+            )}
+            {heroImageError && (
+              <div className="absolute inset-0 bg-gradient-to-b from-navy to-navy-dark" />
+            )}
+          </div>
+
+          {/* Overlay for Text Readability */}
+          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/90 via-navy/70 to-navy/50" />
+          
+          {/* Particles */}
+          <ParticleBackground intensity="subtle" />
+          
+          <div className="relative z-10 max-w-4xl mx-auto text-center">
+            <ScrollReveal>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8">
+                <AnimatedGradientText 
+                  className="text-5xl md:text-6xl lg:text-7xl"
+                  colorFrom="hsl(0, 0%, 100%)"
+                  colorTo="hsl(180, 45%, 85%)"
+                >
+                  Frequently Asked Questions
+                </AnimatedGradientText>
+              </h1>
+            </ScrollReveal>
+          </div>
+          
+          {/* Bottom gradient fade */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-[2]"></div>
+        </section>
 
       {/* Most Popular FAQs Section */}
       <section className="relative py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-shimmer">
-              Most Popular FAQs
-            </h2>
+          <ScrollReveal>
+            <div className="text-center mb-8">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <AnimatedGradientText className="text-3xl md:text-4xl">
+                  Most Popular FAQs
+                </AnimatedGradientText>
+              </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Quick answers to the questions we get asked most often
             </p>
-          </div>
-          <Card className="bg-white border-gray-200">
-            <AccordionDark>
-              {mostPopularFAQs.map((faq, index) => (
-                <AccordionItemDark
-                  key={`popular-${index}`}
-                  number={index + 1}
-                  title={faq.question}
-                  defaultOpen={index === 0}
-                >
-                  <p>{faq.answer}</p>
-                </AccordionItemDark>
-              ))}
-            </AccordionDark>
-          </Card>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={0.1}>
+            <Card className="bg-white border-gray-200">
+              <AccordionDark>
+                {mostPopularFAQs.map((faq, index) => (
+                  <AccordionItemDark
+                    key={`popular-${index}`}
+                    number={index + 1}
+                    title={faq.question}
+                    defaultOpen={index === 0}
+                  >
+                    <p>{faq.answer}</p>
+                  </AccordionItemDark>
+                ))}
+              </AccordionDark>
+            </Card>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* Section 1: About Brilliance Advisory */}
       <section className="relative py-16 px-4 sm:px-6 lg:px-8">
-        <div className="relative z-10 max-w-7xl mx-auto">
-            <div className="bg-white rounded-2xl p-8 md:p-12 lg:p-16 border border-gray-200 shadow-lg">
-            <div className="mb-8">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
+        <div className="relative z-10 max-w-4xl mx-auto">
+          <ScrollReveal>
+            <div className="mb-10">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 <AnimatedGradientText className="text-3xl md:text-4xl">About Brilliance Advisory</AnimatedGradientText>
               </h2>
-              <p className="text-lg text-gray-700 leading-relaxed">
-                At Brilliance Advisory, we believe that securing the right financing requires more than just comparing rates. Our human-led approach combines market knowledge with personalised guidance to help you navigate Singapore&apos;s lending landscape with confidence.
-              </p>
+            <p className="text-lg text-gray-700 leading-relaxed">
+              At Brilliance Advisory, we believe that securing the right financing requires more than just comparing rates. Our human-led approach combines market knowledge with personalised guidance to help you navigate Singapore&apos;s lending landscape with confidence.
+            </p>
             </div>
+          </ScrollReveal>
+          <ScrollReveal delay={0.1}>
             <AccordionDark>
               {aboutFAQs.map((faq, index) => {
                 const num = questionNumber++
@@ -467,20 +373,26 @@ export default function FAQPage() {
                 )
               })}
             </AccordionDark>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* Section 2: Personal Loans */}
       <section className="relative py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="relative z-10 max-w-7xl mx-auto">
-            <div className="bg-white rounded-2xl p-8 md:p-12 lg:p-16 border border-gray-200 shadow-lg">
-            <div className="mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-shimmer">Personal Loans</h2>
-              <p className="text-lg text-gray-700 leading-relaxed">
-                Personal loans in Singapore can serve various purposes, from debt consolidation to major purchases or unexpected expenses. This section addresses common questions about eligibility, application processes, and loan terms.
-              </p>
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
+        <div className="relative z-10 max-w-4xl mx-auto">
+          <ScrollReveal>
+            <div className="mb-10">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <AnimatedGradientText className="text-3xl md:text-4xl">Personal Loans</AnimatedGradientText>
+              </h2>
+            <p className="text-lg text-gray-700 leading-relaxed">
+              Personal loans in Singapore can serve various purposes, from debt consolidation to major purchases or unexpected expenses. This section addresses common questions about eligibility, application processes, and loan terms.
+            </p>
             </div>
+          </ScrollReveal>
+          <ScrollReveal delay={0.1}>
             <AccordionDark>
               {personalLoanFAQs.map((faq, index) => {
                 const num = questionNumber++
@@ -496,22 +408,26 @@ export default function FAQPage() {
                 )
               })}
             </AccordionDark>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* Section 3: Business & Corporate Loans */}
       <section className="relative py-16 px-4 sm:px-6 lg:px-8">
-        <div className="relative z-10 max-w-7xl mx-auto">
-            <div className="bg-white rounded-2xl p-8 md:p-12 lg:p-16 border border-gray-200 shadow-lg">
-            <div className="mb-8">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
+        <div className="relative z-10 max-w-4xl mx-auto">
+          <ScrollReveal>
+            <div className="mb-10">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 <AnimatedGradientText className="text-3xl md:text-4xl">Business & Corporate Loans</AnimatedGradientText>
               </h2>
-              <p className="text-lg text-gray-700 leading-relaxed">
-                Business financing in Singapore encompasses various loan types designed to support different corporate needs, from working capital and expansion to equipment purchases and cash flow management.
-              </p>
+            <p className="text-lg text-gray-700 leading-relaxed">
+              Business financing in Singapore encompasses various loan types designed to support different corporate needs, from working capital and expansion to equipment purchases and cash flow management.
+            </p>
             </div>
+          </ScrollReveal>
+          <ScrollReveal delay={0.1}>
             <AccordionDark>
               {businessLoanFAQs.map((faq, index) => {
                 const num = questionNumber++
@@ -527,27 +443,32 @@ export default function FAQPage() {
                 )
               })}
             </AccordionDark>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* Explore Topics Section */}
       <section className="relative py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <AnimatedGradientText className="text-3xl md:text-4xl">Explore Topics</AnimatedGradientText>
-            </h2>
+          <ScrollReveal>
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <AnimatedGradientText className="text-3xl md:text-4xl">Explore Topics</AnimatedGradientText>
+              </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Discover more resources and information to help you make informed financing decisions
             </p>
-          </div>
+            </div>
+          </ScrollReveal>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {exploreTopics.map((topic, index) => {
               const Icon = topic.icon
               return (
-                <Link key={index} href={topic.href}>
-                  <Card hover className="h-full text-center">
+                <ScrollReveal key={index} delay={index * 0.1}>
+                  <Link href={topic.href}>
+                    <Card hover className="h-full text-center">
                     <div className="w-16 h-16 bg-navy/10 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Icon className="w-8 h-8 text-navy" />
                     </div>
@@ -557,55 +478,40 @@ export default function FAQPage() {
                       Learn more
                       <ArrowRight className="w-4 h-4 ml-1" />
                     </div>
-                  </Card>
-                </Link>
+                    </Card>
+                  </Link>
+                </ScrollReveal>
               )
             })}
           </div>
         </div>
       </section>
 
-      {/* Don't See Your Question Section with AI Chatbot */}
+      {/* Don't See Your Question Section */}
       <section className="relative py-16 px-4 sm:px-6 lg:px-8">
-        <div className="relative z-10 max-w-4xl mx-auto">
-          <Card className="bg-gradient-to-br from-navy/5 via-white to-teal/5 border-2 border-gray-200 text-center p-8 md:p-12">
-            <div className="mb-6">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MessageCircle className="w-8 h-8 text-primary" />
-              </div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                <AnimatedGradientText className="text-3xl md:text-4xl">
-                  Don&apos;t see your question here?
-                </AnimatedGradientText>
-              </h2>
-              <p className="text-lg text-gray-300 mb-6 leading-relaxed">
-                Our AI assistant can help answer your questions about loans, eligibility, and our services. For personalized advice tailored to your specific situation, our experienced advisors are ready to help.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button
-                onClick={() => {
-                  const chatbotButton = document.querySelector('button[aria-label="Open AI Chatbot"]') as HTMLButtonElement
-                  chatbotButton?.click()
-                }}
-                className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors font-semibold flex items-center gap-2"
-              >
-                <MessageCircle className="w-5 h-5" />
-                Chat with AI Assistant
-              </button>
-              <Link href="/contact">
-                <Button variant="outline" size="lg" className="flex items-center gap-2">
-                  Speak to an Advisor
-                  <ArrowRight className="w-5 h-5" />
-                </Button>
-              </Link>
-            </div>
-          </Card>
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
+          <ScrollReveal>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              <AnimatedGradientText className="text-3xl md:text-4xl">
+                Don&apos;t see your question here?
+              </AnimatedGradientText>
+            </h2>
+          <p className="text-lg text-gray-700 mb-8 leading-relaxed max-w-2xl mx-auto">
+            We understand that every financial situation is unique. Our experienced advisors are here to provide personalised guidance tailored to your specific circumstances.
+            </p>
+          </ScrollReveal>
+          <ScrollReveal delay={0.1}>
+            <Link href="/contact">
+              <Button variant="primary" size="lg" className="flex items-center gap-2 mx-auto">
+                Contact Our Advisors
+                <ArrowRight className="w-5 h-5" />
+              </Button>
+            </Link>
+          </ScrollReveal>
         </div>
       </section>
-
-      {/* AI Chatbot Component */}
-      <AIChatbot />
 
       {/* Disclaimer */}
       <div className="relative py-8 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
@@ -615,6 +521,8 @@ export default function FAQPage() {
           </p>
         </div>
       </div>
+      </main>
     </div>
+    </PageTransition>
   )
 }

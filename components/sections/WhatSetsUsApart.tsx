@@ -1,7 +1,7 @@
 'use client'
 
 import { TrendingUp, Shield, Users, CheckCircle2 } from 'lucide-react'
-import Image from 'next/image'
+import NextImage from 'next/image'
 import { Card } from '@/components/ui/Card'
 import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
 import { AmbientBackground } from '@/components/background/AmbientBackground'
@@ -70,7 +70,7 @@ const features = [
           <div className="flex items-center justify-between bg-white rounded-lg px-3 py-2.5 border border-gray-200 hover:border-gray-300 transition-colors shadow-sm">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="w-9 h-9 flex items-center justify-center flex-shrink-0">
-                <Image src="/images/partners/uob.svg" alt="UOB" width={36} height={36} className="object-contain" />
+                <NextImage src="/images/partners/uob.svg" alt="UOB" width={36} height={36} className="object-contain" />
               </div>
               <span className="text-sm font-semibold text-gray-800 truncate">UOB</span>
             </div>
@@ -114,7 +114,7 @@ const features = [
           <div className="flex items-center justify-between bg-white rounded-lg px-3 py-2.5 border border-gray-200 hover:border-gray-300 transition-colors shadow-sm">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="w-9 h-9 flex items-center justify-center flex-shrink-0">
-                <Image src="/images/partners/dbs.svg" alt="DBS" width={36} height={36} className="object-contain" />
+                <NextImage src="/images/partners/dbs.svg" alt="DBS" width={36} height={36} className="object-contain" />
               </div>
               <span className="text-sm font-semibold text-gray-800 truncate">DBS</span>
             </div>
@@ -335,7 +335,7 @@ export default function WhatSetsUsApart() {
           {features.map((feature, index) => {
             const Icon = feature.icon
             if (!Icon) {
-              console.warn(`Icon missing for feature at index ${index}`)
+              // Icon missing - skip rendering this feature
               return null
             }
             return (

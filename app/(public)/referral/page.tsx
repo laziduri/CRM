@@ -1,10 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import { User, Phone, Mail, Building2, Users, MapPin, Heart, CheckCircle2, Info, MessageSquare } from 'lucide-react'
+import { User, Phone, Mail, Building2, Users, MapPin, CheckCircle2, Info, MessageSquare } from 'lucide-react'
 import Link from 'next/link'
-import Image from 'next/image'
+import NextImage from 'next/image'
 import AccordionDark, { AccordionItemDark } from '@/components/ui/AccordionDark'
+import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
+import { AmbientBackground } from '@/components/background/AmbientBackground'
+import { GlowBackground } from '@/components/background/GlowBackground'
+import { ScrollReveal } from '@/components/ui/ScrollReveal'
+import { PageTransition } from '@/components/layout/PageTransition'
+import { ParticleBackground } from '@/components/background/ParticleBackground'
 
 export default function ReferralPage() {
   const [formData, setFormData] = useState({
@@ -29,84 +35,123 @@ export default function ReferralPage() {
     })
   }
 
+  const [submitError, setSubmitError] = useState<string | null>(null)
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false)
+    setSubmitError(null)
+    try {
+      const response = await fetch('/api/submit-referral', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+      const result = await response.json()
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to submit referral')
+      }
       setIsSubmitted(true)
-    }, 1000)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to submit. Please try again or contact sales@brillianceadvisory.sg'
+      setSubmitError(message)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4">
-        <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-8 md:p-12 text-center">
-          <CheckCircle2 className="w-20 h-20 text-green-500 mx-auto mb-6" />
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Thank You! 🙌
-          </h1>
-          <p className="text-lg text-gray-600 mb-8">
-            Your referral submission has been received. We&apos;ll reach out to you soon to connect you with your friend and get them started on their loan journey.
-          </p>
-          <a
-            href="/"
-            className="inline-block bg-gradient-to-r from-primary to-teal hover:from-primary-dark hover:to-teal-dark text-white px-8 py-3 rounded-lg font-semibold transition-all"
-          >
-            Return Home
-          </a>
+      <PageTransition>
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4">
+          <AmbientBackground intensity="moderate" />
+          <GlowBackground intensity="subtle" />
+          <div className="relative z-10 max-w-2xl w-full bg-white rounded-2xl shadow-xl p-8 md:p-12 text-center">
+            <CheckCircle2 className="w-20 h-20 text-green-500 mx-auto mb-6" />
+            <h1 className="text-3xl md:text-4xl font-bold mb-4">
+              <AnimatedGradientText className="text-3xl md:text-4xl">
+                Thank You! 🙌
+              </AnimatedGradientText>
+            </h1>
+            <p className="text-lg text-gray-600 mb-8">
+              Your referral submission has been received. We&apos;ll reach out to you soon to connect you with your friend and get them started on their loan journey.
+            </p>
+            <a
+              href="/"
+              className="inline-block bg-gradient-to-r from-primary to-teal hover:from-primary-dark hover:to-teal-dark text-white px-8 py-3 rounded-lg font-semibold transition-all"
+            >
+              Return Home
+            </a>
+          </div>
         </div>
-      </div>
+      </PageTransition>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Hero Section */}
-      <div className="relative text-white py-20 md:py-28 lg:py-32 overflow-hidden">
-        {/* Background Image Layer */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/images/pexels-fauxels-3184418.jpg"
-            alt="Team collaboration"
-            fill
-            priority
-            className="object-cover object-center"
-            quality={90}
-            sizes="100vw"
-          />
-        </div>
+    <PageTransition>
+      <div className="min-h-screen bg-white relative overflow-hidden">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         
-        {/* Navy Overlay - More transparent than hero section with fade effect */}
-        <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/75 via-navy/65 to-navy/50" />
-        
-        {/* Bottom fade transition */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-50 via-gray-50/40 to-transparent pointer-events-none z-[2]"></div>
-        
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-block mb-6">
-            <span className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm md:text-base font-medium border border-white/30">
-              Referral Program
-            </span>
+        {/* Hero Section */}
+        <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden w-full">
+          {/* Background Image Layer */}
+          <div className="absolute inset-0 z-0">
+            <NextImage
+              src="/images/pexels-fauxels-3184418.jpg"
+              alt="Team collaboration"
+              fill
+              priority
+              className="object-cover object-center animate-zoom-in-slow"
+              quality={90}
+              sizes="100vw"
+            />
           </div>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            It Pays To<br />
-            <span className="bg-gradient-to-r from-white to-teal-100 bg-clip-text text-transparent">
-              Be Friends
-            </span>
-          </h1>
-          <p className="text-base md:text-lg max-w-2xl mx-auto opacity-90 leading-relaxed">
-            Recommend someone and earn <span className="font-semibold text-white">*10% of our net commission</span> when they secure a loan through us!
-          </p>
-        </div>
-      </div>
+          
+          {/* Dark overlay for strong text contrast */}
+          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/90 via-navy/75 to-navy/55" />
+          
+          {/* Particles */}
+          <ParticleBackground intensity="subtle" />
+          
+          {/* Bottom fade transition */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-[2]"></div>
+          
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+            <ScrollReveal>
+              <div className="inline-block mb-6">
+                <span className="px-4 py-2 bg-white/95 text-navy rounded-full text-sm md:text-base font-semibold border border-white shadow-lg">
+                  Referral Program
+                </span>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+                <span className="text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]">It Pays To</span>
+                <br />
+                <AnimatedGradientText 
+                  className="text-5xl md:text-6xl lg:text-7xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)]"
+                  colorFrom="hsl(0, 0%, 100%)"
+                  colorTo="hsl(174, 70%, 85%)"
+                >
+                  Be Friends
+                </AnimatedGradientText>
+              </h1>
+            </ScrollReveal>
+            <ScrollReveal delay={0.2}>
+              <p className="text-base md:text-lg max-w-2xl mx-auto text-white/95 leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.3)]">
+                Recommend someone and earn <span className="font-semibold text-white">*10% of our net commission</span> when they secure a loan through us!
+              </p>
+            </ScrollReveal>
+          </div>
+        </section>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         {/* Referral Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 lg:p-12 mb-12">
+        <ScrollReveal>
+          <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 lg:p-12 mb-12">
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Your Details Section */}
             <div>
@@ -286,6 +331,11 @@ export default function ReferralPage() {
               </p>
             </div>
 
+            {submitError && (
+              <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-center">
+                <p className="text-sm text-red-800">{submitError}</p>
+              </div>
+            )}
             {/* Submit Button */}
             <div className="flex items-center justify-center pt-4">
               <button
@@ -299,24 +349,24 @@ export default function ReferralPage() {
                       Sending...
                     </>
                   ) : (
-                    <>
-                      Submit Referral <Heart className="w-5 h-5 fill-current" />
-                    </>
+                    'Submit Referral'
                   )}
               </button>
             </div>
           </form>
-        </div>
+          </div>
+        </ScrollReveal>
 
         {/* WhatsApp Alternative */}
-        <div className="bg-gradient-to-r from-primary to-teal rounded-2xl shadow-xl p-6 md:p-8 mb-12">
+        <ScrollReveal delay={0.1}>
+          <div className="bg-gradient-to-r from-primary to-teal rounded-2xl shadow-xl p-6 md:p-8 mb-12">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-white">
               <h3 className="text-xl md:text-2xl font-bold mb-2">Prefer WhatsApp?</h3>
               <p className="text-white/90">You may also submit a referral by messaging us directly.</p>
             </div>
             <a
-              href="https://wa.me/6591234567?text=Hello! I would like to pass a referral to Brilliance Advisory."
+              href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '6591234567'}?text=${encodeURIComponent('Hello! I would like to pass a referral to Brilliance Advisory.')}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-all flex items-center gap-2 whitespace-nowrap"
@@ -326,12 +376,16 @@ export default function ReferralPage() {
             </a>
           </div>
         </div>
+        </ScrollReveal>
 
         {/* How To Receive Section */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 lg:p-12 mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
-            How Does the Referral Program Work?
-          </h2>
+        <ScrollReveal delay={0.2}>
+          <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 lg:p-12 mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
+              <AnimatedGradientText className="text-3xl md:text-4xl">
+                How Does the Referral Program Work?
+              </AnimatedGradientText>
+            </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Step 1 */}
@@ -373,14 +427,18 @@ export default function ReferralPage() {
               </p>
             </div>
           </div>
-        </div>
+          </div>
+        </ScrollReveal>
 
         {/* FAQ Section */}
-        <div className="mb-12">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Quick Answers to your burning questions
-            </h2>
+        <ScrollReveal delay={0.3}>
+          <div className="mb-12">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <AnimatedGradientText className="text-3xl md:text-4xl">
+                  Quick Answers to your burning questions
+                </AnimatedGradientText>
+              </h2>
             <p className="text-lg text-gray-600">
               Don&apos;t see your question listed?
             </p>
@@ -415,10 +473,12 @@ export default function ReferralPage() {
               </AccordionItemDark>
             ))}
           </AccordionDark>
-        </div>
+          </div>
+        </ScrollReveal>
 
         {/* Terms Section */}
-        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 md:p-8">
+        <ScrollReveal delay={0.4}>
+          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 md:p-8">
           <div className="flex items-start gap-3 mb-4">
             <Info className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
             <h3 className="text-xl font-bold text-gray-900">
@@ -445,7 +505,9 @@ export default function ReferralPage() {
             </li>
           </ul>
         </div>
+        </ScrollReveal>
       </div>
     </div>
+    </PageTransition>
   )
 }

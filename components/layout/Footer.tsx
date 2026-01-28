@@ -1,9 +1,13 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
+import NextImage from 'next/image'
 import { Facebook, Twitter, Linkedin, Instagram } from 'lucide-react'
 
 export default function Footer() {
+  // State-based image fallback handling
+  const [logoSrc, setLogoSrc] = useState('/images/whitelogo.svg')
   const footerLinks = {
     company: [
       { href: '/aboutus', label: 'About Us' },
@@ -42,23 +46,22 @@ export default function Footer() {
           <div>
             <Link href="/" className="flex items-center gap-2 mb-4">
               <div className="relative h-12 w-12 flex-shrink-0">
-                <img
-                  src="/images/whitelogo.svg"
+                <NextImage
+                  src={logoSrc}
                   alt="Brilliance Advisory Logo"
+                  width={48}
+                  height={48}
                   className="h-12 w-12 object-contain"
-                  onError={(e) => {
+                  onError={() => {
                     // Fallback to PNG if SVG doesn't exist
-                    if (e.currentTarget.src.includes('.svg')) {
-                      e.currentTarget.src = '/images/whitelogo.png'
+                    if (logoSrc.includes('.svg')) {
+                      setLogoSrc('/images/whitelogo.png')
                     }
                   }}
                 />
               </div>
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-navy to-teal bg-clip-text text-transparent hover:from-teal hover:to-navy transition-all cursor-pointer">Brilliance Advisory</h3>
+              <h3 className="text-2xl font-bold text-white cursor-pointer">Brilliance Advisory</h3>
             </Link>
-            <p className="text-sm text-gray-400 mb-4 leading-relaxed">
-              Singapore-based financial consultancy specialising in human-led personal and business loan advisory. We provide personalised guidance to help you secure the right financing solution.
-            </p>
             <div className="flex space-x-4">
               {socialLinks.map((social) => {
                 const Icon = social.icon

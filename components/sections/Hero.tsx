@@ -1,18 +1,40 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
+import NextImage from 'next/image'
 import { motion } from 'motion/react'
 import { Button } from '@/components/ui/Button'
-import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
-import { TypingText } from '@/components/ui/TypingText'
+import { ParticleBackground } from '@/components/background/ParticleBackground'
+
+const HEADLINE = 'Find the Best Loans in Singapore'
+const WORDS = HEADLINE.split(' ')
+const SUBTEXT = (
+  <>
+    <span className="text-white">Compare personal loans, business loans, and more from top banks. </span>
+    <span className="text-gray-200">Fast approval, transparent rates, no hidden fees.</span>
+  </>
+)
+
+const WORD_STAGGER_MS = 70
+const HEADLINE_DURATION_MS = WORDS.length * WORD_STAGGER_MS
+const SUBTEXT_DELAY_MS = HEADLINE_DURATION_MS + 200
 
 export default function Hero() {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setPrefersReducedMotion(mq.matches)
+    const handler = () => setPrefersReducedMotion(mq.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden w-full">
       {/* Background Image Layer with Zoom Animation */}
       <div className="absolute inset-0 z-0">
-        <Image
+        <NextImage
           src="/images/sean-pollock-PhYq704ffdA-unsplash.jpg"
           alt="Modern skyscrapers"
           fill
@@ -26,35 +48,54 @@ export default function Hero() {
       {/* Navy Overlay for Text Readability - Gradient from top to bottom, stronger at top for header */}
       <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/80 via-navy/65 to-navy/45" />
       
+      {/* Particles */}
+      <ParticleBackground intensity="subtle" />
+      
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
         <div className="text-center w-full">
-          {/* Main heading with gradient animation - white/light gradient for contrast */}
-          <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 leading-tight">
-            <AnimatedGradientText 
-              className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
-              colorFrom="hsl(0, 0%, 100%)"
-              colorTo="hsl(180, 45%, 70%)"
-            >
-              Find the Best Loans in Singapore
-            </AnimatedGradientText>
+          {/* Main heading: word-by-word drop-in or single fade (reduced motion) */}
+          <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 leading-tight bg-gradient-to-r from-white via-white to-[hsl(180,45%,70%)] bg-clip-text text-transparent">
+            {prefersReducedMotion ? (
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+              >
+                {HEADLINE}
+              </motion.span>
+            ) : (
+              WORDS.map((word, i) => (
+                <motion.span
+                  key={`${word}-${i}`}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.5,
+                    delay: i * (WORD_STAGGER_MS / 1000),
+                    ease: 'easeOut',
+                  }}
+                  style={{ display: 'inline-block', marginRight: '0.25em' }}
+                >
+                  {word}
+                </motion.span>
+              ))
+            )}
           </h1>
           
-          {/* Description with typing animation */}
-          <p className="text-xl md:text-2xl lg:text-3xl mb-12 text-white max-w-4xl mx-auto text-center text-body">
-            <TypingText
-              text="Compare personal loans, business loans, and more from top banks. "
-              speed={40}
-              delay={1200}
-              className="text-white"
-            />
-            <TypingText
-              text="Fast approval, transparent rates, no hidden fees."
-              speed={40}
-              delay={1200 + (40 * "Compare personal loans, business loans, and more from top banks. ".length)}
-              className="text-gray-200"
-            />
-          </p>
+          {/* Subtext: fade-in after headline */}
+          <motion.p
+            className="text-xl md:text-2xl lg:text-3xl mb-12 text-white max-w-4xl mx-auto text-center text-body"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.6,
+              delay: prefersReducedMotion ? 0.3 : SUBTEXT_DELAY_MS / 1000,
+              ease: 'easeOut',
+            }}
+          >
+            {SUBTEXT}
+          </motion.p>
           
           {/* Buttons */}
           <motion.div
@@ -62,7 +103,7 @@ export default function Hero() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ 
               duration: 0.9, 
-              delay: 1.2,
+              delay: prefersReducedMotion ? 0.5 : 1.2,
               ease: 'easeOut'
             }}
             className="flex flex-col sm:flex-row gap-6 justify-center"

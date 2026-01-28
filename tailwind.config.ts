@@ -151,16 +151,6 @@ const config: Config = {
   				light: 'hsl(180, 45%, 50%)',
   				dark: 'hsl(180, 45%, 35%)',
   			},
-  			navy: {
-  				DEFAULT: 'hsl(220, 50%, 25%)',
-  				light: 'hsl(220, 50%, 35%)',
-  				dark: 'hsl(220, 50%, 20%)',
-  			},
-  			teal: {
-  				DEFAULT: 'hsl(180, 45%, 40%)',
-  				light: 'hsl(180, 45%, 50%)',
-  				dark: 'hsl(180, 45%, 35%)',
-  			},
   			accent: {
   				DEFAULT: 'hsl(var(--accent))',
   				foreground: 'hsl(var(--accent-foreground))',

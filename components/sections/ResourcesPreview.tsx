@@ -2,7 +2,7 @@
 
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
-import Image from 'next/image'
+import NextImage from 'next/image'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
@@ -11,18 +11,19 @@ import { GlowBackground } from '@/components/background/GlowBackground'
 import { motion } from 'motion/react'
 import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
 import { resourcesArticles } from '@/lib/resources'
-import { educationArticles } from '@/lib/education'
+import { educationArticles, type EducationArticle } from '@/lib/education'
+import type { BlogPost } from '@/types'
 
 export default function ResourcesPreview() {
   // Select 3 interesting topics
-  const selectedResources = [
+  const selectedResources: (BlogPost | EducationArticle)[] = [
     // Credit Score Impact - from resources (blog)
     resourcesArticles.find(article => article.slug === 'credit-score-impact-personal-loan-eligibility'),
     // Debt Consolidation - from education
     educationArticles.find(article => article.slug === 'debt-consolidation-safe-strategies-singapore'),
     // Personal Loan Interest - from education
     educationArticles.find(article => article.slug === 'personal-loan-interest-singapore'),
-  ].filter(Boolean) // Remove any undefined entries
+  ].filter((r): r is BlogPost | EducationArticle => r != null)
 
   // If we don't have all 3, use fallbacks
   if (selectedResources.length < 3) {
@@ -48,7 +49,7 @@ export default function ResourcesPreview() {
     return `/resources/education/${resource.slug}`
   }
 
-  const getResourceType = (resource: any) => {
+  const getResourceType = (resource: BlogPost | EducationArticle) => {
     const isBlog = resourcesArticles.some(article => article.slug === resource.slug)
     return isBlog ? 'blog' : 'education'
   }
@@ -109,7 +110,7 @@ export default function ResourcesPreview() {
                       <div className="relative w-full aspect-[4/3] bg-gray-100 overflow-hidden">
                         {imagePath ? (
                           <>
-                            <Image
+                            <NextImage
                               src={imagePath}
                               alt={resource.title}
                               fill

@@ -90,6 +90,45 @@ export default function DebtConsolidationCalculator() {
   const totalSavings = (currentTotalMonthly * currentPayoffMonths) - consolidatedLoan.totalAmount
   const interestSavings = currentTotalInterest - consolidatedLoan.totalInterest
   
+  // Determine if consolidation is beneficial
+  const isConsolidationBeneficial = () => {
+    // Consolidation is beneficial if ANY of these are true:
+    // 1. Lower monthly payment
+    // 2. Lower total interest
+    // 3. Lower total amount
+    // 4. Shorter payoff time (and not significantly worse in other metrics)
+    
+    const hasLowerMonthly = consolidatedLoan.monthlyPayment < currentTotalMonthly
+    const hasLowerInterest = consolidatedLoan.totalInterest < currentTotalInterest
+    const hasLowerTotal = consolidatedLoan.totalAmount < (currentTotalBalance + currentTotalInterest)
+    const hasShorterPayoff = consolidatedTenure < currentPayoffMonths && currentPayoffMonths !== 999
+    
+    // Consolidation is beneficial if it improves at least one metric significantly
+    // without making others significantly worse
+    const monthlyImprovement = currentTotalMonthly > 0 
+      ? ((currentTotalMonthly - consolidatedLoan.monthlyPayment) / currentTotalMonthly) * 100 
+      : 0
+    const interestImprovement = currentTotalInterest > 0 
+      ? ((currentTotalInterest - consolidatedLoan.totalInterest) / currentTotalInterest) * 100 
+      : 0
+    
+    // If monthly payment is significantly lower (>10% reduction), it's beneficial
+    if (monthlyImprovement > 10) return true
+    
+    // If total interest is significantly lower (>10% reduction), it's beneficial
+    if (interestImprovement > 10) return true
+    
+    // If total amount is lower, it's beneficial
+    if (hasLowerTotal) return true
+    
+    // If payoff time is shorter and not much worse in other metrics, it's beneficial
+    if (hasShorterPayoff && monthlyImprovement >= -5 && interestImprovement >= -5) return true
+    
+    return false
+  }
+  
+  const consolidationIsBeneficial = isConsolidationBeneficial()
+  
   // Auto-update consolidated amount when debts change
   useEffect(() => {
     const total = debts.reduce((sum, debt) => sum + debt.balance, 0)
@@ -295,7 +334,11 @@ export default function DebtConsolidationCalculator() {
             <div className="bg-white rounded-lg p-6 border-2 border-teal">
               <div className="flex items-center justify-between mb-5">
                 <h4 className="text-lg font-semibold text-gray-900">Consolidated Loan</h4>
-                <Badge variant="success">Recommended</Badge>
+                {consolidationIsBeneficial ? (
+                  <Badge variant="success">Recommended</Badge>
+                ) : (
+                  <Badge variant="warning">Consider Carefully</Badge>
+                )}
               </div>
               <div className="space-y-4">
                 <div className="flex justify-between">
@@ -347,6 +390,17 @@ export default function DebtConsolidationCalculator() {
               </p>
             )}
           </div>
+
+          {/* Warning message for non-beneficial consolidation */}
+          {!consolidationIsBeneficial && (
+            <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <p className="text-sm text-yellow-800">
+                <strong>Note:</strong> Based on the current terms, consolidation may not provide significant benefits. 
+                The consolidated loan has higher monthly payments, total interest, or total cost compared to your current situation. 
+                Consider adjusting the interest rate, loan amount, or tenure to find better terms.
+              </p>
+            </div>
+          )}
         </Card>
       )}
     </div>

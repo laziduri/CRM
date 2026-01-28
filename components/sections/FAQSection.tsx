@@ -9,12 +9,12 @@ const faqs = [
   {
     number: 1,
     question: 'What does Brilliance Advisory actually do?',
-    answer: 'Brilliance Advisory is Singapore\'s trusted financial advisory and consulting firm specialising in loan and grant solutions. Unlike automated matching platforms, we provide personalised one-on-one consultations with our experienced team. Our consultants take the time to understand your unique financial situation, business needs, and goals. We then provide expert guidance, compare options from our extensive network of banks and financial institutions, and personally guide you through the entire application process. We believe in building genuine relationships with our clients, offering tailored advice and ongoing support throughout your financing journey.',
+    answer: 'Brilliance Advisory is a Singapore-based financial consultancy that provides advisory services. We are not a lender. We do not lend money directly. Our role is to provide expert guidance and connect you with suitable lenders from our network of banks and licensed financial institutions in Singapore. Unlike automated matching platforms, we provide personalised one-on-one consultations with our experienced team. Our consultants take the time to understand your unique financial situation, business needs, and goals. We then provide expert guidance, compare options from our network, and personally guide you through the entire application process. We believe in building genuine relationships with our clients, offering tailored advice and ongoing support throughout your financing journey.',
   },
   {
     number: 2,
     question: 'How much does Brilliance Advisory charge for advisory services?',
-    answer: 'Brilliance Advisory provides professional loan advisory services tailored to each individual or business situation. Any advisory fees are assessed on a case-by-case basis, depending on the scope and complexity of work involved. We are fully transparent about our fees — all applicable fees, if any, will be clearly explained and agreed upon before any engagement of services. There are no hidden charges.',
+    answer: 'Brilliance Advisory provides professional loan advisory services tailored to each individual or business situation. Our consultation fees are assessed on a case-by-case basis, depending on the scope and complexity of work involved. We are fully transparent about our fees — all applicable fees will be clearly explained and agreed upon before any engagement of services. There are no hidden charges.',
   },
   {
     number: 3,

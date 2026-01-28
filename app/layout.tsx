@@ -1,5 +1,6 @@
 import "./globals.css"
 import { ConditionalAuthProvider } from "@/components/ConditionalAuthProvider"
+import PreloaderWrapper from "@/components/PreloaderWrapper"
 
 export default function RootLayout({
   children,
@@ -10,7 +11,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ConditionalAuthProvider>
-          {children}
+          <PreloaderWrapper>
+            {children}
+          </PreloaderWrapper>
         </ConditionalAuthProvider>
       </body>
     </html>

@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
+import NextImage from 'next/image'
 import { motion } from 'motion/react'
 import { 
   Wallet, 
@@ -26,6 +26,12 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import AccordionDark, { AccordionItemDark } from '@/components/ui/AccordionDark'
+import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
+import { AmbientBackground } from '@/components/background/AmbientBackground'
+import { GlowBackground } from '@/components/background/GlowBackground'
+import { ScrollReveal } from '@/components/ui/ScrollReveal'
+import { PageTransition } from '@/components/layout/PageTransition'
+import { ParticleBackground } from '@/components/background/ParticleBackground'
 
 const personalLoanTypes = [
   {
@@ -121,7 +127,7 @@ const faqs = [
   {
     number: 1,
     question: 'What makes Brilliance Advisory different from online loan comparison platforms?',
-    answer: 'While digital platforms offer automated matching, Brilliance Advisory provides personalized financial consulting through experienced advisors. We take time to understand your financial situation, goals, and preferences through one-on-one consultations. Our consultants leverage their expertise and relationships with banking partners to secure the most favorable terms specifically tailored to your profile. You&apos;ll work directly with a dedicated consultant who guides you through the entire process, answers your questions, and ensures you make informed decisions aligned with your financial objectives.',
+    answer: 'While digital platforms offer automated matching, Brilliance Advisory provides personalised financial consulting through experienced advisors. We take time to understand your financial situation, goals, and preferences through one-on-one consultations. Our consultants leverage their expertise and relationships with banking partners to secure the most favourable terms specifically tailored to your profile. You&apos;ll work directly with a dedicated consultant who guides you through the entire process, answers your questions, and ensures you make informed decisions aligned with your financial objectives.',
   },
   {
     number: 2,
@@ -136,7 +142,7 @@ const faqs = [
   {
     number: 4,
     question: 'What documents do I need to prepare for the loan application process?',
-    answer: 'Required documentation typically includes identification (NRIC for Singaporeans/PRs, or Passport and Employment Pass for foreigners), income verification (recent payslips, CPF statements, or Notice of Assessment), proof of residence (utility bills or bank statements), and employment confirmation (employment letter or contract). Specific requirements may vary by lender and loan amount. Our consultants will provide you with a personalized checklist during your consultation, ensuring you have all necessary documents prepared before submission, which streamlines the approval process.',
+    answer: 'Required documentation typically includes identification (NRIC for Singaporeans/PRs, or Passport and Employment Pass for foreigners), income verification (recent payslips, CPF statements, or Notice of Assessment), proof of residence (utility bills or bank statements), and employment confirmation (employment letter or contract). Specific requirements may vary by lender and loan amount. Our consultants will provide you with a personalised checklist during your consultation, ensuring you have all necessary documents prepared before submission, which streamlines the approval process.',
   },
   {
     number: 5,
@@ -156,169 +162,172 @@ const faqs = [
   {
     number: 8,
     question: 'How does Brilliance Advisory ensure I get the best interest rates available?',
-    answer: 'Our competitive advantage lies in our established relationships with multiple banking partners and our deep understanding of their credit assessment criteria. Our consultants leverage their expertise to present your application in the most favorable light, ensuring all positive factors are highlighted. We also negotiate on your behalf, utilising our relationship managers and knowledge of current promotions or preferential rates. Additionally, by comparing options across our extensive network, we ensure you receive the most competitive terms available for your specific profile. Our commission structure aligns our interests with yours—we succeed when you secure favorable terms.',
+    answer: 'Our competitive advantage lies in our established relationships with multiple banking partners and our deep understanding of their credit assessment criteria. Our consultants leverage their expertise to present your application in the most favourable light, ensuring all positive factors are highlighted. We also negotiate on your behalf, utilising our relationship managers and knowledge of current promotions or preferential rates. Additionally, by comparing options across our extensive network, we ensure you receive the most competitive terms available for your specific profile. Our commission structure aligns our interests with yours—we succeed when you secure favourable terms.',
   },
 ]
 
 export default function PersonalLoansPage() {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden w-full">
-        {/* Background Image Layer with Zoom Animation */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/images/922dd29d-a92d-4734-bd06-65935a20cb06.png"
-            alt="Personal financing solutions"
-            fill
-            priority
-            className="object-cover object-center animate-zoom-in-slow"
-            quality={90}
-            sizes="100vw"
-          />
-        </div>
+    <PageTransition>
+      <div className="min-h-screen bg-white relative overflow-hidden">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         
-        {/* Solid White Overlay for Text Readability - No fade */}
-        <div className="absolute inset-0 z-[1] bg-white/65" />
-        
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
-          <div className="text-center max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
-            >
-              <Badge variant="primary" className="mb-6">Personal Financing</Badge>
-            </motion.div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-gradient-text">
-              {['Personal', 'Financing'].map((word, index) => (
-                <motion.span
-                  key={index}
-                  className="inline-block mr-3"
-                  initial={{ opacity: 0, y: -50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    duration: 0.8,
-                    delay: 0.4,
-                    ease: [0.25, 0.46, 0.45, 0.94],
-                  }}
-                >
-                  {word}
-                </motion.span>
-              ))}
-              {['Made', 'Simple'].map((word, index) => (
-                <motion.span
-                  key={index}
-                  className="inline-block mr-3"
-                  initial={{ opacity: 0, y: -50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    duration: 0.8,
-                    delay: 0.8 + (index * 0.3),
-                    ease: [0.25, 0.46, 0.45, 0.94],
-                  }}
-                >
-                  {word}
-                </motion.span>
-              ))}
-            </h1>
-            <motion.p 
-              className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed"
-              initial={{ opacity: 0, x: 100 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.5, ease: 'easeOut', delay: 0.3 }}
-            >
-              No hidden steps. Just structured guidance and clarity.
-            </motion.p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-float-up-delay-3">
-              <Link href="/apply" className="w-full sm:w-auto">
-                <Button variant="primary" size="lg" className="text-lg px-8 py-6 w-full sm:w-auto min-w-[240px] inline-flex items-center justify-center gap-2">
-                  Schedule a Consultation
-                  <ArrowRight className="w-5 h-5" />
-                </Button>
-              </Link>
+        <main id="main-content">
+        {/* Hero Section */}
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden w-full">
+          {/* Background Image Layer with Zoom Animation */}
+          <div className="absolute inset-0 z-0">
+            <NextImage
+              src="/images/922dd29d-a92d-4734-bd06-65935a20cb06.png"
+              alt="Personal financing solutions"
+              fill
+              priority
+              className="object-cover object-center animate-zoom-in-slow"
+              quality={90}
+              sizes="100vw"
+            />
+          </div>
+          
+          {/* Navy Overlay for Text Readability */}
+          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/80 via-navy/65 to-navy/45" />
+          
+          {/* Particles */}
+          <ParticleBackground intensity="subtle" />
+          
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
+            <div className="text-center max-w-4xl mx-auto">
+              <ScrollReveal>
+                <Badge variant="primary" className="mb-6">Personal Financing</Badge>
+              </ScrollReveal>
+              <ScrollReveal delay={0.1}>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                  <AnimatedGradientText 
+                    className="text-4xl md:text-5xl lg:text-6xl"
+                    colorFrom="hsl(0, 0%, 100%)"
+                    colorTo="hsl(180, 45%, 70%)"
+                  >
+                    Personal Financing Made Simple
+                  </AnimatedGradientText>
+                </h1>
+              </ScrollReveal>
+              <ScrollReveal delay={0.2}>
+                <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
+                  No hidden steps. Just structured guidance and clarity.
+                </p>
+              </ScrollReveal>
+              <ScrollReveal delay={0.3}>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                  <Link href="/apply" className="w-full sm:w-auto">
+                    <Button variant="primary" size="lg" className="text-lg px-8 py-6 w-full sm:w-auto min-w-[240px] inline-flex items-center justify-center gap-2">
+                      Schedule a Consultation
+                      <ArrowRight className="w-5 h-5" />
+                    </Button>
+                  </Link>
+                </div>
+              </ScrollReveal>
             </div>
           </div>
-        </div>
-        
-        {/* Bottom gradient fade - seamless transition to next section */}
-        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-[2]"></div>
-      </section>
+          
+          {/* Bottom gradient fade - seamless transition to next section */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-[2]"></div>
+        </section>
 
       {/* What are Personal Loans Section */}
-      <section className="py-20 bg-white relative overflow-hidden bg-business-stars">
-        <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-        <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-teal-light/5 rounded-full blur-3xl opacity-30 animate-float"></div>
+      <section className="py-20 bg-white relative overflow-hidden">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-6 animate-gradient-text animate-slide-in-left">
-                What is a Personal Loan?
-              </h2>
+            <ScrollReveal>
+              <div className="text-center mb-12">
+                <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                  <AnimatedGradientText className="text-3xl md:text-4xl">
+                    What is a Personal Loan?
+                  </AnimatedGradientText>
+                </h2>
               <p className="text-lg text-gray-700 leading-relaxed mb-4 animate-slide-in-right">
                 A personal loan is an unsecured financing solution that provides you with immediate access to funds for various personal needs, from home renovations and education expenses to debt consolidation and significant life events. Unlike secured loans that require collateral, personal loans are approved based on your creditworthiness, income stability, and repayment capacity.
               </p>
               <p className="text-lg text-gray-700 leading-relaxed mb-6">
                 At Brilliance Advisory, we believe personal loans should be more than transactional—they should be strategic financial decisions made with expert guidance. Our consultants take a holistic approach to understanding your financial landscape, ensuring the loan structure you choose serves both your immediate needs and long-term financial well-being.
               </p>
-            </div>
+              </div>
+            </ScrollReveal>
             
             {/* Key Features Highlight */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-              <Card className="p-6 text-center animate-scale-in hover:scale-105 transition-transform duration-300">
-                <div className="text-3xl font-bold text-primary mb-2">Up to S$200,000</div>
-                <p className="text-gray-600 text-sm mb-2">Maximum loan amount from major banks</p>
-                <p className="text-xs text-gray-500">Higher limits for premium profiles</p>
-              </Card>
-              <Card className="p-6 text-center animate-scale-in hover:scale-105 transition-transform duration-300" style={{ animationDelay: '0.1s' }}>
-                <div className="text-3xl font-bold text-primary mb-2">1 – 7 Years</div>
-                <p className="text-gray-600 text-sm">Flexible repayment tenure to suit your needs</p>
-              </Card>
-              <Card className="p-6 text-center animate-scale-in hover:scale-105 transition-transform duration-300" style={{ animationDelay: '0.2s' }}>
-                <div className="text-3xl font-bold text-primary mb-2">No Collateral</div>
-                <p className="text-gray-600 text-sm">Unsecured financing based on creditworthiness</p>
-              </Card>
-              <Card className="p-6 text-center animate-scale-in hover:scale-105 transition-transform duration-300" style={{ animationDelay: '0.3s' }}>
-                <div className="text-3xl font-bold text-primary mb-2">3.48% - 11.88%</div>
-                <p className="text-gray-600 text-sm mb-2">EIR (Effective Interest Rate) p.a.</p>
-                <p className="text-xs text-gray-500">Competitive rates with expert negotiation</p>
-              </Card>
+              <ScrollReveal delay={0.1}>
+                <Card className="p-6 text-center hover:scale-105 transition-transform duration-300">
+                  <div className="text-3xl font-bold text-primary mb-2">Up to S$200,000</div>
+                  <p className="text-gray-600 text-sm mb-2">Maximum loan amount from major banks</p>
+                  <p className="text-xs text-gray-500">Higher limits for premium profiles</p>
+                </Card>
+              </ScrollReveal>
+              <ScrollReveal delay={0.2}>
+                <Card className="p-6 text-center hover:scale-105 transition-transform duration-300">
+                  <div className="text-3xl font-bold text-primary mb-2">1 – 7 Years</div>
+                  <p className="text-gray-600 text-sm">Flexible repayment tenure to suit your needs</p>
+                </Card>
+              </ScrollReveal>
+              <ScrollReveal delay={0.3}>
+                <Card className="p-6 text-center hover:scale-105 transition-transform duration-300">
+                  <div className="text-3xl font-bold text-primary mb-2">No Collateral</div>
+                  <p className="text-gray-600 text-sm">Unsecured financing based on creditworthiness</p>
+                </Card>
+              </ScrollReveal>
+              <ScrollReveal delay={0.4}>
+                <Card className="p-6 text-center hover:scale-105 transition-transform duration-300">
+                  <div className="text-3xl font-bold text-primary mb-2">3.48% - 11.88%</div>
+                  <p className="text-gray-600 text-sm mb-2">EIR (Effective Interest Rate) p.a.</p>
+                  <p className="text-xs text-gray-500">Competitive rates with expert negotiation</p>
+                </Card>
+              </ScrollReveal>
             </div>
           </div>
         </div>
       </section>
 
       {/* Common Uses of Personal Loans Section */}
-      <section className="py-20 bg-white relative overflow-hidden bg-business-stars">
-        <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-        <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl opacity-30 animate-pulse-glow"></div>
+      <section className="py-20 bg-white relative overflow-hidden">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-text animate-rotate-in">
-              Common Uses for Personal Loans
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-float-up-delay-2">
-              Whether you&apos;re planning for the future, managing expenses, or pursuing personal goals, our consultants help you structure financing that supports your aspirations.
-            </p>
-          </div>
+          <ScrollReveal>
+            <div className="text-center mb-16 relative">
+              {/* Faded background word "LOANS" */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+                <span className="text-[120px] md:text-[180px] lg:text-[240px] xl:text-[300px] font-bold text-gray-200/30 select-none" style={{
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1,
+                  fontFamily: 'inherit'
+                }}>
+                  LOANS
+                </span>
+              </div>
+              {/* Foreground content */}
+              <div className="relative z-10">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                  <AnimatedGradientText className="text-3xl md:text-4xl">
+                    Common Uses for Personal Loans
+                  </AnimatedGradientText>
+                </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-float-up-delay-2">
+                Whether you&apos;re planning for the future, managing expenses, or pursuing personal goals, our consultants help you structure financing that supports your aspirations.
+              </p>
+              </div>
+            </div>
+          </ScrollReveal>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {personalLoanTypes.map((loan, index) => {
               const Icon = loan.icon
-              const delayClasses = [
-                'animate-float-up-delay-1',
-                'animate-float-up-delay-2',
-                'animate-float-up-delay-3',
-                'animate-float-up-delay-4',
-                'animate-float-up-delay-5',
-                'animate-float-up-delay-6',
-              ]
               return (
-                <Card 
-                  key={index} 
-                  hover 
-                  className={`p-6 h-full flex flex-col ${delayClasses[index] || 'animate-float-up'} transform hover:scale-105 transition-all duration-300`}
-                >
+                <ScrollReveal key={index} delay={index * 0.1}>
+                  <Card 
+                    hover 
+                    className="p-6 h-full flex flex-col transform hover:scale-105 transition-all duration-300"
+                  >
                   <div className="mb-4">
                     <div className="w-14 h-14 bg-gradient-to-br from-primary to-teal rounded-lg flex items-center justify-center mb-4 shadow-lg">
                       <Icon className="w-7 h-7 text-white" strokeWidth={2.5} />
@@ -330,7 +339,8 @@ export default function PersonalLoansPage() {
                     Learn more
                     <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                   </Link>
-                </Card>
+                  </Card>
+                </ScrollReveal>
               )
             })}
           </div>
@@ -338,23 +348,28 @@ export default function PersonalLoansPage() {
       </section>
 
       {/* Interest Rates Comparison Table Section */}
-      <section className="py-20 bg-white relative overflow-hidden bg-business-stars">
-        <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl opacity-30 animate-pulse-glow"></div>
+      <section className="py-20 bg-white relative overflow-hidden">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-text animate-slide-in-left">
-              Interest Rates & Terms
-            </h2>
+          <ScrollReveal>
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <AnimatedGradientText className="text-3xl md:text-4xl">
+                  Interest Rates & Terms
+                </AnimatedGradientText>
+              </h2>
             <p className="text-lg text-gray-600 mb-2 animate-slide-in-right">
-              Interest rates are determined by your credit profile, income level, loan amount, and chosen lender. Our consultants leverage their expertise and relationships to negotiate the most favorable terms available for your specific situation.
+              Interest rates are determined by your credit profile, income level, loan amount, and chosen lender. Our consultants leverage their expertise and relationships to negotiate the most favourable terms available for your specific situation.
             </p>
             <p className="text-sm text-gray-500 animate-float-up-delay-2">
               <strong>Important:</strong> The Effective Interest Rate (EIR) reflects the true cost of borrowing, including all fees and charges. Processing fees vary from 0% to 3% for banks, with licensed moneylenders charging up to 10% of the principal amount (capped by MAS regulations).
             </p>
-          </div>
+            </div>
+          </ScrollReveal>
           
-          <div className="overflow-x-auto animate-scale-in" style={{ opacity: 0 }}>
+          <ScrollReveal delay={0.1}>
+            <div className="overflow-x-auto">
             <div className="inline-block min-w-full align-middle">
               <div className="overflow-hidden rounded-xl border border-secondary-gray3/50 shadow-lg transform hover:scale-[1.01] transition-transform duration-300">
                 <table className="min-w-full divide-y divide-secondary-gray3/30 bg-white">
@@ -398,49 +413,49 @@ export default function PersonalLoansPage() {
                 </table>
               </div>
             </div>
-          </div>
+            </div>
+          </ScrollReveal>
           
-          <div className="mt-8 text-center">
-            <Link href="/calculator">
-              <Button variant="outline" size="lg" className="border-2 border-primary text-primary hover:bg-primary hover:text-white inline-flex items-center justify-center gap-2">
-                Calculate Your Loan Repayment
-                <ArrowRight className="w-5 h-5" />
-              </Button>
-            </Link>
-          </div>
+          <ScrollReveal delay={0.2}>
+            <div className="mt-8 text-center">
+              <Link href="/calculator">
+                <Button variant="outline" size="lg" className="border-2 border-primary text-primary hover:bg-primary hover:text-white inline-flex items-center justify-center gap-2">
+                  Calculate Your Loan Repayment
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              </Link>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* Required Documents Section */}
-      <section className="py-20 bg-white relative overflow-hidden bg-business-stars">
-        <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-        <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-teal-light/5 rounded-full blur-3xl opacity-30 animate-float"></div>
+      <section className="py-20 bg-white relative overflow-hidden">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-text animate-rotate-in">
-              Required Documents
-            </h2>
+          <ScrollReveal>
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <AnimatedGradientText className="text-3xl md:text-4xl">
+                  Required Documents
+                </AnimatedGradientText>
+              </h2>
             <p className="text-lg text-gray-600 animate-slide-in-right">
-              Prepare these documents in advance to streamline your application process. Our consultants will provide a personalized checklist based on your specific lender selection.
+              Prepare these documents in advance to streamline your application process. Our consultants will provide a personalised checklist based on your specific lender selection.
             </p>
-          </div>
+            </div>
+          </ScrollReveal>
           
           <div className="flex flex-wrap justify-center gap-6 max-w-4xl mx-auto">
             {requiredDocuments.map((doc, index) => {
               const Icon = doc.icon
-              const delayClasses = [
-                'animate-scale-in',
-                'animate-scale-in',
-                'animate-scale-in',
-                'animate-scale-in',
-              ]
               return (
-                <Card 
-                  key={index} 
-                  hover 
-                  className={`p-6 text-center w-full sm:w-[280px] ${delayClasses[index] || 'animate-scale-in'} transform hover:scale-105 transition-all duration-300`}
-                  style={{ animationDelay: `${index * 0.15}s` }}
-                >
+                <ScrollReveal key={index} delay={index * 0.1}>
+                  <Card 
+                    hover 
+                    className="p-6 text-center w-full sm:w-[280px] transform hover:scale-105 transition-all duration-300"
+                  >
                   <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-lg flex items-center justify-center mx-auto mb-4 shadow-lg">
                     <Icon className="w-8 h-8 text-white" strokeWidth={2.5} />
                   </div>
@@ -452,108 +467,123 @@ export default function PersonalLoansPage() {
                   </Badge>
                   <h3 className="text-lg font-bold text-gray-900 mb-2">{doc.name}</h3>
                   <p className="text-sm text-gray-600">{doc.description}</p>
-                </Card>
+                  </Card>
+                </ScrollReveal>
               )
             })}
           </div>
           
-          <div className="mt-12 text-center">
-            <Link href="/apply">
-              <Button variant="primary" size="lg" className="inline-flex items-center justify-center gap-2">
-                Begin Your Application
-                <ArrowRight className="w-5 h-5" />
-              </Button>
-            </Link>
-          </div>
+          <ScrollReveal delay={0.4}>
+            <div className="mt-12 text-center">
+              <Link href="/apply">
+                <Button variant="primary" size="lg" className="inline-flex items-center justify-center gap-2">
+                  Begin Your Application
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              </Link>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* Why Choose Us Section */}
-      <section className="py-20 bg-white relative overflow-hidden bg-business-stars">
-        <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] h-[80%] pointer-events-none radial-glow-teal opacity-40 animate-pulse-glow"></div>
+      <section className="py-20 bg-white relative overflow-hidden">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-gradient-text animate-slide-in-left">
-              Why Choose Brilliance Advisory for Your Personal Loan Needs?
-            </h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <Card hover className="p-8 animate-slide-in-left transform hover:scale-105 transition-all duration-300">
-              <div className="flex items-start gap-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0 animate-pulse-glow">
-                  <Users className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Personalized Consultative Approach</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    We prioritise understanding your unique financial situation through comprehensive one-on-one consultations. Unlike automated platforms that simply match profiles to products, our experienced consultants take time to understand your goals, assess your repayment capacity, and recommend solutions that genuinely serve your best interests. Every recommendation is backed by careful analysis and explained in terms you can understand.
-                  </p>
-                </div>
-              </div>
-            </Card>
-            
-            <Card hover className="p-8 animate-slide-in-right transform hover:scale-105 transition-all duration-300">
-              <div className="flex items-start gap-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-                  <Target className="w-8 h-8 text-white" strokeWidth={2.5} />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Strategic Loan Structuring</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Our consultants don&apos;t just find you a loan—they help you structure financing strategically. We consider factors like your existing obligations, future financial plans, and overall debt management strategy. Whether you&apos;re consolidating debts, financing a major purchase, or managing unexpected expenses, we ensure the loan terms complement your broader financial picture rather than merely addressing an immediate need.
-                  </p>
-                </div>
-              </div>
-            </Card>
-          </div>
+          <ScrollReveal>
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <AnimatedGradientText className="text-3xl md:text-4xl">
+                  Why Choose Us?
+                </AnimatedGradientText>
+              </h2>
+            </div>
+          </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Card hover className="p-8 animate-slide-in-left transform hover:scale-105 transition-all duration-300">
-              <div className="flex items-start gap-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-                  <Sparkles className="w-8 h-8 text-white" strokeWidth={2.5} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 lg:gap-8">
+            <ScrollReveal delay={0.1}>
+              <Card hover className="p-8 h-full transform hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-start gap-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <Users className="w-8 h-8 text-white" strokeWidth={2.5} />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-3">Personalised Consultative Approach</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      One-on-one consultations to understand your goals and repayment capacity. Recommendations tailored to you, explained in plain terms.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Preferential Rates Through Relationships</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Our established relationships with leading banks and financial institutions enable us to negotiate preferential terms on your behalf. We leverage our understanding of each lender&apos;s criteria, current promotions, and preferential rate structures to present your application optimally. This often results in more favorable interest rates and terms than what you might secure through direct applications.
-                  </p>
+              </Card>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.2}>
+              <Card hover className="p-8 h-full transform hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-start gap-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <Target className="w-8 h-8 text-white" strokeWidth={2.5} />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-3">Strategic Loan Structuring</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      We structure financing around your obligations and plans—not just a product match. Terms that fit your full financial picture.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Card>
-            
-            <Card hover className="p-8 animate-slide-in-right transform hover:scale-105 transition-all duration-300">
-              <div className="flex items-start gap-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-                  <Shield className="w-8 h-8 text-white" strokeWidth={2.5} />
+              </Card>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.3}>
+              <Card hover className="p-8 h-full transform hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-start gap-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <Sparkles className="w-8 h-8 text-white" strokeWidth={2.5} />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-3">Preferential Rates</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Our relationships with leading banks help us negotiate better terms. You often get more favourable rates than applying directly.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Ongoing Support & Relationship Building</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Our commitment extends beyond loan approval and disbursement. Your dedicated consultant remains accessible for questions, guidance on repayment strategies, or future financial needs. We view our relationship as a long-term partnership, helping you navigate your financial journey with expert advice and genuine care for your financial well-being.
-                  </p>
+              </Card>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.4}>
+              <Card hover className="p-8 h-full transform hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-start gap-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-teal rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <Shield className="w-8 h-8 text-white" strokeWidth={2.5} />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-3">Ongoing Support</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Support doesn&apos;t end at disbursement. Your consultant stays available for questions, repayment guidance, and future needs.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
+            </ScrollReveal>
           </div>
         </div>
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-white relative overflow-hidden bg-business-stars">
-        <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-light/5 rounded-full blur-3xl opacity-40 animate-pulse-glow"></div>
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl opacity-40 animate-pulse-glow" style={{ animationDelay: '1s' }}></div>
+      <section className="py-20 bg-white relative overflow-hidden">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
             {/* Left Side - Text Content */}
-            <div className="flex flex-col justify-center">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight animate-gradient-text">
-                Frequently Asked Questions
-              </h2>
+            <ScrollReveal>
+              <div className="flex flex-col justify-center">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                  <AnimatedGradientText className="text-3xl md:text-4xl lg:text-5xl">
+                    Frequently Asked Questions
+                  </AnimatedGradientText>
+                </h2>
               <p className="text-lg text-gray-600 mb-8">
                 Have additional questions or ready to begin?
               </p>
@@ -567,11 +597,13 @@ export default function PersonalLoansPage() {
                   <ArrowRight className="w-5 h-5" />
                 </Button>
               </Link>
-            </div>
+              </div>
+            </ScrollReveal>
 
             {/* Right Side - FAQ Accordions */}
-            <div>
-              <AccordionDark>
+            <ScrollReveal delay={0.1}>
+              <div>
+                <AccordionDark>
                 {faqs.map((faq) => (
                   <AccordionItemDark 
                     key={faq.number} 
@@ -582,11 +614,14 @@ export default function PersonalLoansPage() {
                     <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
                   </AccordionItemDark>
                 ))}
-              </AccordionDark>
-            </div>
+                </AccordionDark>
+              </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
+      </main>
     </div>
+    </PageTransition>
   )
 }

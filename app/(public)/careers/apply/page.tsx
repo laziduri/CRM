@@ -32,6 +32,7 @@ function CareerApplicationForm() {
   
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const [resumeFileName, setResumeFileName] = useState('')
 
   // Get the job title from slug if position param exists
@@ -71,10 +72,24 @@ function CareerApplicationForm() {
 
   const onSubmit = async (data: ApplicationFormData) => {
     setIsSubmitting(true)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    setIsSubmitting(false)
-    setIsSubmitted(true)
+    setSubmitError(null)
+    try {
+      const response = await fetch('/api/submit-careers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      const result = await response.json()
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to submit application')
+      }
+      setIsSubmitted(true)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to submit. Please try again or email sales@brillianceadvisory.sg'
+      setSubmitError(message)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (isSubmitted) {
@@ -274,6 +289,11 @@ function CareerApplicationForm() {
                 )}
               </div>
 
+              {submitError && (
+                <div className="rounded-lg bg-red-50 border border-red-200 p-3">
+                  <p className="text-sm text-red-800">{submitError}</p>
+                </div>
+              )}
               {/* Submit Button */}
               <div className="pt-4">
                 <Button
