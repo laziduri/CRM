@@ -65,7 +65,7 @@
 @layer base {
   /* Lock root font-size so live matches dev (avoids browser/system default scaling) */
   html {
-    font-size: 16px;
+    font-size: 16px !important;
   }
   * {
     @apply border-border;

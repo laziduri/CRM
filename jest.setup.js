@@ -4,12 +4,12 @@ import '@testing-library/jest-dom'
 // Polyfill fetch for Node.js test environment
 import { TextEncoder, TextDecoder } from 'util'
 global.TextEncoder = TextEncoder
-global.TextDecoder = TextDecoder
+global.TextDecoder = TextDecoder as typeof global.TextDecoder
 
 // Use node-fetch for Node.js test environment
 if (typeof global.fetch === 'undefined') {
   const fetch = require('node-fetch')
-  global.fetch = fetch
+  global.fetch = fetch as typeof global.fetch
   // @ts-ignore - node-fetch doesn't have Response, Request, Headers in global
   global.Response = fetch.Response
   global.Request = fetch.Request

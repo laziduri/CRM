@@ -325,8 +325,8 @@ export default function AboutPage() {
             />
           </div>
           
-          {/* Overlay for Text Readability - navy only in bottom 1/4 */}
-          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/25 via-navy/35 via-[75%] to-primary" />
+          {/* Overlay for Text Readability - fade top-down, bottom half navy */}
+          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/40 via-primary to-primary" />
           
           {/* Particles */}
           <ParticleBackground intensity="subtle" />
@@ -352,13 +352,13 @@ export default function AboutPage() {
               </p>
             </ScrollReveal>
           </div>
-
-          {/* Bottom gradient fade to navy */}
-          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-primary via-primary/80 to-transparent pointer-events-none z-[2]" />
         </section>
 
       {/* Unified Vision, Mission, Purpose & Values Section - Interactive Tabs */}
       <section className="relative py-24 md:py-32 px-4 sm:px-6 lg:px-8 bg-primary">
+        <AmbientBackground intensity="moderate" />
+        <GlowBackground intensity="subtle" />
+        
         <div className="relative z-10 max-w-7xl mx-auto">
           {/* Section Header - FinPath Style */}
           <div className="text-center mb-16">
