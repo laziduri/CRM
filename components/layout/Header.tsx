@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import NextImage from 'next/image'
 import { useRouter, usePathname } from 'next/navigation'
 import { Menu, X, ChevronDown, User, LogOut, Settings, FileText, FolderKanban, CheckSquare, Calendar, BarChart3, GitBranch, Mic, MessageSquare, LayoutDashboard } from 'lucide-react'
 import { motion } from 'motion/react'
@@ -19,6 +20,7 @@ export default function Header() {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
   const [isConsultant, setIsConsultant] = useState(false)
   const [consultant, setConsultant] = useState<any>(null)
+  const [logoSrc, setLogoSrc] = useState('/images/brilliance-logo.svg')
   const profileDropdownRef = useRef<HTMLDivElement>(null)
 
   // Check if user is logged in as consultant - refresh on route changes
@@ -103,7 +105,7 @@ export default function Header() {
 
   return (
     <motion.header
-      initial={{ y: -100, opacity: 0 }}
+      initial={false}
       animate={{ y: 0, opacity: 1 }}
       transition={{ 
         duration: 1.2, 
@@ -117,21 +119,23 @@ export default function Header() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex justify-between items-center h-16 md:h-20 flex-nowrap">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0 min-w-0">
+          <Link href="/" className="flex items-center gap-2 min-w-0 flex-shrink">
             <div className="relative h-8 w-8 flex-shrink-0">
-              <img
-                src="/images/brilliance-logo.svg"
+              <NextImage
+                src={logoSrc}
                 alt="Brilliance Advisory Logo"
+                width={32}
+                height={32}
+                sizes="32px"
                 className="h-8 w-8 object-contain"
-                onError={(e) => {
-                  // Fallback to PNG if SVG doesn't exist
-                  if (e.currentTarget.src.includes('.svg')) {
-                    e.currentTarget.src = '/images/brilliance-logo.png'
+                onError={() => {
+                  if (logoSrc.includes('.svg')) {
+                    setLogoSrc('/images/brilliance-logo.png')
                   }
                 }}
               />
             </div>
-            <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-navy to-teal bg-clip-text text-transparent whitespace-nowrap">Brilliance Advisory</span>
+            <span className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-navy to-teal bg-clip-text text-transparent truncate min-w-0">Brilliance Advisory</span>
           </Link>
 
           {/* Desktop Navigation */}

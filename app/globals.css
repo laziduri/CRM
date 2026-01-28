@@ -63,15 +63,11 @@
 }
 
 @layer base {
-  /* Lock root font-size so live matches dev (avoids browser/system default scaling) */
-  html {
-    font-size: 16px !important;
-  }
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-x-hidden;
     font-feature-settings: "kern" 1, "liga" 1;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -291,4 +287,11 @@
 
 .animate-shimmer {
   animation: shimmer 3s ease-in-out infinite;
+}
+
+/* Unlayered: always wins regardless of Next.js production CSS order (dev/prod parity) */
+html,
+:root {
+  font-size: 16px !important;
+  -webkit-text-size-adjust: 100%;
 }

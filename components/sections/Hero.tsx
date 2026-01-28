@@ -58,7 +58,7 @@ export default function Hero() {
           <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 leading-tight bg-gradient-to-r from-white via-white to-[hsl(180,45%,70%)] bg-clip-text text-transparent">
             {prefersReducedMotion ? (
               <motion.span
-                initial={{ opacity: 0 }}
+                initial={false}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
               >
@@ -68,7 +68,7 @@ export default function Hero() {
               WORDS.map((word, i) => (
                 <motion.span
                   key={`${word}-${i}`}
-                  initial={{ opacity: 0, y: -20 }}
+                  initial={false}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
                     duration: 0.5,
@@ -86,7 +86,7 @@ export default function Hero() {
           {/* Subtext: fade-in after headline */}
           <motion.p
             className="text-xl md:text-2xl lg:text-3xl mb-12 text-white max-w-4xl mx-auto text-center text-body"
-            initial={{ opacity: 0, y: 12 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{
               duration: 0.6,
@@ -99,7 +99,7 @@ export default function Hero() {
           
           {/* Buttons */}
           <motion.div
-            initial={{ y: 50, opacity: 0 }}
+            initial={false}
             animate={{ y: 0, opacity: 1 }}
             transition={{ 
               duration: 0.9, 

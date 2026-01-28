@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts'
 import { DollarSign, TrendingUp, Calculator, Calendar, Info, ChevronDown } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
@@ -59,6 +59,16 @@ export default function LoanCalculator() {
   const [interestRate, setInterestRate] = useState(4.5)
   const [tenure, setTenure] = useState(36)
   const [showLoanTypes, setShowLoanTypes] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const mq = typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)')
+    if (!mq) return
+    setIsMobile(mq.matches)
+    const handler = () => setIsMobile(mq.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
 
   const calculation = calculateLoanPayment(loanAmount, interestRate, tenure)
 
@@ -281,43 +291,49 @@ export default function LoanCalculator() {
 
         <Card className="p-6">
           <h3 className="text-xl font-bold text-primary mb-6">Total Payment Breakdown</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={pieData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(1)}%`}
-                outerRadius={100}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip 
-                formatter={(value) => formatCurrency(Number(value))}
-                contentStyle={{ 
-                  backgroundColor: 'white', 
-                  border: '1px solid #E5E5E5', 
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-                }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-          <div className="mt-4 flex justify-center gap-6">
-            {pieData.map((entry, index) => (
-              <div key={entry.name} className="flex items-center gap-2">
-                <div 
-                  className="w-3 h-3 rounded-full" 
-                  style={{ backgroundColor: COLORS[index % COLORS.length] }}
-                ></div>
-                <span className="text-sm text-accent-gray2">{entry.name}</span>
-              </div>
-            ))}
+          <div className="flex flex-col">
+            {/* Chart: second on mobile (below legend), first on desktop */}
+            <div className="order-2 md:order-1">
+              <ResponsiveContainer width="100%" height={isMobile ? 220 : 300}>
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={isMobile ? false : ({ name, percent }) => `${name}: ${(percent * 100).toFixed(1)}%`}
+                    outerRadius={isMobile ? 70 : 100}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value) => formatCurrency(Number(value))}
+                    contentStyle={{
+                      backgroundColor: 'white',
+                      border: '1px solid #E5E5E5',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            {/* Legend: first on mobile (above chart), second on desktop (below chart) */}
+            <div className="order-1 md:order-2 flex justify-center gap-6 mb-4 md:mb-0 md:mt-4">
+              {pieData.map((entry, index) => (
+                <div key={entry.name} className="flex items-center gap-2">
+                  <div
+                    className="w-3 h-3 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                  />
+                  <span className="text-sm text-accent-gray2">{entry.name}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </Card>
       </div>

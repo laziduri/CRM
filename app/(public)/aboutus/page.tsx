@@ -325,8 +325,8 @@ export default function AboutPage() {
             />
           </div>
           
-          {/* Overlay for Text Readability - fade top-down, bottom half navy */}
-          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/40 via-primary to-primary" />
+          {/* Overlay for Text Readability - navy starts lower, bottom portion only */}
+          <div className="absolute inset-0 z-[1] bg-gradient-to-b from-navy/20 via-navy/30 via-[75%] to-primary" />
           
           {/* Particles */}
           <ParticleBackground intensity="subtle" />
@@ -356,9 +356,6 @@ export default function AboutPage() {
 
       {/* Unified Vision, Mission, Purpose & Values Section - Interactive Tabs */}
       <section className="relative py-24 md:py-32 px-4 sm:px-6 lg:px-8 bg-primary">
-        <AmbientBackground intensity="moderate" />
-        <GlowBackground intensity="subtle" />
-        
         <div className="relative z-10 max-w-7xl mx-auto">
           {/* Section Header - FinPath Style */}
           <div className="text-center mb-16">

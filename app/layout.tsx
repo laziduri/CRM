@@ -1,11 +1,17 @@
 import "./globals.css"
 import { ConditionalAuthProvider } from "@/components/ConditionalAuthProvider"
-import PreloaderWrapper from "@/components/PreloaderWrapper"
-import type { Viewport } from "next"
+import type { Metadata, Viewport } from "next"
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+}
+
+export const metadata: Metadata = {
+  icons: {
+    icon: "/icon.png",
+    apple: "/apple-icon.png",
+  },
 }
 
 export default function RootLayout({
@@ -20,9 +26,7 @@ export default function RootLayout({
       </head>
       <body>
         <ConditionalAuthProvider>
-          <PreloaderWrapper>
-            {children}
-          </PreloaderWrapper>
+          {children}
         </ConditionalAuthProvider>
       </body>
     </html>

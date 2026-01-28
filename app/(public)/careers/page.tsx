@@ -31,7 +31,6 @@ import {
   Dumbbell,
   Coffee,
   Calendar,
-  Stethoscope,
   DollarSign,
   GraduationCap,
   Home,
@@ -462,199 +461,154 @@ export default function CareersPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {/* Health & Medical */}
+            {/* Health & Wellbeing */}
             <Card className="border-2 border-primary/20 hover:shadow-xl transition-all group">
               <div className="p-6">
                 <div className="w-14 h-14 bg-gradient-to-br from-primary/10 to-teal/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Stethoscope className="w-7 h-7 text-primary" />
+                  <Heart className="w-7 h-7 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Health & Medical</h3>
-                <p className="text-gray-700 leading-relaxed mb-4">
-                  Comprehensive medical, dental, and vision coverage to keep you and your family healthy. We also provide health screening benefits and access to wellness programs.
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Health & Wellbeing</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  We believe great work starts with feeling good, both physically and mentally. Our benefits are designed to support your health, energy, and peace of mind, both in and outside of work.
                 </p>
-                <ul className="text-sm text-gray-600 space-y-2">
-                  <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-primary rounded-full"></span>
-                    Medical insurance coverage
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-primary rounded-full"></span>
-                    Dental and vision benefits
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-primary rounded-full"></span>
-                    Annual health screenings
-                  </li>
-                </ul>
               </div>
             </Card>
 
-            {/* Financial Wellness */}
+            {/* Rewards & Growth */}
             <Card className="border-2 border-teal/20 hover:shadow-xl transition-all group">
               <div className="p-6">
                 <div className="w-14 h-14 bg-gradient-to-br from-teal/10 to-primary/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <DollarSign className="w-7 h-7 text-teal" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Financial Wellness</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Rewards & Growth</h3>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  Competitive compensation packages with performance-based rewards. We offer financial planning support and retirement savings programs to help secure your future.
+                  Your effort should translate into real rewards. We offer clear earning potential and performance-based incentives that recognise results.
                 </p>
                 <ul className="text-sm text-gray-600 space-y-2">
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-teal rounded-full"></span>
-                    Competitive base salary
+                    Transparent salary structure
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-teal rounded-full"></span>
-                    Performance bonuses
+                    Performance-based commissions & bonuses
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-teal rounded-full"></span>
-                    CPF contributions
+                    Opportunities to grow income as you grow your role
                   </li>
                 </ul>
               </div>
             </Card>
 
-            {/* Work-Life Balance */}
+            {/* Flexibility & Balance */}
             <Card className="border-2 border-primary/20 hover:shadow-xl transition-all group">
               <div className="p-6">
                 <div className="w-14 h-14 bg-gradient-to-br from-primary/10 to-teal/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <Home className="w-7 h-7 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Work-Life Balance</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Flexibility & Balance</h3>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  Flexible work arrangements and generous leave policies help you maintain a healthy balance between your professional and personal life.
+                  We trust our people to manage their time responsibly. Flexibility isn&apos;t a perk here—it&apos;s how we work.
                 </p>
                 <ul className="text-sm text-gray-600 space-y-2">
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-primary rounded-full"></span>
-                    Flexible working hours
+                    Flexible working arrangements
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-primary rounded-full"></span>
-                    Generous annual leave
+                    Healthy work-life boundaries
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-primary rounded-full"></span>
-                    Work-from-home options
+                    Support for personal commitments when it matters
                   </li>
                 </ul>
               </div>
             </Card>
 
-            {/* Professional Development */}
+            {/* Career Development */}
             <Card className="border-2 border-teal/20 hover:shadow-xl transition-all group">
               <div className="p-6">
                 <div className="w-14 h-14 bg-gradient-to-br from-teal/10 to-primary/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <GraduationCap className="w-7 h-7 text-teal" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Professional Development</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Career Development</h3>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  Continuous learning opportunities through training programs, workshops, and mentorship. We invest in your growth and career advancement.
+                  We don&apos;t just hire, we invest. If you&apos;re driven to improve, we provide the tools, guidance, and opportunities to help you level up.
                 </p>
                 <ul className="text-sm text-gray-600 space-y-2">
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-teal rounded-full"></span>
-                    Training and workshops
+                    On-the-job learning and mentorship
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-teal rounded-full"></span>
-                    Mentorship programs
+                    Skill development through real client exposure
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-teal rounded-full"></span>
-                    Career development support
+                    Clear progression opportunities for high performers
                   </li>
                 </ul>
               </div>
             </Card>
 
-            {/* Team Culture */}
+            {/* Team & Culture */}
             <Card className="border-2 border-primary/20 hover:shadow-xl transition-all group">
               <div className="p-6">
                 <div className="w-14 h-14 bg-gradient-to-br from-primary/10 to-teal/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <Smile className="w-7 h-7 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Team Culture</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Team & Culture</h3>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  Regular team building activities, company events, and a supportive environment where collaboration and camaraderie thrive.
+                  You&apos;ll be surrounded by people who take their work seriously but not themselves. We value collaboration, respect, and showing up for one another.
                 </p>
                 <ul className="text-sm text-gray-600 space-y-2">
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-primary rounded-full"></span>
-                    Team building activities
+                    Supportive and collaborative team culture
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-primary rounded-full"></span>
-                    Company events and celebrations
+                    Regular team activities and company gatherings
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-primary rounded-full"></span>
-                    Collaborative workspace
+                    A positive, low-ego working environment
                   </li>
                 </ul>
               </div>
             </Card>
 
-            {/* Additional Perks */}
+            {/* Everyday Perks */}
             <Card className="border-2 border-teal/20 hover:shadow-xl transition-all group">
               <div className="p-6">
                 <div className="w-14 h-14 bg-gradient-to-br from-teal/10 to-primary/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <Coffee className="w-7 h-7 text-teal" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Additional Perks</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Everyday Perks</h3>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  Small touches that make a big difference, from refreshments in the office to recognition programs and employee appreciation initiatives.
+                  It&apos;s the small things that make work enjoyable. We make sure effort is noticed and milestones are celebrated.
                 </p>
                 <ul className="text-sm text-gray-600 space-y-2">
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-teal rounded-full"></span>
-                    Office refreshments
+                    Team lunches and office refreshments
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-teal rounded-full"></span>
-                    Employee recognition
+                    Recognition for great work
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-teal rounded-full"></span>
-                    Birthday and milestone celebrations
+                    Celebrations for birthdays and achievements
                   </li>
                 </ul>
               </div>
             </Card>
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative py-16 px-4 sm:px-6 lg:px-8">
-        {/* Subtle background pattern */}
-        <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
-        
-        {/* Soft gradient overlays */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-light/5 rounded-full blur-3xl opacity-30"></div>
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl opacity-30"></div>
-        
-        <div className="relative z-10 max-w-4xl mx-auto">
-          <Card className="bg-gradient-to-r from-primary to-teal text-white text-center">
-            <h2 className="text-3xl font-bold mb-4">Ready to Join Our Team?</h2>
-            <p className="text-lg mb-8 opacity-90">
-              Explore our open positions and take the next step in your career with Brilliance Advisory.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="#open-positions">
-                <Button variant="secondary" size="lg" className="bg-white text-primary hover:bg-gray-100">
-                  View All Positions
-                </Button>
-              </Link>
-              <Link href="/contact">
-                <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10">
-                  Contact Us
-                </Button>
-              </Link>
-            </div>
-          </Card>
         </div>
       </section>
     </div>
