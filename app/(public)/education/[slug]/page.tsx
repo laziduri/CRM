@@ -38,7 +38,7 @@ export default function EducationArticlePage({ params }: PageProps) {
       <div className="absolute inset-0 bg-modern-dots opacity-3"></div>
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link
-          href="/education"
+          href="/resources/education"
           className="inline-flex items-center text-primary hover:text-primary-dark mb-6"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />

@@ -96,6 +96,13 @@ export function validateEnv(): EnvConfig {
 }
 
 /**
+ * Reset cached config (for testing only). Next getEnv() will re-validate.
+ */
+export function __resetEnvConfigForTesting(): void {
+  envConfig = null
+}
+
+/**
  * Get validated environment config
  * Returns the cached config or validates and returns it
  */

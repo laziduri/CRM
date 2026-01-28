@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals'
-import { validateEnv, getEnv, env } from '@/lib/env-validator'
+import { validateEnv, getEnv, env, __resetEnvConfigForTesting } from '@/lib/env-validator'
 
 describe('env-validator', () => {
   const originalEnv = { ...process.env }
@@ -82,11 +82,12 @@ describe('env-validator', () => {
 
   describe('env helpers', () => {
     it('should provide type-safe access', () => {
+      __resetEnvConfigForTesting()
       process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co'
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-key'
       process.env.JWT_SECRET = 'test-secret'
       process.env.JWT_REFRESH_SECRET = 'test-refresh-secret'
-      // Set NODE_ENV for this test
+      // Set NODE_ENV for this test so getEnv() caches with development
       Object.defineProperty(process.env, 'NODE_ENV', {
         value: 'development',
         writable: true,
