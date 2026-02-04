@@ -23,7 +23,6 @@ export default function Footer() {
     resources: [
       { href: '/calculator', label: 'Loan Calculator' },
       { href: '/apply', label: 'Apply Now' },
-      { href: '/crm', label: 'Consultant CRM' },
     ],
     legal: [
       { href: '/privacy', label: 'Privacy Policy' },
@@ -81,7 +80,7 @@ export default function Footer() {
 
           {/* Company Links */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Company</h4>
+            <h4 className="text-base text-white font-semibold mb-4">Company</h4>
             <ul className="space-y-2">
               {footerLinks.company.map((link) => (
                 <li key={link.href}>
@@ -98,7 +97,7 @@ export default function Footer() {
 
           {/* Products Links */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Products</h4>
+            <h4 className="text-base text-white font-semibold mb-4">Products</h4>
             <ul className="space-y-2">
               {footerLinks.products.map((link) => (
                 <li key={link.href}>
@@ -115,7 +114,7 @@ export default function Footer() {
 
           {/* Resources Links */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Resources</h4>
+            <h4 className="text-base text-white font-semibold mb-4">Resources</h4>
             <ul className="space-y-2">
               {footerLinks.resources.map((link) => (
                 <li key={link.href}>
@@ -132,7 +131,7 @@ export default function Footer() {
 
           {/* Legal Links */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Legal</h4>
+            <h4 className="text-base text-white font-semibold mb-4">Legal</h4>
             <ul className="space-y-2">
               {footerLinks.legal.map((link) => (
                 <li key={link.href}>

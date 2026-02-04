@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import DealList from '@/components/deals/DealList'
 import type { Deal } from '@/lib/deals/types'
+import { ROUTES } from '@/lib/route-constants'
 
 export default function DealsPage() {
   const router = useRouter()
@@ -14,6 +15,11 @@ export default function DealsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('All')
+
+  const getConsultantId = () => {
+    if (typeof window === 'undefined') return '1'
+    return localStorage.getItem('consultant_id') || '1'
+  }
 
   // Fetch deals
   const fetchDeals = useCallback(async () => {
@@ -25,7 +31,7 @@ export default function DealsPage() {
 
       const response = await fetch(`/api/deals?${params.toString()}`, {
         headers: {
-          'x-consultant-id': '1',
+          'x-consultant-id': getConsultantId(),
         },
       })
 
@@ -55,7 +61,7 @@ export default function DealsPage() {
       const response = await fetch(`/api/deals/${dealId}`, {
         method: 'DELETE',
         headers: {
-          'x-consultant-id': '1',
+          'x-consultant-id': getConsultantId(),
         },
       })
 
@@ -71,11 +77,11 @@ export default function DealsPage() {
   }
 
   const handleView = (deal: Deal) => {
-    router.push(`/crm/deals/${deal.id}`)
+    router.push(ROUTES.CRM.dealDetail(deal.id))
   }
 
   const handleEdit = (deal: Deal) => {
-    router.push(`/crm/deals/${deal.id}/edit`)
+    router.push(ROUTES.CRM.dealEdit(deal.id))
   }
 
   // Calculate stats
@@ -98,7 +104,7 @@ export default function DealsPage() {
               variant="primary"
               size="sm"
               className="flex items-center gap-2"
-              onClick={() => router.push('/crm/deals/new')}
+              onClick={() => router.push(ROUTES.CRM.DEALS_NEW)}
             >
               <Plus className="w-4 h-4" />
               Create New Deal

@@ -37,7 +37,7 @@ export default function TasksPage() {
       const consultantToken = localStorage.getItem('consultant_token')
 
       if (!consultantId || !consultantToken) {
-        router.push('/consultant/login')
+        router.push('/crm')
         return
       }
 

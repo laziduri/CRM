@@ -60,54 +60,64 @@ export default function ConsultantSettingsPage() {
   ]
 
   useEffect(() => {
-    const token = localStorage.getItem('consultant_token')
-    const consultantId = localStorage.getItem('consultant_id')
+    const loadSettings = async () => {
+      const token = localStorage.getItem('consultant_token')
+      const consultantId = localStorage.getItem('consultant_id')
 
-    if (!token || !consultantId) {
-      // Only redirect if not already on login page
-      if (typeof window !== 'undefined' && !window.location.pathname.includes('login')) {
-        router.push('/consultant/login')
+      if (!token || !consultantId) {
+        // Only redirect if not already on login page
+        if (typeof window !== 'undefined' && window.location.pathname !== '/crm') {
+          router.push('/crm')
+        }
+        setIsLoading(false)
+        return
       }
-      return
-    }
 
-    // Fetch consultant data (mock for now)
-    setConsultant({
-      id: '1',
-      consultantId: 'CON001',
-      username: 'consultant1',
-      name: 'Sarah Chen',
-      email: 'sarah.chen@brillianceadvisory.com',
-      phone: '+65 9123 4567',
-      profilePicture: '',
-    })
-    
-    // Load saved notification preferences (mock)
-    setRemindOneDayBefore(true)
-    setRemindTwoHoursBefore(true)
-    
-    // Check calendar connection status (mock - in production, fetch from API)
-    setIsGoogleCalendarConnected(false)
-    setIsOutlookCalendarConnected(false)
-    
-    // Load calendar color
-    const savedColor = localStorage.getItem('consultant_calendar_color') || 'blue'
-    setCalendarColor(savedColor)
-    
-    // Load birthday visibility (mock - in production, fetch from API)
-    const savedShowBirthday = localStorage.getItem('consultant_show_birthday')
-    setShowBirthday(savedShowBirthday !== null ? savedShowBirthday === 'true' : true)
-    
-    // Load team members to get their colors (mock - in production, fetch from API)
-    const mockTeamMembers = [
-      { id: '1', name: 'You', email: 'you@example.com', role: 'consultant', color: savedColor },
-      { id: '2', name: 'John Smith', email: 'john@example.com', role: 'consultant', color: 'green' },
-      { id: '3', name: 'Jane Doe', email: 'jane@example.com', role: 'consultant', color: 'purple' },
-      { id: '4', name: 'Ashley', email: 'ashley@example.com', role: 'director', color: 'orange' },
-    ]
-    setTeamMembers(mockTeamMembers)
-    
-    setIsLoading(false)
+      // Fetch actual consultant from API
+      const consultantRes = await fetch(`/api/consultant/${consultantId}`)
+      if (consultantRes.ok) {
+        const data = await consultantRes.json()
+        setConsultant({
+          id: data.consultant.id,
+          consultantId: data.consultant.consultantId,
+          username: data.consultant.username,
+          name: data.consultant.name,
+          email: data.consultant.email,
+          phone: data.consultant.phone || '',
+          profilePicture: data.consultant.profilePicture || '',
+        })
+      } else {
+        setConsultant(null)
+      }
+      
+      // Load saved notification preferences (mock)
+      setRemindOneDayBefore(true)
+      setRemindTwoHoursBefore(true)
+      
+      // Check calendar connection status (mock - in production, fetch from API)
+      setIsGoogleCalendarConnected(false)
+      setIsOutlookCalendarConnected(false)
+      
+      // Load calendar color
+      const savedColor = localStorage.getItem('consultant_calendar_color') || 'blue'
+      setCalendarColor(savedColor)
+      
+      // Load birthday visibility (mock - in production, fetch from API)
+      const savedShowBirthday = localStorage.getItem('consultant_show_birthday')
+      setShowBirthday(savedShowBirthday !== null ? savedShowBirthday === 'true' : true)
+      
+      // Load team members to get their colors (mock - in production, fetch from API)
+      const mockTeamMembers = [
+        { id: '1', name: 'You', email: 'you@example.com', role: 'consultant', color: savedColor },
+        { id: '2', name: 'John Smith', email: 'john@example.com', role: 'consultant', color: 'green' },
+        { id: '3', name: 'Jane Doe', email: 'jane@example.com', role: 'consultant', color: 'purple' },
+        { id: '4', name: 'Ashley', email: 'ashley@example.com', role: 'director', color: 'orange' },
+      ]
+      setTeamMembers(mockTeamMembers)
+      
+      setIsLoading(false)
+    }
+    loadSettings()
   }, [router])
 
   const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -404,7 +414,7 @@ export default function ConsultantSettingsPage() {
             <ArrowLeft className="w-4 h-4" />
             Back to Dashboard
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
           <p className="text-gray-600 mt-2">Manage your account settings and preferences</p>
         </div>
 

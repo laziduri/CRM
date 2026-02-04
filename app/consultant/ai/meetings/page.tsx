@@ -57,7 +57,7 @@ export default function AIMeetingsPage() {
   useEffect(() => {
     const token = localStorage.getItem('consultant_token')
     if (!token) {
-      router.push('/client/login')
+      router.push('/crm')
       return
     }
 

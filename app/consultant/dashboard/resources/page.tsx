@@ -182,7 +182,7 @@ export default function ConsultantResourcesPage() {
                             {index + 1}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h3 className="font-semibold text-gray-900 mb-1">{doc.name}</h3>
+                            <h3 className="text-base font-semibold text-gray-900 mb-1">{doc.name}</h3>
                             <p className="text-sm text-gray-600">{doc.description}</p>
                           </div>
                         </div>
@@ -205,7 +205,7 @@ export default function ConsultantResourcesPage() {
 
               {/* Quick Copy Templates */}
               <div className="mt-6 pt-6 border-t border-gray-200">
-                <h3 className="font-semibold text-gray-900 mb-3">Quick Copy Templates</h3>
+                <h3 className="text-base font-semibold text-gray-900 mb-3">Quick Copy Templates</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <button
                     onClick={() => {
@@ -256,7 +256,7 @@ export default function ConsultantResourcesPage() {
           <div className="flex items-start gap-3">
             <FileText className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
             <div>
-              <h3 className="font-semibold text-blue-900 mb-2">Important Notes for Consultants</h3>
+              <h3 className="text-base font-semibold text-blue-900 mb-2">Important Notes for Consultants</h3>
               <ul className="text-sm text-blue-800 space-y-2 list-disc list-inside">
                 <li>Documents must be clear, readable, and in PDF or image format (JPG, PNG)</li>
                 <li>For business loans, ensure all directors&apos; documents are collected</li>

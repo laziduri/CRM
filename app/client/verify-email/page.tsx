@@ -122,7 +122,7 @@ function VerifyEmailContent() {
                     Go to Login
                   </Button>
                 </Link>
-                <Link href="/client/register">
+                <Link href="/client/login">
                   <Button variant="secondary" size="lg" className="w-full">
                     Create New Account
                   </Button>

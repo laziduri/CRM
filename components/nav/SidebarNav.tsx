@@ -14,41 +14,42 @@ import {
   Package,
   FileCheck,
 } from "lucide-react"
+import { ROUTES } from "@/lib/route-constants"
 
 const navItems = [
   {
-    title: "Home",
-    href: "/",
+    title: "CRM Home",
+    href: ROUTES.CRM.HOME,
     icon: Home,
   },
   {
     title: "Dashboard",
-    href: "/crm",
+    href: ROUTES.CONSULTANT.DASHBOARD,
     icon: BarChart3,
   },
   {
     title: "Products",
-    href: "/crm/products",
+    href: ROUTES.CRM.PRODUCTS,
     icon: Package,
   },
   {
     title: "Deals",
-    href: "/crm/deals",
+    href: ROUTES.CRM.DEALS,
     icon: FileCheck,
   },
   {
     title: "Clients",
-    href: "/consultant/clients",
+    href: ROUTES.CONSULTANT.CLIENTS,
     icon: Users,
   },
   {
     title: "Applications",
-    href: "/consultant/applications",
+    href: ROUTES.CONSULTANT.APPLICATIONS,
     icon: FileText,
   },
   {
     title: "Settings",
-    href: "/consultant/dashboard/settings",
+    href: ROUTES.CONSULTANT.SETTINGS,
     icon: Settings,
   },
 ]
@@ -61,7 +62,7 @@ export function SidebarNav() {
       <nav className="flex-1 space-y-1 p-4">
         {navItems.map((item) => {
           const Icon = item.icon
-          const isActive = pathname === item.href
+          const isActive = pathname === item.href || (item.href !== ROUTES.CRM.HOME && pathname?.startsWith(item.href + '/'))
           
           return (
             <Link key={item.href} href={item.href}>

@@ -63,7 +63,7 @@ export default function AIProjectsPage() {
   useEffect(() => {
     const token = localStorage.getItem('consultant_token')
     if (!token) {
-      router.push('/client/login')
+      router.push('/crm')
       return
     }
 

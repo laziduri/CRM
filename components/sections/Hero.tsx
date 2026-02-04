@@ -16,9 +16,11 @@ const SUBTEXT = (
   </>
 )
 
-const WORD_STAGGER_MS = 70
-const HEADLINE_DURATION_MS = WORDS.length * WORD_STAGGER_MS
-const SUBTEXT_DELAY_MS = HEADLINE_DURATION_MS + 200
+const WORD_STAGGER_MS = 120
+const HEADLINE_DURATION_S = 1.2
+const SUBTEXT_DELAY_S = 2
+const BUTTONS_DELAY_S = 3
+const EASE_EXPO_OUT = [0.16, 1, 0.3, 1] as const
 
 export default function Hero() {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
@@ -58,9 +60,9 @@ export default function Hero() {
           <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-4 leading-tight bg-gradient-to-r from-white via-white to-[hsl(180,45%,70%)] bg-clip-text text-transparent">
             {prefersReducedMotion ? (
               <motion.span
-                initial={false}
+                initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, ease: 'easeOut' }}
+                transition={{ duration: 0.4, ease: 'easeOut' }}
               >
                 {HEADLINE}
               </motion.span>
@@ -68,12 +70,12 @@ export default function Hero() {
               WORDS.map((word, i) => (
                 <motion.span
                   key={`${word}-${i}`}
-                  initial={false}
+                  initial={{ opacity: 0, y: -36 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
-                    duration: 0.5,
+                    duration: HEADLINE_DURATION_S,
                     delay: i * (WORD_STAGGER_MS / 1000),
-                    ease: 'easeOut',
+                    ease: EASE_EXPO_OUT,
                   }}
                   style={{ display: 'inline-block', marginRight: '0.25em' }}
                 >
@@ -86,12 +88,12 @@ export default function Hero() {
           {/* Subtext: fade-in after headline */}
           <motion.p
             className="text-xl md:text-2xl lg:text-3xl mb-12 text-white max-w-4xl mx-auto text-center text-body"
-            initial={false}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
-              duration: 0.6,
-              delay: prefersReducedMotion ? 0.3 : SUBTEXT_DELAY_MS / 1000,
-              ease: 'easeOut',
+              duration: prefersReducedMotion ? 0.4 : 1.2,
+              delay: prefersReducedMotion ? 0.3 : SUBTEXT_DELAY_S,
+              ease: EASE_EXPO_OUT,
             }}
           >
             {SUBTEXT}
@@ -99,12 +101,12 @@ export default function Hero() {
           
           {/* Buttons */}
           <motion.div
-            initial={false}
+            initial={{ opacity: 0, y: 32 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ 
-              duration: 0.9, 
-              delay: prefersReducedMotion ? 0.5 : 1.2,
-              ease: 'easeOut'
+              duration: prefersReducedMotion ? 0.4 : 1.2, 
+              delay: prefersReducedMotion ? 0.5 : BUTTONS_DELAY_S,
+              ease: EASE_EXPO_OUT
             }}
             className="flex flex-col sm:flex-row gap-6 justify-center"
           >

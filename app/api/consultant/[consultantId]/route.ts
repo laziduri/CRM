@@ -25,6 +25,17 @@ const CONSULTANTS: Array<{
     director: 'ashley',
     createdAt: new Date('2024-01-15'),
   },
+  {
+    id: '2',
+    consultantId: 'CON002',
+    username: 'clean',
+    name: 'Clean Account',
+    email: 'clean@brillianceadvisory.com',
+    phone: '+65 9000 0000',
+    role: 'Consultant',
+    director: 'ashley',
+    createdAt: new Date(),
+  },
 ]
 
 export async function GET(

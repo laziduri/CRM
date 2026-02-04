@@ -11,7 +11,7 @@ export default function TeamPage() {
   useEffect(() => {
     const token = localStorage.getItem('consultant_token')
     if (!token) {
-      router.push('/consultant/login')
+      router.push('/crm')
     }
   }, [router])
 

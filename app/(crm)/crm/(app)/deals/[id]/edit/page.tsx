@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { ArrowLeft, Save, Send } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -9,16 +9,17 @@ import DealBuilder from '@/components/deals/DealBuilder'
 import DealTotals from '@/components/deals/DealTotals'
 import type { Product } from '@/lib/products/types'
 import type { DealProduct, CreateDealInput } from '@/lib/deals/types'
-import { calculateDealProductTotals } from '@/lib/deals/calculations'
 import { ROUTES } from '@/lib/route-constants'
 
-export default function NewDealPage() {
+export default function EditDealPage() {
   const router = useRouter()
+  const params = useParams()
+  const id = params?.id as string
   const [products, setProducts] = useState<Product[]>([])
   const [selectedProducts, setSelectedProducts] = useState<DealProduct[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  
+
   // Deal form data
   const [dealName, setDealName] = useState('')
   const [clientName, setClientName] = useState('')
@@ -31,7 +32,6 @@ export default function NewDealPage() {
 
   // Fetch products
   const fetchProducts = useCallback(async () => {
-    setIsLoading(true)
     try {
       const response = await fetch('/api/products?isActive=true', {
         headers: {
@@ -45,19 +45,52 @@ export default function NewDealPage() {
 
       const data = await response.json()
       setProducts(data.products || [])
-    } catch (error) {
-      console.error('Error fetching products:', error)
-    } finally {
-      setIsLoading(false)
+    } catch (err) {
+      console.error('Error fetching products:', err)
     }
   }, [])
 
-  useEffect(() => {
-    fetchProducts()
-  }, [fetchProducts])
+  // Fetch existing deal
+  const fetchDeal = useCallback(async () => {
+    if (!id) return
 
-  const handleAddProduct = (product: Product) => {
-    // Product is already added in DealBuilder, this is just for tracking
+    setIsLoading(true)
+    try {
+      const [dealRes, _] = await Promise.all([
+        fetch(`/api/deals/${id}`, {
+          headers: { 'x-consultant-id': getConsultantId() },
+        }),
+        fetchProducts(),
+      ])
+
+      if (!dealRes.ok) {
+        setIsLoading(false)
+        if (dealRes.status === 404) {
+          router.push(ROUTES.CRM.DEALS)
+          return
+        }
+        throw new Error('Failed to fetch deal')
+      }
+
+      const { deal } = await dealRes.json()
+      setDealName(deal.name)
+      setClientName(deal.clientName || '')
+      setDescription(deal.description || '')
+      setSelectedProducts(deal.products || [])
+    } catch (err) {
+      console.error('Error fetching deal:', err)
+      router.push(ROUTES.CRM.DEALS)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [id, fetchProducts, router])
+
+  useEffect(() => {
+    fetchDeal()
+  }, [fetchDeal])
+
+  const handleAddProduct = (_product: Product) => {
+    // Product is already added in DealBuilder
   }
 
   const handleProductsChange = (newProducts: DealProduct[]) => {
@@ -77,11 +110,11 @@ export default function NewDealPage() {
 
     setIsSubmitting(true)
     try {
-      const dealData: CreateDealInput = {
+      const updateData = {
         name: dealName,
         clientName: clientName || undefined,
         description: description || undefined,
-        products: selectedProducts.map(p => ({
+        products: selectedProducts.map((p) => ({
           productId: p.productId,
           productName: p.productName,
           category: p.category,
@@ -97,23 +130,23 @@ export default function NewDealPage() {
         status,
       }
 
-      const response = await fetch('/api/deals', {
-        method: 'POST',
+      const response = await fetch(`/api/deals/${id}`, {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           'x-consultant-id': getConsultantId(),
         },
-        body: JSON.stringify(dealData),
+        body: JSON.stringify(updateData),
       })
 
       if (!response.ok) {
-        throw new Error('Failed to create deal')
+        throw new Error('Failed to update deal')
       }
 
       router.push(ROUTES.CRM.DEALS)
-    } catch (error) {
-      console.error('Error creating deal:', error)
-      alert('Failed to create deal. Please try again.')
+    } catch (err) {
+      console.error('Error updating deal:', err)
+      alert('Failed to update deal. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
@@ -124,7 +157,7 @@ export default function NewDealPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading products...</p>
+          <p className="text-gray-600">Loading deal...</p>
         </div>
       </div>
     )
@@ -140,19 +173,19 @@ export default function NewDealPage() {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => router.back()}
+                onClick={() => router.push(ROUTES.CRM.DEALS)}
               >
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Create New Deal</h1>
-                <p className="text-sm text-gray-600">Build a quote with multiple products</p>
+                <h1 className="text-2xl font-bold text-gray-900">Edit Deal</h1>
+                <p className="text-sm text-gray-600">Update deal information and products</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
-                onClick={() => router.back()}
+                onClick={() => router.push(ROUTES.CRM.DEALS)}
                 disabled={isSubmitting}
               >
                 Cancel
@@ -161,7 +194,7 @@ export default function NewDealPage() {
                 variant="outline"
                 onClick={() => handleSave('draft')}
                 disabled={isSubmitting || selectedProducts.length === 0}
-                className="flex items-center gap-2"
+                className="gap-2"
               >
                 <Save className="w-4 h-4" />
                 Save Draft
@@ -170,7 +203,7 @@ export default function NewDealPage() {
                 variant="primary"
                 onClick={() => handleSave('sent')}
                 disabled={isSubmitting || selectedProducts.length === 0}
-                className="flex items-center gap-2"
+                className="gap-2"
               >
                 <Send className="w-4 h-4" />
                 Send to Client
@@ -186,7 +219,7 @@ export default function NewDealPage() {
           <div className="lg:col-span-1 space-y-6">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Deal Information</h2>
-              
+
               <div className="space-y-4">
                 <div>
                   <Input

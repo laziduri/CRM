@@ -59,7 +59,7 @@ export default function AIDashboardsPage() {
   useEffect(() => {
     const token = localStorage.getItem('consultant_token')
     if (!token) {
-      router.push('/client/login')
+      router.push('/crm')
       return
     }
 

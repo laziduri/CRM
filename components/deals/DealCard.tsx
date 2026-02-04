@@ -37,7 +37,7 @@ export default function DealCard({ deal, onEdit, onDelete, onView }: DealCardPro
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
-          <h3 className="font-semibold text-gray-900 mb-1">{deal.name}</h3>
+          <h3 className="text-base font-semibold text-gray-900 mb-1">{deal.name}</h3>
           {deal.clientName && (
             <p className="text-sm text-gray-600 mb-2">Client: {deal.clientName}</p>
           )}

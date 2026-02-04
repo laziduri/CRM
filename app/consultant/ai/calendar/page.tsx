@@ -36,7 +36,6 @@ import {
   Flag,
   Tag,
   Layers,
-  ChevronDown,
   CalendarDays,
   Grid3x3,
   List,
@@ -1233,11 +1232,12 @@ export default function CalendarPage() {
   const [filterType, setFilterType] = useState<'all' | 'tasks' | 'appointments'>('all')
   const [visibleCalendars, setVisibleCalendars] = useState<Record<string, boolean>>({})
   const [notifications, setNotifications] = useState<Array<{ id: string; message: string; type: 'info' | 'success' | 'warning'; timestamp: Date }>>([])
+  const [showAddMenuModal, setShowAddMenuModal] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('consultant_token')
     if (!token) {
-      router.push('/consultant/login')
+      router.push('/crm')
       return
     }
 
@@ -1722,20 +1722,55 @@ export default function CalendarPage() {
               <Button
                 variant="primary"
                 size="sm"
-                onClick={() => setShowAddTaskModal(true)}
+                type="button"
+                onClick={() => setShowAddMenuModal(true)}
               >
                 <Plus className="w-4 h-4 mr-2" />
-                Add Task
+                Add
               </Button>
 
-              <Button
-                variant="primary"
+              <Modal
+                isOpen={showAddMenuModal}
+                onClose={() => setShowAddMenuModal(false)}
+                title="Add"
                 size="sm"
-                onClick={() => setShowAddAppointmentModal(true)}
               >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Appointment
-              </Button>
+                <div className="flex flex-col gap-2">
+                  <button
+                    type="button"
+                    className="flex w-full items-center gap-3 rounded-lg border border-gray-200 px-4 py-3 text-left text-gray-800 transition-colors hover:bg-gray-50 hover:border-primary/30"
+                    onClick={() => {
+                      setShowAddMenuModal(false)
+                      setShowAddEventModal(true)
+                    }}
+                  >
+                    <CalendarDays className="w-5 h-5 text-primary" />
+                    Add Event
+                  </button>
+                  <button
+                    type="button"
+                    className="flex w-full items-center gap-3 rounded-lg border border-gray-200 px-4 py-3 text-left text-gray-800 transition-colors hover:bg-gray-50 hover:border-primary/30"
+                    onClick={() => {
+                      setShowAddMenuModal(false)
+                      setShowAddTaskModal(true)
+                    }}
+                  >
+                    <CheckCircle2 className="w-5 h-5 text-primary" />
+                    Add Task
+                  </button>
+                  <button
+                    type="button"
+                    className="flex w-full items-center gap-3 rounded-lg border border-gray-200 px-4 py-3 text-left text-gray-800 transition-colors hover:bg-gray-50 hover:border-primary/30"
+                    onClick={() => {
+                      setShowAddMenuModal(false)
+                      setShowAddAppointmentModal(true)
+                    }}
+                  >
+                    <Clock className="w-5 h-5 text-primary" />
+                    Add Appointment
+                  </button>
+                </div>
+              </Modal>
 
               <Link href="/consultant/dashboard/settings">
                 <Button variant="outline" size="sm">
@@ -1775,15 +1810,6 @@ export default function CalendarPage() {
                       ? `Week of ${currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
                       : currentDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
                   </h2>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={() => setShowAddEventModal(true)}
-                    className="ml-4"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Event
-                  </Button>
                 </div>
               </div>
 
@@ -1971,7 +1997,7 @@ export default function CalendarPage() {
                                   }}
                                 >
                                   <div className="flex items-center justify-between mb-1">
-                                    <h3 className="font-semibold text-gray-900">{getAppointmentDisplayText(item)}</h3>
+                                    <h3 className="text-base font-semibold text-gray-900">{getAppointmentDisplayText(item)}</h3>
                                     <span className="text-xs text-gray-500">
                                       {new Date(item.startTime).toLocaleTimeString('en-US', {
                                         hour: 'numeric',
@@ -2013,7 +2039,7 @@ export default function CalendarPage() {
           {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sticky top-20">
-              <h3 className="font-semibold text-gray-900 mb-4">Calendars</h3>
+              <h3 className="text-base font-semibold text-gray-900 mb-4">Calendars</h3>
               
               {/* My Calendars */}
               <div className="mb-4">
@@ -2380,7 +2406,7 @@ export default function CalendarPage() {
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-1">
                                 {isBirthday && <BirthdayCake className="w-4 h-4 text-pink-600" />}
-                                <h4 className="font-semibold text-gray-900">{getAppointmentDisplayText(item)}</h4>
+                                <h4 className="text-base font-semibold text-gray-900">{getAppointmentDisplayText(item)}</h4>
                               </div>
                               <div className="flex items-center gap-4 text-xs text-gray-600">
                                 <span className="flex items-center gap-1">

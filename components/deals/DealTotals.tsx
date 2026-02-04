@@ -52,7 +52,7 @@ export default function DealTotals({ products, className = '' }: DealTotalsProps
           </div>
         </div>
         <div className="border-t border-gray-200 pt-4 mt-4">
-          <h4 className="text-md font-semibold text-gray-900 mb-3">Take-Home Commission</h4>
+          <h4 className="text-base font-semibold text-gray-900 mb-3">Take-Home Commission</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-gray-600 mb-1">Take-Home (With SFEC)</p>

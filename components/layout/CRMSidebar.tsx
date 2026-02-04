@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   Users,
   FileText,
+  FileCheck,
   Calendar as CalendarIcon,
   MessageSquare,
   TrendingUp,
@@ -23,7 +24,9 @@ import {
   Menu,
   X,
   Briefcase,
+  LogOut,
 } from 'lucide-react'
+import { ROUTES } from '@/lib/route-constants'
 
 interface NavItem {
   label: string
@@ -55,6 +58,7 @@ export default function CRMSidebar() {
         { label: 'Dashboard', href: '/consultant/dashboard', icon: LayoutDashboard },
         { label: 'Calendar', href: '/consultant/calendar', icon: CalendarIcon },
         { label: 'Tasks', href: '/consultant/tasks', icon: CheckSquare },
+        { label: 'Deals & Quotes', href: '/crm/deals', icon: FileCheck },
         { label: 'Clients', href: '/consultant/clients', icon: Users },
         { label: 'Pipeline', href: '/consultant/pipeline', icon: FolderKanban },
         { label: 'Messages', href: '/consultant/messages', icon: MessageSquare },
@@ -163,16 +167,13 @@ export default function CRMSidebar() {
         `}
       >
         <div className="flex flex-col h-full">
-          {/* Logo/Header */}
-          <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-            <Link href="/consultant/dashboard" className="flex items-center gap-2">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <Briefcase className="w-5 h-5 text-primary" />
+          {/* Logo/Header - compact */}
+          <div className="p-3 border-b border-gray-200 flex items-center justify-between">
+            <Link href="/consultant/dashboard" className="flex items-center gap-2 min-w-0">
+              <div className="p-1.5 bg-primary/10 rounded-lg shrink-0">
+                <Briefcase className="w-4 h-4 text-primary" />
               </div>
-              <div>
-                <h2 className="font-bold text-gray-900">Brilliance CRM</h2>
-                <p className="text-xs text-gray-500">Consultant Portal</p>
-              </div>
+              <span className="text-sm font-medium text-gray-700 truncate">Portal</span>
             </Link>
           </div>
 
@@ -266,8 +267,8 @@ export default function CRMSidebar() {
             })}
           </nav>
 
-          {/* Footer/User Section */}
-          <div className="p-4 border-t border-gray-200">
+          {/* Footer: Settings + Logout */}
+          <div className="mt-auto p-4 border-t border-gray-200 space-y-1">
             <Link
               href="/consultant/dashboard/settings"
               onClick={handleNavClick}
@@ -282,6 +283,20 @@ export default function CRMSidebar() {
               <Settings className="w-4 h-4" />
               <span>Settings</span>
             </Link>
+            <button
+              type="button"
+              onClick={() => {
+                localStorage.removeItem('consultant_token')
+                localStorage.removeItem('consultant_id')
+                router.push(ROUTES.CRM.LOGIN)
+                router.refresh()
+                if (window.innerWidth < 768) setIsMobileOpen(false)
+              }}
+              className="flex items-center gap-3 px-3 py-2 rounded-lg w-full text-left text-sm text-red-600 hover:bg-red-50 transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+              <span>Logout</span>
+            </button>
           </div>
         </div>
       </aside>

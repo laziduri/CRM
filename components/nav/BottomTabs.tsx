@@ -14,7 +14,7 @@ import {
 const tabItems = [
   {
     title: "Home",
-    href: "/",
+    href: "/crm",
     icon: Home,
   },
   {

@@ -157,7 +157,7 @@ export default function DealBuilder({ products, selectedProducts, onProductsChan
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900">{product.productName}</h4>
+                    <h4 className="text-base font-semibold text-gray-900">{product.productName}</h4>
                     <div className="flex items-center gap-2 mt-1">
                       <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${getCategoryColor(product.category)}`}>
                         {product.category}

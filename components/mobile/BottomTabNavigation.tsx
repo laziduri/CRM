@@ -1,8 +1,9 @@
 'use client'
 
 import { usePathname, useRouter } from 'next/navigation'
-import { Calendar, CheckSquare, Users } from 'lucide-react'
+import { Calendar, CheckSquare, Users, FileCheck } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { ROUTES } from '@/lib/route-constants'
 
 interface TabItem {
   label: string
@@ -21,6 +22,11 @@ const tabs: TabItem[] = [
     label: 'Tasks',
     href: '/consultant/tasks',
     icon: CheckSquare,
+  },
+  {
+    label: 'Deals',
+    href: ROUTES.CRM.DEALS,
+    icon: FileCheck,
   },
   {
     label: 'Clients',

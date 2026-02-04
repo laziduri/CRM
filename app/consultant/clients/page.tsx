@@ -104,7 +104,7 @@ export default function ClientsPage() {
     const token = localStorage.getItem('consultant_token')
     const consultantId = localStorage.getItem('consultant_id')
     if (!token || !consultantId) {
-      router.push('/client/login')
+      router.push('/crm')
       return
     }
 

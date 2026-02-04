@@ -2,7 +2,7 @@
 const CACHE_NAME = 'brilliance-crm-v1'
 const urlsToCache = [
   '/crm',
-  '/crm/login',
+  '/crm',
   '/consultant/dashboard',
   '/images/brilliance-logo.png',
   '/manifest.json',

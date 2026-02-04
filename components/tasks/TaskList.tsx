@@ -121,7 +121,7 @@ export default function TaskList({ tasks, onToggleComplete, onDelete, onEdit }: 
             ) : (
               <ChevronRight className="w-4 h-4 text-gray-500" />
             )}
-            <h3 className={`font-semibold ${color}`}>{title}</h3>
+            <h3 className={`text-base font-semibold ${color}`}>{title}</h3>
             <span className="px-2 py-0.5 text-xs font-medium bg-gray-200 text-gray-700 rounded-full">
               {taskList.length}
             </span>

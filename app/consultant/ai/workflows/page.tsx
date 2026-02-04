@@ -68,7 +68,7 @@ export default function AIWorkflowsPage() {
   useEffect(() => {
     const token = localStorage.getItem('consultant_token')
     if (!token) {
-      router.push('/client/login')
+      router.push('/crm')
       return
     }
 

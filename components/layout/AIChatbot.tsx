@@ -1106,7 +1106,7 @@ Purpose: ${appointmentData.purpose}`
           <div className="w-64 bg-gray-50 border-r border-gray-200 flex flex-col flex-shrink-0">
             {/* Sidebar Header */}
             <div className="p-4 border-b border-gray-200 flex-shrink-0">
-              <h3 className="font-semibold text-gray-900 mb-3">Chats</h3>
+              <h3 className="text-base font-semibold text-gray-900 mb-3">Chats</h3>
               <button
                 onClick={createNewThread}
                 className="w-full flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-primary to-teal text-white rounded-lg hover:from-primary-dark hover:to-teal-dark transition-all font-medium text-sm"
@@ -1178,7 +1178,7 @@ Purpose: ${appointmentData.purpose}`
                   <Bot className="w-6 h-6 text-white" />
                 </div>
                 <div className="min-w-0">
-                  <h3 className="font-semibold truncate">Claire - Brilliance Advisory</h3>
+                  <h3 className="text-base font-semibold truncate">Claire - Brilliance Advisory</h3>
                   <p className="text-xs text-white/90">AI Assistant</p>
                 </div>
               </div>
@@ -1194,7 +1194,7 @@ Purpose: ${appointmentData.purpose}`
             {showAppointmentForm && (
               <div className="absolute inset-0 bg-white z-20 flex flex-col">
               <div className="bg-gradient-to-r from-primary to-teal text-white p-4 flex items-center justify-between">
-                <h3 className="font-semibold">Book an Appointment</h3>
+                <h3 className="text-base font-semibold">Book an Appointment</h3>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setShowAppointmentForm(false)}

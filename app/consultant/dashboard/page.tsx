@@ -51,6 +51,9 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts'
+import TodayTasksWidget from '@/components/dashboard/TodayTasksWidget'
+import UpcomingAppointmentsWidget from '@/components/dashboard/UpcomingAppointmentsWidget'
+import CRMDashboardWidget from '@/components/dashboard/CRMDashboardWidget'
 
 interface ConsultantData {
   id: string
@@ -281,163 +284,192 @@ export default function ConsultantDashboardPage() {
         const consultantId = localStorage.getItem('consultant_id')
 
         if (!token || !consultantId) {
-          // Redirect to login if not authenticated
+          // Redirect to CRM login (working consultant login page)
           setIsLoading(false)
-          if (!window.location.pathname.includes('login')) {
-            router.push('/consultant/login')
+          if (window.location.pathname !== '/crm') {
+            router.push('/crm')
           }
           return
         }
 
-        // Mock data - in production, fetch from API
+        // Fetch actual consultant from API
+        const consultantRes = await fetch(`/api/consultant/${consultantId}`)
+        if (!consultantRes.ok) {
+          // Invalid/expired session: clear and send to login so user can re-enter
+          localStorage.removeItem('consultant_token')
+          localStorage.removeItem('consultant_id')
+          router.replace('/crm')
+          setIsLoading(false)
+          return
+        }
+        const consultantData = await consultantRes.json()
+        const fetchedConsultant = consultantData.consultant
         setConsultant({
-          id: '1',
-          consultantId: 'CON001',
-          username: 'consultant1',
-          name: 'Sarah Chen',
-          email: 'sarah.chen@brillianceadvisory.com',
-          phone: '+65 9123 4567',
+          id: fetchedConsultant.id,
+          consultantId: fetchedConsultant.consultantId,
+          username: fetchedConsultant.username,
+          name: fetchedConsultant.name,
+          email: fetchedConsultant.email,
+          phone: fetchedConsultant.phone || '',
         })
 
-        // Mock performance metrics
-        setMetrics({
-          totalCommissions: 125000,
-          monthlyCommissions: 18500,
-          commissionGrowth: 12.5,
-          closedDeals: 87,
-          closedDealsGrowth: 8.3,
-          activeClients: 24,
-          clientGrowth: 15.0,
-          successRate: 87.5,
-          successRateChange: 3.2,
-          averageDealSize: 85000,
-          averageDealSizeChange: -2.1,
-          pendingApplications: 8,
-          todayAppointments: 3,
-        })
+        // Clean Account (CON002) = fresh demo with nothing added. Sarah Chen (CON001) = demo with sample data.
+        const isCleanAccount = fetchedConsultant.consultantId === 'CON002'
 
-        // Mock deal status data
-        setDealStatusData([
-          { status: 'New', count: 5, color: '#6B7280' },
-          { status: 'In Progress', count: 8, color: '#3B82F6' },
-          { status: 'Under Review', count: 6, color: '#F59E0B' },
-          { status: 'Approved', count: 4, color: '#8B5CF6' },
-          { status: 'Closed', count: 87, color: '#10B981' },
-          { status: 'Rejected', count: 3, color: '#EF4444' },
-        ])
-
-        // Mock loan type data
-        setLoanTypeData([
-          { name: 'Personal Loans', value: 45, color: '#3B82F6' },
-          { name: 'Business Loans', value: 35, color: '#10B981' },
-          { name: 'Home Loans', value: 15, color: '#F59E0B' },
-          { name: 'Other', value: 5, color: '#8B5CF6' },
-        ])
-
-        // Mock appointments
-        const today = new Date()
-        setAppointments([
-          {
-            id: '1',
-            title: 'Initial Consultation',
-            clientName: 'John Doe',
-            consultantName: 'Sarah Chen',
-            consultantId: '1',
-            date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 10, 0),
-            time: '10:00 AM',
-            duration: 60,
-            type: 'consultation',
-            location: 'office',
-          },
-          {
-            id: '2',
-            title: 'Follow-up Meeting',
-            clientName: 'ABC Trading Pte Ltd',
-            consultantName: 'Sarah Chen',
-            consultantId: '1',
-            date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 14, 30),
-            time: '2:30 PM',
-            duration: 45,
-            type: 'follow-up',
-            location: 'online',
-          },
-          {
-            id: '3',
-            title: 'Closing Meeting',
-            clientName: 'Jane Smith',
-            consultantName: 'Sarah Chen',
-            consultantId: '1',
-            date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 16, 0),
-            time: '4:00 PM',
-            duration: 30,
-            type: 'closing',
-            location: 'office',
-          },
-          {
-            id: '4',
-            title: 'Client Meeting',
-            clientName: 'XYZ Services Ltd',
-            consultantName: 'Michael Tan',
-            consultantId: '2',
-            date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 11, 0),
-            time: '11:00 AM',
-            duration: 60,
-            type: 'consultation',
-            location: 'office',
-          },
-          {
-            id: '5',
-            title: 'Follow-up',
-            clientName: 'DEF Manufacturing',
-            consultantName: 'Emily Wong',
-            consultantId: '3',
-            date: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1, 9, 30),
-            time: '9:30 AM',
-            duration: 45,
-            type: 'follow-up',
-            location: 'online',
-          },
-        ])
-
-        // Mock teammates
-        setTeammates([
-          {
-            id: '2',
-            consultantId: 'CON002',
-            name: 'Michael Tan',
-            email: 'michael.tan@brillianceadvisory.com',
-            role: 'Senior Consultant',
-            totalDeals: 95,
-            closedDeals: 82,
-            totalCommissions: 142000,
-            successRate: 86.3,
-            activeClients: 28,
-          },
-          {
-            id: '3',
-            consultantId: 'CON003',
-            name: 'Emily Wong',
-            email: 'emily.wong@brillianceadvisory.com',
-            role: 'Consultant',
-            totalDeals: 72,
-            closedDeals: 61,
-            totalCommissions: 98000,
-            successRate: 84.7,
-            activeClients: 19,
-          },
-          {
-            id: '4',
-            consultantId: 'CON004',
-            name: 'David Lim',
-            email: 'david.lim@brillianceadvisory.com',
-            role: 'Consultant',
-            totalDeals: 58,
-            closedDeals: 49,
-            totalCommissions: 78000,
-            successRate: 84.5,
-            activeClients: 16,
-          },
-        ])
+        if (isCleanAccount) {
+          // Empty/fresh data for testing - nothing added
+          setMetrics({
+            totalCommissions: 0,
+            monthlyCommissions: 0,
+            commissionGrowth: 0,
+            closedDeals: 0,
+            closedDealsGrowth: 0,
+            activeClients: 0,
+            clientGrowth: 0,
+            successRate: 0,
+            successRateChange: 0,
+            averageDealSize: 0,
+            averageDealSizeChange: 0,
+            pendingApplications: 0,
+            todayAppointments: 0,
+          })
+          setDealStatusData([])
+          setLoanTypeData([])
+          setAppointments([])
+          setTeammates([])
+        } else {
+          // Sarah Chen demo - sample data
+          setMetrics({
+            totalCommissions: 125000,
+            monthlyCommissions: 18500,
+            commissionGrowth: 12.5,
+            closedDeals: 87,
+            closedDealsGrowth: 8.3,
+            activeClients: 24,
+            clientGrowth: 15.0,
+            successRate: 87.5,
+            successRateChange: 3.2,
+            averageDealSize: 85000,
+            averageDealSizeChange: -2.1,
+            pendingApplications: 8,
+            todayAppointments: 3,
+          })
+          setDealStatusData([
+            { status: 'New', count: 5, color: '#6B7280' },
+            { status: 'In Progress', count: 8, color: '#3B82F6' },
+            { status: 'Under Review', count: 6, color: '#F59E0B' },
+            { status: 'Approved', count: 4, color: '#8B5CF6' },
+            { status: 'Closed', count: 87, color: '#10B981' },
+            { status: 'Rejected', count: 3, color: '#EF4444' },
+          ])
+          setLoanTypeData([
+            { name: 'Personal Loans', value: 45, color: '#3B82F6' },
+            { name: 'Business Loans', value: 35, color: '#10B981' },
+            { name: 'Home Loans', value: 15, color: '#F59E0B' },
+            { name: 'Other', value: 5, color: '#8B5CF6' },
+          ])
+          const today = new Date()
+          setAppointments([
+            {
+              id: '1',
+              title: 'Initial Consultation',
+              clientName: 'John Doe',
+              consultantName: 'Sarah Chen',
+              consultantId: '1',
+              date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 10, 0),
+              time: '10:00 AM',
+              duration: 60,
+              type: 'consultation',
+              location: 'office',
+            },
+            {
+              id: '2',
+              title: 'Follow-up Meeting',
+              clientName: 'ABC Trading Pte Ltd',
+              consultantName: 'Sarah Chen',
+              consultantId: '1',
+              date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 14, 30),
+              time: '2:30 PM',
+              duration: 45,
+              type: 'follow-up',
+              location: 'online',
+            },
+            {
+              id: '3',
+              title: 'Closing Meeting',
+              clientName: 'Jane Smith',
+              consultantName: 'Sarah Chen',
+              consultantId: '1',
+              date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 16, 0),
+              time: '4:00 PM',
+              duration: 30,
+              type: 'closing',
+              location: 'office',
+            },
+            {
+              id: '4',
+              title: 'Client Meeting',
+              clientName: 'XYZ Services Ltd',
+              consultantName: 'Michael Tan',
+              consultantId: '2',
+              date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 11, 0),
+              time: '11:00 AM',
+              duration: 60,
+              type: 'consultation',
+              location: 'office',
+            },
+            {
+              id: '5',
+              title: 'Follow-up',
+              clientName: 'DEF Manufacturing',
+              consultantName: 'Emily Wong',
+              consultantId: '3',
+              date: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1, 9, 30),
+              time: '9:30 AM',
+              duration: 45,
+              type: 'follow-up',
+              location: 'online',
+            },
+          ])
+          setTeammates([
+            {
+              id: '2',
+              consultantId: 'CON002',
+              name: 'Michael Tan',
+              email: 'michael.tan@brillianceadvisory.com',
+              role: 'Senior Consultant',
+              totalDeals: 95,
+              closedDeals: 82,
+              totalCommissions: 142000,
+              successRate: 86.3,
+              activeClients: 28,
+            },
+            {
+              id: '3',
+              consultantId: 'CON003',
+              name: 'Emily Wong',
+              email: 'emily.wong@brillianceadvisory.com',
+              role: 'Consultant',
+              totalDeals: 72,
+              closedDeals: 61,
+              totalCommissions: 98000,
+              successRate: 84.7,
+              activeClients: 19,
+            },
+            {
+              id: '4',
+              consultantId: 'CON004',
+              name: 'David Lim',
+              email: 'david.lim@brillianceadvisory.com',
+              role: 'Consultant',
+              totalDeals: 58,
+              closedDeals: 49,
+              totalCommissions: 78000,
+              successRate: 84.5,
+              activeClients: 16,
+            },
+          ])
+        }
       } catch (error) {
         console.error('Error loading dashboard data:', error)
       } finally {
@@ -492,14 +524,6 @@ export default function ConsultantDashboardPage() {
       </div>
     )
   }
-
-  const todayAppointments = appointments.filter(apt => {
-    const aptDate = new Date(apt.date)
-    const today = new Date()
-    return aptDate.getDate() === today.getDate() &&
-           aptDate.getMonth() === today.getMonth() &&
-           aptDate.getFullYear() === today.getFullYear()
-  })
 
   const totalDeals = dealStatusData.reduce((sum, item) => sum + item.count, 0)
 
@@ -616,8 +640,29 @@ export default function ConsultantDashboardPage() {
     }))
   }
 
+  const handleAddTask = async (taskData: Partial<{ title: string; startTime: Date; endTime: Date; deadline: Date; startDate: Date; status: string; priority: string; taskType: string; estimatedDuration: number }>) => {
+    const consultantId = typeof window !== 'undefined' ? localStorage.getItem('consultant_id') : null
+    if (!consultantId) return
+    const res = await fetch('/api/consultant/tasks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-consultant-id': consultantId },
+      body: JSON.stringify({
+        title: taskData.title,
+        startTime: taskData.startTime instanceof Date ? taskData.startTime.toISOString() : undefined,
+        endTime: taskData.endTime instanceof Date ? taskData.endTime.toISOString() : undefined,
+        deadline: taskData.deadline instanceof Date ? taskData.deadline.toISOString() : undefined,
+        startDate: taskData.startDate instanceof Date ? taskData.startDate.toISOString().split('T')[0] : undefined,
+        status: taskData.status || 'pending',
+        priority: taskData.priority || 'medium',
+        taskType: taskData.taskType || 'other',
+        estimatedDuration: taskData.estimatedDuration || 30,
+      }),
+    })
+    if (!res.ok) throw new Error('Failed to add task')
+  }
+
   const tabs = [
-    { id: 'overview' as DashboardTab, label: 'Overview', icon: BarChart3 },
+    { id: 'overview' as DashboardTab, label: 'Today', icon: BarChart3 },
     { id: 'resources' as DashboardTab, label: 'Resources', icon: FileText },
     { id: 'notes' as DashboardTab, label: 'Notes', icon: StickyNote },
     { id: 'appointments' as DashboardTab, label: 'Appointment Summary', icon: BookOpen },
@@ -679,6 +724,110 @@ export default function ConsultantDashboardPage() {
         {/* Overview Tab Content */}
         {activeTab === 'overview' && (
           <>
+            {/* Work Section - Above the fold (mobile-first) */}
+            <div className="space-y-6 mb-8">
+              {/* Row 1: Tasks Today | Upcoming Appointments */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <TodayTasksWidget
+                  consultantId={consultant?.id ?? null}
+                  onAddTask={handleAddTask}
+                />
+                <UpcomingAppointmentsWidget
+                  consultantId={consultant?.consultantId ?? null}
+                  consultantDbId={consultant?.id ?? null}
+                />
+              </div>
+              {/* Row 2: Calendar | CRM Quick View */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Calendar - existing inline block */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Appointments Calendar</h3>
+                    <Link href="/consultant/calendar" className="text-xs text-primary hover:text-primary-dark font-medium min-h-[44px] flex items-center">
+                      View all →
+                    </Link>
+                  </div>
+                  <div className="flex items-center justify-between mb-4">
+                    <button
+                      onClick={() => navigateMonth('prev')}
+                      className="p-2 hover:bg-gray-100 rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                      aria-label="Previous month"
+                    >
+                      <ChevronLeft className="w-5 h-5 text-gray-600" />
+                    </button>
+                    <h4 className="text-base font-semibold text-gray-900">{monthName}</h4>
+                    <button
+                      onClick={() => navigateMonth('next')}
+                      className="p-2 hover:bg-gray-100 rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                      aria-label="Next month"
+                    >
+                      <ChevronRight className="w-5 h-5 text-gray-600" />
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-7 gap-1 mb-2">
+                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+                      <div key={day} className="text-center text-xs font-medium text-gray-500 py-2">
+                        {day}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="grid grid-cols-7 gap-1">
+                    {Array.from({ length: firstDay }).map((_, index) => (
+                      <div key={`empty-${index}`} className="aspect-square" />
+                    ))}
+                    {Array.from({ length: daysInMonth }).map((_, index) => {
+                      const day = index + 1
+                      const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
+                      const dayAppointments = getAppointmentsForDate(date)
+                      const isToday = date.toDateString() === new Date().toDateString()
+                      const isSelected = date.toDateString() === selectedDate.toDateString()
+                      return (
+                        <button
+                          key={day}
+                          onClick={() => setSelectedDate(date)}
+                          className={`aspect-square p-1 text-sm rounded-lg transition-colors relative min-h-[44px] ${
+                            isToday
+                              ? 'bg-primary text-white font-semibold'
+                              : isSelected
+                              ? 'bg-primary/10 text-primary font-semibold'
+                              : 'hover:bg-gray-100 text-gray-900'
+                          }`}
+                        >
+                          {day}
+                          {dayAppointments.length > 0 && (
+                            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-0.5">
+                              {dayAppointments.slice(0, 3).map((_, idx) => (
+                                <div
+                                  key={idx}
+                                  className={`w-1 h-1 rounded-full ${isToday ? 'bg-white' : 'bg-primary'}`}
+                                />
+                              ))}
+                              {dayAppointments.length > 3 && (
+                                <span className={`text-xs ${isToday ? 'text-white' : 'text-primary'}`}>
+                                  +{dayAppointments.length - 3}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+                <CRMDashboardWidget
+                  pendingApplications={metrics.pendingApplications}
+                  activeClients={metrics.activeClients}
+                  dealStatusData={dealStatusData}
+                  onAddClient={() => setShowAddClientModal(true)}
+                />
+              </div>
+            </div>
+
+            {/* Analytics Section - Below the fold */}
+            <div className="border-t border-gray-200 pt-8">
+              <h2 className="text-lg font-semibold text-gray-900 mb-6">Analytics</h2>
+            </div>
+
             {/* Monthly Goals and Targets */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
           <div className="flex items-center justify-between mb-6">
@@ -884,9 +1033,9 @@ export default function ConsultantDashboardPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 mb-8">
           {/* Charts Section */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="space-y-6">
             {/* Deal Status Bar Chart */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-6">
@@ -971,138 +1120,6 @@ export default function ConsultantDashboardPage() {
               </div>
             </div>
           </div>
-
-          {/* Calendar & Today's Overview */}
-          <div className="space-y-6">
-            {/* Calendar */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-gray-900">Appointments Calendar</h3>
-                <Link href="/consultant/calendar" className="text-xs text-primary hover:text-primary-dark font-medium">
-                  View all →
-                </Link>
-              </div>
-              
-              {/* Calendar Header */}
-              <div className="flex items-center justify-between mb-4">
-                <button
-                  onClick={() => navigateMonth('prev')}
-                  className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  <ChevronLeft className="w-5 h-5 text-gray-600" />
-                </button>
-                <h4 className="font-semibold text-gray-900">{monthName}</h4>
-                <button
-                  onClick={() => navigateMonth('next')}
-                  className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  <ChevronRight className="w-5 h-5 text-gray-600" />
-                </button>
-              </div>
-
-              {/* Calendar Grid */}
-              <div className="grid grid-cols-7 gap-1 mb-2">
-                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-                  <div key={day} className="text-center text-xs font-medium text-gray-500 py-2">
-                    {day}
-                  </div>
-                ))}
-              </div>
-              
-              <div className="grid grid-cols-7 gap-1">
-                {Array.from({ length: firstDay }).map((_, index) => (
-                  <div key={`empty-${index}`} className="aspect-square"></div>
-                ))}
-                {Array.from({ length: daysInMonth }).map((_, index) => {
-                  const day = index + 1
-                  const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
-                  const dayAppointments = getAppointmentsForDate(date)
-                  const isToday = date.toDateString() === new Date().toDateString()
-                  const isSelected = date.toDateString() === selectedDate.toDateString()
-                  
-                  return (
-                    <button
-                      key={day}
-                      onClick={() => setSelectedDate(date)}
-                      className={`aspect-square p-1 text-sm rounded-lg transition-colors relative ${
-                        isToday
-                          ? 'bg-primary text-white font-semibold'
-                          : isSelected
-                          ? 'bg-primary/10 text-primary font-semibold'
-                          : 'hover:bg-gray-100 text-gray-900'
-                      }`}
-                    >
-                      {day}
-                      {dayAppointments.length > 0 && (
-                        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-0.5">
-                          {dayAppointments.slice(0, 3).map((_, idx) => (
-                            <div
-                              key={idx}
-                              className={`w-1 h-1 rounded-full ${
-                                isToday ? 'bg-white' : 'bg-primary'
-                              }`}
-                            ></div>
-                          ))}
-                          {dayAppointments.length > 3 && (
-                            <span className={`text-xs ${isToday ? 'text-white' : 'text-primary'}`}>
-                              +{dayAppointments.length - 3}
-                            </span>
-                          )}
-                        </div>
-                      )}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Today's Appointments */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-gray-900">Today&apos;s Appointments</h3>
-                <span className="px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full">
-                  {todayAppointments.length}
-                </span>
-              </div>
-              <div className="space-y-3 max-h-[400px] overflow-y-auto">
-                {todayAppointments.length > 0 ? (
-                  todayAppointments
-                    .sort((a, b) => a.date.getTime() - b.date.getTime())
-                    .map((apt) => (
-                      <div
-                        key={apt.id}
-                        className="p-3 border border-gray-200 rounded-lg hover:border-primary hover:bg-primary/5 transition-colors"
-                      >
-                        <div className="flex items-start justify-between mb-1">
-                          <div className="flex-1">
-                            <p className="font-semibold text-gray-900 text-sm">{apt.title}</p>
-                            <p className="text-xs text-gray-600">{apt.clientName}</p>
-                          </div>
-                          <span className="text-xs font-medium text-primary">{apt.time}</span>
-                        </div>
-                        <div className="flex items-center gap-2 mt-2">
-                          <span className={`text-xs px-2 py-0.5 rounded-full ${
-                            apt.consultantId === consultant?.id
-                              ? 'bg-primary/10 text-primary'
-                              : 'bg-gray-100 text-gray-600'
-                          }`}>
-                            {apt.consultantName}
-                          </span>
-                          <span className="text-xs text-gray-500">
-                            {apt.duration} min
-                          </span>
-                          <span className="text-xs text-gray-500 capitalize">
-                            {apt.location}
-                          </span>
-                        </div>
-                      </div>
-                    ))
-                ) : (
-                  <p className="text-sm text-gray-500 text-center py-4">No appointments today</p>
-                )}
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Teams Section */}
@@ -1133,7 +1150,7 @@ export default function ConsultantDashboardPage() {
                     {teammate.name.split(' ').map(n => n[0]).join('')}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-900 truncate">{teammate.name}</h3>
+                    <h3 className="text-base font-semibold text-gray-900 truncate">{teammate.name}</h3>
                     <p className="text-xs text-gray-500 truncate">{teammate.role}</p>
                   </div>
                 </div>
@@ -1169,7 +1186,7 @@ export default function ConsultantDashboardPage() {
                 <Briefcase className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900">Total Deals</h3>
+                <h3 className="text-lg font-semibold text-gray-900">Total Deals</h3>
                 <p className="text-2xl font-bold text-gray-900">{totalDeals}</p>
               </div>
             </div>
@@ -1201,7 +1218,7 @@ export default function ConsultantDashboardPage() {
                 <DollarSign className="w-6 h-6 text-green-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900">Total Pipeline Value</h3>
+                <h3 className="text-lg font-semibold text-gray-900">Total Pipeline Value</h3>
                 <p className="text-2xl font-bold text-gray-900">$2.4M</p>
               </div>
             </div>
@@ -1223,7 +1240,7 @@ export default function ConsultantDashboardPage() {
                 <Clock className="w-6 h-6 text-teal" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900">Average Close Time</h3>
+                <h3 className="text-lg font-semibold text-gray-900">Average Close Time</h3>
                 <p className="text-2xl font-bold text-gray-900">18 days</p>
               </div>
             </div>
@@ -1361,7 +1378,7 @@ export default function ConsultantDashboardPage() {
                               {index + 1}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h4 className="font-semibold text-gray-900 mb-1">{doc.name}</h4>
+                              <h4 className="text-base font-semibold text-gray-900 mb-1">{doc.name}</h4>
                               <p className="text-sm text-gray-600">{doc.description}</p>
                             </div>
                           </div>
@@ -1384,7 +1401,7 @@ export default function ConsultantDashboardPage() {
 
                 {/* Quick Copy Templates */}
                 <div className="mt-6 pt-6 border-t border-gray-200">
-                  <h4 className="font-semibold text-gray-900 mb-3">Quick Copy Templates</h4>
+                  <h4 className="text-base font-semibold text-gray-900 mb-3">Quick Copy Templates</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <button
                       onClick={() => {
@@ -1434,7 +1451,7 @@ export default function ConsultantDashboardPage() {
               <div className="flex items-start gap-3">
                 <FileText className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold text-blue-900 mb-2">Important Notes for Consultants</h3>
+                  <h3 className="text-base font-semibold text-blue-900 mb-2">Important Notes for Consultants</h3>
                   <ul className="text-sm text-blue-800 space-y-2 list-disc list-inside">
                     <li>Documents must be clear, readable, and in PDF or image format (JPG, PNG)</li>
                     <li>For business loans, ensure all directors&apos; documents are collected</li>
@@ -1696,7 +1713,7 @@ export default function ConsultantDashboardPage() {
                       }`}
                     >
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-semibold text-gray-900">
+                        <h3 className="text-base font-semibold text-gray-900">
                           {goal.month} {goal.year || new Date().getFullYear()}
                         </h3>
                         {allTargetsMet ? (

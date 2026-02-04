@@ -52,7 +52,7 @@ export default function ProductsCards({ products, onEdit, onDelete, isAdmin = fa
           {/* Header */}
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
-              <h3 className="font-semibold text-gray-900 mb-1">{product.name}</h3>
+              <h3 className="text-base font-semibold text-gray-900 mb-1">{product.name}</h3>
               <div className="flex items-center gap-2 flex-wrap">
                 <span className={`px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(product.category)}`}>
                   {product.category}

@@ -26,7 +26,7 @@ export default function NotFound() {
               Back to CRM
             </button>
           </Link>
-          <Link href="/crm/login">
+          <Link href="/crm">
             <button className="px-6 py-3 bg-white/5 backdrop-blur-sm border border-cyan-500/30 rounded-lg font-semibold text-gray-300 hover:bg-white/10 hover:border-cyan-500/50 transition-all duration-300">
               Go to Login
             </button>

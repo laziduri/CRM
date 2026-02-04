@@ -27,11 +27,15 @@ export default function ProductsPage() {
   const [vendorFilter, setVendorFilter] = useState<string>('All')
   const [statusFilter, setStatusFilter] = useState<string>('Active')
 
+  const getConsultantId = () => {
+    if (typeof window === 'undefined') return '1'
+    return localStorage.getItem('consultant_id') || '1'
+  }
+
   // Check admin status on mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const consultantId = localStorage.getItem('consultant_id') || '1'
-      setIsAdminUser(isAdmin(consultantId))
+      setIsAdminUser(isAdmin(getConsultantId()))
     }
   }, [])
 
@@ -47,7 +51,7 @@ export default function ProductsPage() {
 
       const response = await fetch(`/api/products?${params.toString()}`, {
         headers: {
-          'x-consultant-id': '1', // Mock consultant ID
+          'x-consultant-id': getConsultantId(),
         },
       })
 
@@ -74,7 +78,7 @@ export default function ProductsPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-consultant-id': '1',
+          'x-consultant-id': getConsultantId(),
         },
         body: JSON.stringify(data),
       })
@@ -99,7 +103,7 @@ export default function ProductsPage() {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'x-consultant-id': '1',
+          'x-consultant-id': getConsultantId(),
         },
         body: JSON.stringify(data),
       })
@@ -126,7 +130,7 @@ export default function ProductsPage() {
       const response = await fetch(`/api/products/${productId}`, {
         method: 'DELETE',
         headers: {
-          'x-consultant-id': '1',
+          'x-consultant-id': getConsultantId(),
         },
       })
 
